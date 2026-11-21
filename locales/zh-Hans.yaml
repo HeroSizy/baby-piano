@@ -1,9 +1,9 @@
-appName: 宝宝钢琴
+appName: Mash Piano
 title: 宝宝钢琴
 desktopIntro: 开始后会全屏，并接管整块键盘：宝宝随便按都只会弹出好听的钢琴声，不会退出、切换程序或触发系统快捷键。每个键都有自己的音，左下最低，右上最高。
 exitHow: 家长退出：用鼠标在屏幕右上角按住不放 3 秒，或在键盘上输入 quitpiano。
 exitHowTyped: 家长退出：在键盘上输入 quitpiano。
-permissionMissing: 锁住键盘需要“辅助功能”权限。请打开设置，打开“宝宝钢琴”的开关，打开后这里会自动变绿。
+permissionMissing: 锁住键盘需要“辅助功能”权限。请打开设置，打开“Mash Piano”的开关，打开后这里会自动变绿。
 permissionGranted: 已获得权限，可以锁住整块键盘。
 openSettings: 打开“辅助功能”设置
 soundLoading: 正在载入钢琴……
@@ -17,10 +17,10 @@ lockMouse: 同时锁住鼠标和触控板（笔记本推荐；打开后只能用
 showVisuals: 按键时放彩色烟花（宝宝看不到屏幕的话不用开）
 start: 开始弹琴（全屏锁定键盘）
 secureInput: 有程序开启了“安全键盘输入”（如终端的“安全键盘输入”、正在输入的密码框），这时任何程序都锁不住键盘。请关闭它（或重启电脑）后再开始。
-lockFailed: 无法锁定键盘。请确认已在 系统设置 › 隐私与安全性 › 辅助功能 中打开“宝宝钢琴”；更新版本后，请先删掉旧条目（−）再重新添加。
+lockFailed: 无法锁定键盘。请确认已在 系统设置 › 隐私与安全性 › 辅助功能 中打开“Mash Piano”；更新版本后，请先删掉旧条目（−）再重新添加。
 windowsLimits: Ctrl+Alt+Del 任何程序都拦不住；Win+L 在弹琴时会被禁用。
 cornerHint: 家长：在右上角按住 3 秒退出
 touchIntro: 大大的彩色琴键，宝宝每根手指都能弹，所有的音都在同一个音阶里，怎么弹都好听。
 touchLockIOS: 想让宝宝出不去，请打开“引导式访问”：设置 › 辅助功能 › 引导式访问，然后在弹琴时连按三下侧边按钮。
-touchLockAndroid: 想让宝宝出不去，请固定应用：设置 › 安全 › 应用固定，然后在最近任务里固定“宝宝钢琴”。
+touchLockAndroid: 想让宝宝出不去，请固定应用：设置 › 安全 › 应用固定，然后在最近任务里固定“Mash Piano”。
 touchStart: 开始弹琴
