@@ -4,7 +4,6 @@ package kiosk
 
 import (
 	"errors"
-	"runtime"
 	"sync"
 	"unsafe"
 
@@ -31,8 +30,9 @@ var ErrNotAllowed = errors.New("kiosk: the system refused the keyboard; check Ac
 // context, so the lock is the package's one.
 var lock struct {
 	sync.Mutex
-	tap, loop uintptr
-	onKey     func(Key)
+	tap, source uintptr
+	onKey       func(Key)
+	hideCursor  bool
 }
 
 // Start swallows every key, media key and trackpad gesture, and with
@@ -59,27 +59,20 @@ func Start(opts Options, onKey func(Key)) error {
 			mask |= 1 << t
 		}
 	}
-	started := make(chan error, 1)
-	go func() {
-		runtime.LockOSThread() // the run loop is this thread's
-		const hidEventTap, headInsert, defaultTap = 0, 0, 0
-		tap := cgEventTapCreate(hidEventTap, headInsert, defaultTap, mask, tapCallback, 0)
-		if tap == 0 {
-			started <- ErrNotAllowed
-			return
-		}
-		source := cfMachPortCreateRunLoopSource(0, tap, 0)
-		loop := cfRunLoopGetCurrent()
-		cfRunLoopAddSource(loop, source, symValue(coreFoundation, "kCFRunLoopCommonModes"))
-		cgEventTapEnable(tap, true)
-		lock.tap, lock.loop, lock.onKey = tap, loop, onKey
-		started <- nil
-		cfRunLoopRun() // until Stop
-		cfMachPortInvalidate(tap)
-		cfRelease(source)
-		cfRelease(tap)
-	}()
-	return <-started
+	const hidEventTap, headInsert, defaultTap = 0, 0, 0
+	tap := cgEventTapCreate(hidEventTap, headInsert, defaultTap, mask, tapCallback, 0)
+	if tap == 0 {
+		return ErrNotAllowed
+	}
+	// The tap's callback runs on the main thread, in the run loop AppKit
+	// serves: reading a key's text or making an NSEvent asks the input
+	// source, which macOS wants on the main thread only, as Caps Lock
+	// switching the input source showed.
+	source := cfMachPortCreateRunLoopSource(0, tap, 0)
+	cfRunLoopAddSource(cfRunLoopGetMain(), source, symValue(coreFoundation, "kCFRunLoopCommonModes"))
+	cgEventTapEnable(tap, true)
+	lock.tap, lock.source, lock.onKey, lock.hideCursor = tap, source, onKey, opts.LockMouse
+	return nil
 }
 
 // Stop gives the keyboard back.
@@ -90,8 +83,14 @@ func Stop() {
 		return
 	}
 	cgEventTapEnable(lock.tap, false)
-	cfRunLoopStop(lock.loop)
-	lock.tap, lock.loop, lock.onKey = 0, 0, nil
+	cfRunLoopRemoveSource(cfRunLoopGetMain(), lock.source, symValue(coreFoundation, "kCFRunLoopCommonModes"))
+	cfMachPortInvalidate(lock.tap)
+	cfRelease(lock.source)
+	cfRelease(lock.tap)
+	if lock.hideCursor {
+		onMain(func() { cgDisplayShowCursor(cgMainDisplayID()) })
+	}
+	lock.tap, lock.source, lock.onKey, lock.hideCursor = 0, 0, nil, false
 }
 
 // Tick keeps the lock and the volume cap in force; call it every half
@@ -243,8 +242,21 @@ func Enter() {
 		// shut-down dialog, no Hide.
 		const hideDock, hideMenuBar, noAppleMenu, noSwitching, noSessionEnd, noHide = 1 << 1, 1 << 3, 1 << 4, 1 << 5, 1 << 7, 1 << 8
 		app.Send(objc.RegisterName("setPresentationOptions:"), uint(hideDock|hideMenuBar|noAppleMenu|noSwitching|noSessionEnd|noHide))
+		lock.Lock()
+		hide := lock.hideCursor
+		lock.Unlock()
+		if hide && main != 0 {
+			// The locked mouse moves nothing: park the pointer in the
+			// piano's screen and hide it there until Stop, the app now
+			// active as hiding wants. Quitting shows it again.
+			f := objc.Send[nsRect](main, objc.RegisterName("frame"))
+			cgWarpMouseCursorPosition(cgPoint{f.X + f.W/2, f.H / 2})
+			cgDisplayHideCursor(cgMainDisplayID())
+		}
 	})
 }
+
+type cgPoint struct{ X, Y float64 }
 
 // Front brings the piano back in front if the system or another app took
 // it, as a notification or the keyboard setup assistant can.
@@ -372,10 +384,13 @@ var (
 	cgEventKeyboardGetUnicodeString func(event uintptr, max uint64, n *uint64, buf *uint16)
 	cfMachPortCreateRunLoopSource   func(alloc, port uintptr, order int) uintptr
 	cfMachPortInvalidate            func(port uintptr)
-	cfRunLoopGetCurrent             func() uintptr
+	cfRunLoopGetMain                func() uintptr
 	cfRunLoopAddSource              func(loop, source, mode uintptr)
-	cfRunLoopRun                    func()
-	cfRunLoopStop                   func(loop uintptr)
+	cfRunLoopRemoveSource           func(loop, source, mode uintptr)
+	cgMainDisplayID                 func() uint32
+	cgDisplayHideCursor             func(display uint32) int32
+	cgDisplayShowCursor             func(display uint32) int32
+	cgWarpMouseCursorPosition       func(p cgPoint) int32
 	objcAutoreleasePoolPush         func() uintptr
 	objcAutoreleasePoolPop          func(uintptr)
 	dispatchAsyncF                  func(queue, context, fn uintptr)
@@ -412,10 +427,13 @@ func load() {
 		purego.RegisterLibFunc(&cgEventKeyboardGetUnicodeString, appServices, "CGEventKeyboardGetUnicodeString")
 		purego.RegisterLibFunc(&cfMachPortCreateRunLoopSource, coreFoundation, "CFMachPortCreateRunLoopSource")
 		purego.RegisterLibFunc(&cfMachPortInvalidate, coreFoundation, "CFMachPortInvalidate")
-		purego.RegisterLibFunc(&cfRunLoopGetCurrent, coreFoundation, "CFRunLoopGetCurrent")
+		purego.RegisterLibFunc(&cfRunLoopGetMain, coreFoundation, "CFRunLoopGetMain")
 		purego.RegisterLibFunc(&cfRunLoopAddSource, coreFoundation, "CFRunLoopAddSource")
-		purego.RegisterLibFunc(&cfRunLoopRun, coreFoundation, "CFRunLoopRun")
-		purego.RegisterLibFunc(&cfRunLoopStop, coreFoundation, "CFRunLoopStop")
+		purego.RegisterLibFunc(&cfRunLoopRemoveSource, coreFoundation, "CFRunLoopRemoveSource")
+		purego.RegisterLibFunc(&cgMainDisplayID, appServices, "CGMainDisplayID")
+		purego.RegisterLibFunc(&cgDisplayHideCursor, appServices, "CGDisplayHideCursor")
+		purego.RegisterLibFunc(&cgDisplayShowCursor, appServices, "CGDisplayShowCursor")
+		purego.RegisterLibFunc(&cgWarpMouseCursorPosition, appServices, "CGWarpMouseCursorPosition")
 		purego.RegisterLibFunc(&objcAutoreleasePoolPush, libObjc, "objc_autoreleasePoolPush")
 		purego.RegisterLibFunc(&objcAutoreleasePoolPop, libObjc, "objc_autoreleasePoolPop")
 		purego.RegisterLibFunc(&dispatchAsyncF, libSys, "dispatch_async_f")

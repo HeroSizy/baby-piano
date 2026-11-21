@@ -4,11 +4,33 @@ package kiosk
 
 import (
 	"os"
+	"runtime"
 	"testing"
 	"time"
 
 	"github.com/ebitengine/purego"
 )
+
+func init() { runtime.LockOSThread() } // TestMain stays on the main thread
+
+// TestMain serves the main run loop, as the app's AppKit does, while the
+// tests run: the tap's callback runs there.
+func TestMain(m *testing.M) {
+	load()
+	var runInMode func(mode uintptr, seconds float64, returnAfterSource bool) int32
+	purego.RegisterLibFunc(&runInMode, coreFoundation, "CFRunLoopRunInMode")
+	defaultMode := symValue(coreFoundation, "kCFRunLoopDefaultMode")
+	code := make(chan int, 1)
+	go func() { code <- m.Run() }()
+	for {
+		select {
+		case c := <-code:
+			os.Exit(c)
+		default:
+			runInMode(defaultMode, 0.05, false)
+		}
+	}
+}
 
 // TestTapSwallowsKeys locks the real keyboard for under a second, posts a
 // key as the keyboard would and checks the lock heard it. It takes the

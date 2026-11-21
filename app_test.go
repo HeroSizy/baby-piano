@@ -160,6 +160,9 @@ func TestHoldingTheCornerStops(t *testing.T) {
 	// Manual frames, so a step does not wait for the ring to fill.
 	app := start(t, &fakeKiosk{}, nsgotest.Size(400, 800), nsgotest.ManualFrames())
 	app.Press("id:start")
+	if !app.StatusBar.Immersive {
+		t.Error("the piano left the system bars showing")
+	}
 	finger := app.Touch("id:corner", core.Point{X: 45, Y: 45})
 	app.Advance(time.Second)
 	finger.Lift()
@@ -171,6 +174,9 @@ func TestHoldingTheCornerStops(t *testing.T) {
 	finger.Lift()
 	if app.Exists("id:corner") || !app.Exists("id:start") {
 		t.Error("holding the corner did not go back to the setup")
+	}
+	if app.StatusBar.Immersive || app.StatusBar.Hidden {
+		t.Error("the setup kept the system bars hidden")
 	}
 }
 
@@ -201,6 +207,23 @@ func TestFireworksKeepUpWithMashing(t *testing.T) {
 		}
 		if got := total(plays(app)); got != 3*burstSlots {
 			t.Errorf("reduced motion %v: %d notes sounded, want %d", still, got, 3*burstSlots)
+		}
+	}
+}
+
+// TestLockedMouseHidesThePointer hides the pointer over the piano only
+// while the mouse is locked: unlocked, parents need it for the corner.
+func TestLockedMouseHidesThePointer(t *testing.T) {
+	for _, locked := range []bool{false, true} {
+		app := start(t, &fakeKiosk{supported: true}, onMac)
+		app.GrantPermission(core.PermissionAccessibility)
+		app.Advance(time.Second)
+		if locked {
+			app.Press("id:lockMouse")
+		}
+		app.Press("id:start")
+		if hidden := app.Find("id:piano").Style.Cursor == core.CursorNone; hidden != locked {
+			t.Errorf("mouse locked %v: pointer hidden %v", locked, hidden)
 		}
 	}
 }
