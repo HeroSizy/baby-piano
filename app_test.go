@@ -204,3 +204,20 @@ func TestFireworksKeepUpWithMashing(t *testing.T) {
 		}
 	}
 }
+
+// TestLockedMouseHidesThePointer hides the pointer over the piano only
+// while the mouse is locked: unlocked, parents need it for the corner.
+func TestLockedMouseHidesThePointer(t *testing.T) {
+	for _, locked := range []bool{false, true} {
+		app := start(t, &fakeKiosk{supported: true}, onMac)
+		app.GrantPermission(core.PermissionAccessibility)
+		app.Advance(time.Second)
+		if locked {
+			app.Press("id:lockMouse")
+		}
+		app.Press("id:start")
+		if hidden := app.Find("id:piano").Style.Cursor == core.CursorNone; hidden != locked {
+			t.Errorf("mouse locked %v: pointer hidden %v", locked, hidden)
+		}
+	}
+}
