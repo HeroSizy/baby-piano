@@ -44,6 +44,7 @@ jobs:
       HAS_CERT: ${{ secrets.MACOS_CERT_P12 != '' }}
       HAS_NOTARY_KEY: ${{ secrets.APPLE_API_KEY_P8 != '' && secrets.APPLE_API_KEY_ID != '' && secrets.APPLE_API_ISSUER != '' }}
       HAS_NOTARY_PW: ${{ secrets.APPLE_ID != '' && secrets.APPLE_APP_PASSWORD != '' }}
+      HAS_IOS_STORE: ${{ secrets.IOS_DIST_CERT_P12 != '' && secrets.IOS_DIST_CERT_PASSWORD != '' && secrets.IOS_PROFILE != '' && secrets.APPLE_API_KEY_P8 != '' && secrets.APPLE_API_KEY_ID != '' && secrets.APPLE_API_ISSUER != '' }}
       HAS_NOTARY: ${{ (secrets.APPLE_API_KEY_P8 != '' && secrets.APPLE_API_KEY_ID != '' && secrets.APPLE_API_ISSUER != '') || (secrets.APPLE_ID != '' && secrets.APPLE_APP_PASSWORD != '') }}
     steps:
       - uses: actions/checkout@v4
@@ -134,6 +135,48 @@ jobs:
           env -u NSGO_NOTARY_KEY go tool nsgo build -version "${{ steps.ver.outputs.version }}" -target ios -installers=false
           ls -la dist/releases
 
+      # ---- App Store (optional, releases only): sign the iPhone/iPad package and upload it ----
+      # Only uploads the build to App Store Connect; submitting it for review stays a manual step.
+      - name: iOS App Store build and upload
+        if: env.HAS_IOS_STORE == 'true' && steps.ver.outputs.release == 'true'
+        env:
+          IOS_DIST_CERT_P12: ${{ secrets.IOS_DIST_CERT_P12 }}
+          IOS_DIST_CERT_PASSWORD: ${{ secrets.IOS_DIST_CERT_PASSWORD }}
+          IOS_PROFILE: ${{ secrets.IOS_PROFILE }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+        run: |
+          # A keychain of its own for the Apple Distribution certificate, unlocked for codesign with no prompt.
+          KEYCHAIN="$RUNNER_TEMP/store.keychain-db"
+          KEYCHAIN_PW="$(uuidgen)"
+          echo "$IOS_DIST_CERT_P12" | base64 --decode > "$RUNNER_TEMP/dist.p12"
+          security create-keychain -p "$KEYCHAIN_PW" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PW" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/dist.p12" -P "$IOS_DIST_CERT_PASSWORD" -f pkcs12 -k "$KEYCHAIN" -T /usr/bin/codesign
+          rm "$RUNNER_TEMP/dist.p12"
+          curl -fsSL https://www.apple.com/certificateauthority/AppleWWDRCAG3.cer -o "$RUNNER_TEMP/AppleWWDRCAG3.cer"
+          security import "$RUNNER_TEMP/AppleWWDRCAG3.cer" -k "$KEYCHAIN" || true
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PW" "$KEYCHAIN"
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+
+          # The App Store provisioning profile; NSGo embeds it and signs with the keychain's matching identity.
+          PROFILE="$RUNNER_TEMP/MashPiano_AppStore.mobileprovision"
+          echo "$IOS_PROFILE" | base64 --decode > "$PROFILE"
+
+          # Each upload needs a build number above the last one; the workflow run number always grows.
+          env -u NSGO_NOTARY_KEY go tool nsgo build -version "${{ steps.ver.outputs.version }}" \
+            -build-number "$((GITHUB_RUN_NUMBER + 100))" -target ios -profile "$PROFILE"
+          IPA=$(ls dist/releases/*-ios.ipa | head -1)
+          test -n "$IPA"
+
+          # altool finds the API key as private_keys/AuthKey_<KEY ID>.p8.
+          mkdir -p ~/.appstoreconnect/private_keys
+          printf '%s\n' "$APPLE_API_KEY_P8" > ~/.appstoreconnect/private_keys/AuthKey_${APPLE_API_KEY_ID}.p8
+          xcrun altool --upload-app -t ios -f "$IPA" --apiKey "$APPLE_API_KEY_ID" --apiIssuer "$APPLE_API_ISSUER"
+          rm -f ~/.appstoreconnect/private_keys/AuthKey_${APPLE_API_KEY_ID}.p8 "$PROFILE"
+
       - uses: actions/upload-artifact@v4
         with:
           name: BabyPiano-${{ steps.ver.outputs.version }}
@@ -158,7 +201,7 @@ jobs:
             - **Mac**: `macos-arm64.dmg` (Apple silicon) or `macos-x64.dmg` (Intel). Open it and drag Mash Piano into Applications.
             - **Windows**: `windows-x64-setup.exe` (most PCs) or `windows-arm64-setup.exe` (ARM PCs).
             - **Android phones and tablets**: `android-arm64.apk`.
-            - **iPhone / iPad**: build and install with Xcode; see docs/DEVELOPMENT.md.
+            - **iPhone / iPad**: on the App Store (search for Mash Piano).
 
             Mac signing: ${{ env.HAS_CERT == 'true' && (env.HAS_NOTARY == 'true' && 'signed with a Developer ID and notarized by Apple, so it opens with a double-click.' || 'signed with a Developer ID, not notarized.') || 'ad-hoc signed. The first launch says the developer cannot be verified: open System Settings › Privacy & Security and choose Open Anyway.' }}
 
