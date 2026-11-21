@@ -1,0 +1,92 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-latest
+    env:
+      HAS_CERT: ${{ secrets.MACOS_CERT_P12 != '' }}
+      HAS_NOTARY: ${{ secrets.APPLE_ID != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version
+        id: ver
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=0.0.0-dev.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ---- 正式签名（可选）：仓库 Secrets 里配置了 Developer ID 证书才会执行 ----
+      - name: Import Developer ID certificate
+        if: env.HAS_CERT == 'true'
+        env:
+          MACOS_CERT_P12: ${{ secrets.MACOS_CERT_P12 }}
+          MACOS_CERT_PASSWORD: ${{ secrets.MACOS_CERT_PASSWORD }}
+        run: |
+          KEYCHAIN="$RUNNER_TEMP/build.keychain-db"
+          KEYCHAIN_PW="$(uuidgen)"
+          echo "$MACOS_CERT_P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security create-keychain -p "$KEYCHAIN_PW" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PW" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/cert.p12" -P "$MACOS_CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PW" "$KEYCHAIN"
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          IDENTITY=$(security find-identity -v -p codesigning "$KEYCHAIN" | grep "Developer ID Application" | head -1 | sed -E 's/.*"(.*)"/\1/')
+          echo "SIGN_IDENTITY=$IDENTITY" >> "$GITHUB_ENV"
+          rm "$RUNNER_TEMP/cert.p12"
+
+      - name: Build (universal)
+        env:
+          UNIVERSAL: "1"
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: bash build.sh
+
+      - name: Package
+        run: |
+          ZIP="BabyPiano-${{ steps.ver.outputs.version }}-macOS.zip"
+          ditto -c -k --sequesterRsrc --keepParent "宝宝钢琴.app" "$ZIP"
+          echo "ZIP=$ZIP" >> "$GITHUB_ENV"
+
+      # ---- 公证（可选）：需要正式证书 + Apple ID 应用专用密码 ----
+      - name: Notarize
+        if: env.HAS_CERT == 'true' && env.HAS_NOTARY == 'true'
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          xcrun notarytool submit "$ZIP" --apple-id "$APPLE_ID" --password "$APPLE_APP_PASSWORD" --team-id "$APPLE_TEAM_ID" --wait
+          xcrun stapler staple "宝宝钢琴.app"
+          rm "$ZIP"
+          ditto -c -k --sequesterRsrc --keepParent "宝宝钢琴.app" "$ZIP"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BabyPiano-macOS
+          path: ${{ env.ZIP }}
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ZIP }}
+          body: |
+            ## 下载
+            下载下面的 `${{ env.ZIP }}`，解压得到「宝宝钢琴.app」，拖进「应用程序」文件夹。
+
+            签名方式：${{ env.HAS_CERT == 'true' && (env.HAS_NOTARY == 'true' && 'Developer ID 签名 + Apple 公证，双击即可打开。' || 'Developer ID 签名（未公证）。') || '本机自签名（ad-hoc）。第一次打开会提示“无法验证开发者”，请看 README 里的“第一次打开”。' }}
+
+            使用说明见 [README](https://github.com/${{ github.repository }}#readme)。

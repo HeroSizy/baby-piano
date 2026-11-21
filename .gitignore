@@ -1,0 +1,4 @@
+宝宝钢琴.app/
+build/
+*.zip
+.DS_Store
