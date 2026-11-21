@@ -29,6 +29,12 @@ enum Settings {
     static let maxSystemVolume: Float = 0.5
 
     /// 宝宝一般看不到屏幕，默认不显示动画（纯黑屏，省电也不分散注意）
+    /// 同时锁住鼠标和触控板（笔记本推荐打开；打开后只能用键盘暗号退出）
+    static var lockMouse: Bool {
+        get { UserDefaults.standard.bool(forKey: "lockMouse") }
+        set { UserDefaults.standard.set(newValue, forKey: "lockMouse") }
+    }
+
     static var showVisuals: Bool {
         get { UserDefaults.standard.bool(forKey: "showVisuals") }
         set { UserDefaults.standard.set(newValue, forKey: "showVisuals") }
@@ -278,7 +284,7 @@ final class KeyboardLock {
 
     var isActive: Bool { tap != nil }
 
-    func start() -> Bool {
+    func start(lockMouse: Bool) -> Bool {
         if tap != nil { return true }
 
         var mask: CGEventMask = 0
@@ -286,6 +292,13 @@ final class KeyboardLock {
         // 18/19/20/29/30/31/32 触控板手势（防止三指/四指滑动切桌面、调度中心）
         for raw in [10, 11, 12, 14, 18, 19, 20, 29, 30, 31, 32] as [UInt64] {
             mask |= (1 << raw)
+        }
+        if lockMouse {
+            // 1-4 左右键按下/松开, 5 移动, 6/7 拖拽, 22 滚动, 25-27 其他按键
+            // 吞掉后光标不动、点击无效，触发角和触控板滑动都不会触发
+            for raw in [1, 2, 3, 4, 5, 6, 7, 22, 25, 26, 27] as [UInt64] {
+                mask |= (1 << raw)
+            }
         }
 
         guard let t = CGEvent.tapCreate(
@@ -336,7 +349,7 @@ final class KeyboardLock {
             if isDown && !isRepeat { fire(200 + keyCode, nil) }
 
         default:
-            break // keyUp、手势：直接吞掉
+            break // keyUp、手势、（锁鼠标时的）鼠标事件：直接吞掉
         }
     }
 
@@ -611,13 +624,17 @@ final class SetupController: NSObject {
                                   target: self, action: #selector(visualsToggled(_:)))
         visualsBox.state = Settings.showVisuals ? .on : .off
 
+        let mouseBox = NSButton(checkboxWithTitle: "同时锁住鼠标和触控板（笔记本推荐；打开后只能用键盘输入 quitpiano 退出）",
+                                target: self, action: #selector(mouseLockToggled(_:)))
+        mouseBox.state = Settings.lockMouse ? .on : .off
+
         startButton.target = self
         startButton.action = #selector(startPressed)
         startButton.bezelStyle = .rounded
         startButton.controlSize = .large
         startButton.keyEquivalent = "\r"
 
-        let stack = NSStackView(views: [title, desc, exitTip, statusLabel, openSettingsButton, volLabel, volRow, systemVolumeLabel, visualsBox, startButton])
+        let stack = NSStackView(views: [title, desc, exitTip, statusLabel, openSettingsButton, volLabel, volRow, systemVolumeLabel, mouseBox, visualsBox, startButton])
         stack.orientation = .vertical
         stack.alignment = .leading
         stack.spacing = 12
@@ -695,6 +712,10 @@ final class SetupController: NSObject {
 
     @objc private func volumeChanged(_ sender: NSSlider) {
         sound.setVolume(Float(sender.doubleValue))
+    }
+
+    @objc private func mouseLockToggled(_ sender: NSButton) {
+        Settings.lockMouse = (sender.state == .on)
     }
 
     @objc private func visualsToggled(_ sender: NSButton) {
@@ -775,7 +796,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             alert.runModal()
             return
         }
-        guard KeyboardLock.shared.start() else {
+        guard KeyboardLock.shared.start(lockMouse: Settings.lockMouse) else {
             let alert = NSAlert()
             alert.messageText = "无法锁定键盘"
             alert.informativeText = "请确认已在 系统设置 › 隐私与安全性 › 辅助功能 中打开“宝宝钢琴”。如果刚重新编译过，请先把旧的条目删掉（−），再重新添加。"
@@ -854,6 +875,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func watchdogTick() {
         SystemVolume.enforceCap()
+        if IsSecureEventInputEnabled() == true {
+            // 运行中有程序开启了安全输入：拦截暂时收不到按键，
+            // 此时靠窗口兜底吞键（只要本程序在前台），并尽快抢回前台。
+            NSLog("BabyPiano: secure event input became enabled while playing")
+        }
         if let t = KeyboardLock.shared.tap, !CGEvent.tapIsEnabled(tap: t) {
             CGEvent.tapEnable(tap: t, enable: true)
         }
