@@ -2,7 +2,7 @@
 
 给小宝宝用的钢琴：宝宝怎么乱按，都只会弹出好听的钢琴声。电脑上 **不会退出、切走程序或触发系统快捷键**；手机和平板上是一排排大大的彩色琴键。
 
-支持 **Mac、Windows、iPhone、iPad、Android**，用 Go 和 [NSGo](https://github.com/nsgo-dev/nsgo) 写成，一份代码。旧的 Swift 版本留在 [`legacy/macos-swift`](legacy/macos-swift)。
+支持 **Mac、Windows、iPhone、iPad、Android**。到 [Releases](../../releases/latest) 下载安装包。
 
 ## 它能做什么
 
@@ -30,7 +30,6 @@
 - 弹琴时 Dock、菜单栏、Cmd+Tab、调度中心、触控板手势、媒体键都被拦下；多个显示器时其他屏幕盖上黑色窗口。
 - **拦不住的**：电源键 / Touch ID 键、合上屏幕、旧款 Touch Bar 上的按钮。其他程序开启了“安全键盘输入”（终端、密码框）时键盘锁不住，程序会提示。
 - 万一程序卡住：按 **Cmd+Option+Esc** 强制退出。
-- 如果 Release 说明写的是“本机自签名”，第一次打开会提示“无法验证开发者”：到 系统设置 › 隐私与安全性 最下面点“仍要打开”。
 
 ### Windows
 
@@ -45,40 +44,8 @@
 - **iPhone / iPad**：想让宝宝出不去，打开“引导式访问”：设置 › 辅助功能 › 引导式访问，弹琴时连按三下侧边按钮。
 - **Android**：下载 `.apk` 安装。想让宝宝出不去，打开“应用固定”：设置 › 安全 › 应用固定，然后在最近任务里固定“宝宝钢琴”。
 
-## 自己编译
-
-需要 Go（版本见 `.mise.toml`）。
-
-```bash
-go tool nsgo dev                                 # 在本机运行
-go tool nsgo test ./...                          # 测试
-go tool nsgo build -target macos_arm64           # Mac
-go tool nsgo build -target windows_x64           # Windows（在 Mac 上也能编译）
-go tool nsgo build -target android_arm64         # Android
-go tool nsgo build -target ios                   # iPhone / iPad（需要 Xcode）
-```
-
-采样从 Salamander Grand Piano 的 FLAC 重新生成：`tools/make-samples.sh <salamander 目录>`（需要 ffmpeg）。
-
-## 发布与签名（维护者）
-
-GitHub Actions 自动发版：把 `nsgo.yaml` 里的 `version` 改成新版本号（比如 `1.0.1`），合并进 `main`，就会编译所有平台、打上 `v1.0.1` 标签并发布 Release，附上 Mac、Windows、Android 安装包。版本号已经有标签时只编译、不发版；手动推送 `v*` 标签也照样发版。
-
-Mac 的签名和公证用仓库 Secrets：
-
-| Secret | 内容 |
-|---|---|
-| `MACOS_CERT_P12` | “Developer ID Application” 证书导出的 .p12，做 base64 |
-| `MACOS_CERT_PASSWORD` | 导出 .p12 时设的密码 |
-| `APPLE_API_KEY_P8` | App Store Connect API 密钥的 .p8 文件内容（公证用，首选） |
-| `APPLE_API_KEY_ID` | 该密钥的 Key ID |
-| `APPLE_API_ISSUER` | 该密钥的 Issuer ID |
-| `APPLE_ID` | Apple 开发者账号邮箱（公证的另一种方式） |
-| `APPLE_APP_PASSWORD` | 在 account.apple.com 生成的“App 专用密码” |
-| `APPLE_TEAM_ID` | 10 位 Team ID（可选，默认 HK2CBGL2Q2，仅 Apple ID 方式用） |
-
-只配前两个 = 正式签名但不公证；再配三个 `APPLE_API_*`（或者 `APPLE_ID` 和 `APPLE_APP_PASSWORD`）= 签名 + 公证。两种都配时用 API 密钥。
-
 ## 致谢
 
 钢琴采样：[Salamander Grand Piano V3](https://archive.org/details/SalamanderGrandPianoV3) by Alexander Holm，[CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)。`sound/notes` 里的文件经过裁剪、淡出和音量统一。
+
+想自己编译或参与开发，见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)。
