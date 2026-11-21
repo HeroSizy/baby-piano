@@ -4,13 +4,19 @@
 
 支持 **Mac、Windows、iPhone、iPad、Android**。到 [Releases](../../releases/latest) 下载安装包。
 
+<p align="center">
+  <img src="docs/screenshots/setup.png" alt="设置页：调音量、试听、开始弹琴" height="360">
+  <img src="docs/screenshots/play.png" alt="弹琴时每个音放一朵彩色烟花" height="360">
+  <img src="docs/screenshots/touch.png" alt="手机和平板上的彩色琴键" height="360">
+</p>
+
 ## 它能做什么
 
 - **乱按也好听**：所有音都在 C 大调五声音阶里（C D E G A），从 C1 到 C8 共 36 个音，任意组合都和谐。
 - **整块键盘都能弹**：字母、数字、符号、F1–F12、方向键、小键盘、Ctrl/Alt/Cmd/Shift……每个键都有自己的音。键盘每往上一排高一个八度，同一排从左到右越来越高；同一个键永远是同一个音。
 - **真钢琴音色**：Salamander Grand Piano 采样（雅马哈 C5 三角钢琴）。
 - **保护耳朵**：高音自动更轻；一巴掌按下十几个键只会响几个；弹琴时电脑系统音量最高 50%，中途连上蓝牙音箱/耳机也会自动压回去。
-- **默认黑屏**：宝宝只听声音；想要的话可以勾选“彩色圆圈”。
+- **默认黑屏**：宝宝只听声音；想要的话可以勾选“按键时放彩色烟花”，每个音都会炸开一朵跟音高同色的烟花。
 - 玩的时候屏幕不熄灭、电脑不休眠。
 
 ## 电脑（Mac、Windows）
