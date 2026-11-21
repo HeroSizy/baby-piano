@@ -1,28 +1,19 @@
-# 🎹 宝宝钢琴 BabyPiano（macOS）
+# 🎹 宝宝钢琴 BabyPiano
 
-给小宝宝用的“键盘钢琴”：宝宝怎么乱按键盘，都只会弹出好听的钢琴声，**不会退出、切走程序或触发系统快捷键**。
+给小宝宝用的钢琴：宝宝怎么乱按，都只会弹出好听的钢琴声。电脑上 **不会退出、切走程序或触发系统快捷键**；手机和平板上是一排排大大的彩色琴键。
+
+支持 **Mac、Windows、iPhone、iPad、Android**，用 Go 和 [NSGo](https://github.com/nsgo-dev/nsgo) 写成，一份代码。旧的 Swift 版本留在 [`legacy/macos-swift`](legacy/macos-swift)。
 
 ## 它能做什么
 
-- **整块键盘被接管**：字母、数字、空格、Cmd/Ctrl/Option/Shift/Fn、F1–F12、音量/亮度键、Cmd+Q、Cmd+Tab、Cmd+Space、调度中心、截屏快捷键……全部被拦下，只用来弹琴。
-- **乱按也好听**：所有音都在 C 大调五声音阶里（C D E G A），任意组合都和谐。同一个键永远是同一个音，左边低、右边高。
-- **真钢琴音色**：使用 macOS 自带的大钢琴采样。
-- **保护耳朵**：力度适中，带限幅器；一巴掌按下十几个键会自动限流（约每秒 12 个音）。弹琴时 **Mac 系统音量最高 50%**，中途连上蓝牙音箱/耳机也会自动压回去。
-- **默认黑屏**：宝宝只听声音，不需要看屏幕；想要的话可以在设置页勾选“彩色动画”。
-- 玩的时候屏幕不熄灭、电脑不休眠（熄屏后会进入锁屏，锁屏密码框任何程序都拦不住）。
+- **乱按也好听**：所有音都在 C 大调五声音阶里（C D E G A），从 C1 到 C8 共 36 个音，任意组合都和谐。
+- **整块键盘都能弹**：字母、数字、符号、F1–F12、方向键、小键盘、Ctrl/Alt/Cmd/Shift……每个键都有自己的音。键盘每往上一排高一个八度，同一排从左到右越来越高；同一个键永远是同一个音。
+- **真钢琴音色**：Salamander Grand Piano 采样（雅马哈 C5 三角钢琴）。
+- **保护耳朵**：高音自动更轻；一巴掌按下十几个键只会响几个；弹琴时电脑系统音量最高 50%，中途连上蓝牙音箱/耳机也会自动压回去。
+- **默认黑屏**：宝宝只听声音；想要的话可以勾选“彩色圆圈”。
+- 玩的时候屏幕不熄灭、电脑不休眠。
 
-## 下载安装
-
-1. 到 [Releases](../../releases/latest) 下载 `BabyPiano-x.y.z-macOS.zip`，解压得到 **宝宝钢琴.app**，拖进“应用程序”文件夹。
-2. **第一次打开**（仅当 Release 说明写的是“本机自签名 ad-hoc”时需要）：
-   - 双击会提示“无法验证开发者”，点“完成/取消”；
-   - 打开 系统设置 › 隐私与安全性，拉到最下面，点“仍要打开”，再确认一次。
-   - 或者在终端运行：`xattr -dr com.apple.quarantine /Applications/宝宝钢琴.app`
-3. 打开后按提示授予 **辅助功能** 权限：系统设置 › 隐私与安全性 › 辅助功能，打开“宝宝钢琴”的开关。设置页的状态会自动变绿。
-
-> 为什么要这个权限？拦截 Cmd+Q、Cmd+Tab 这类系统快捷键，macOS 只允许有“辅助功能”权限的程序做。本程序不联网，也不记录任何按键。
-
-## 使用
+## 电脑（Mac、Windows）
 
 1. 打开 **宝宝钢琴**，先用滑块调好音量，点 **试听**（开始后键盘上的音量键会被锁住）。
 2. 点 **开始弹琴（全屏锁定键盘）**，把键盘交给宝宝。
@@ -30,41 +21,59 @@
    - 用鼠标在屏幕 **右上角** 按住不放 **3 秒**（勾选了“锁住鼠标”时不可用）；
    - 或在键盘上连续输入 **`quitpiano`**（字母之间停顿不超过 3 秒）。
 
-## 注意事项
+笔记本建议勾选 **“同时锁住鼠标和触控板”**：光标不动、点击无效，退出只能输入 `quitpiano`。
 
-- **拦不住的**：
-  - 电源键 / Touch ID 键：短按会锁屏，长按强制关机；合上笔记本屏幕。
-  - 旧款 MacBook Pro 的触控栏（Touch Bar）上的音量、亮度按钮。
-  - 系统“辅助功能”快捷键：如开启了“连按 5 次 Shift 打开粘滞键”，宝宝可能触发。可在 系统设置 › 辅助功能 › 键盘 里关掉。
-  - 🌐/Fn 键：单按可能切换输入法或弹出表情面板。可在 系统设置 › 键盘 里把“按下 🌐 键时”设为“无操作”。
-  - Caps Lock：按键本身被吞掉，但大写锁定灯和状态在系统更底层切换。如果设置了“用大写锁定键切换输入法”，玩完后检查一下输入法。
-- **鼠标/触控板**：默认不锁（家长可以用鼠标退出）。笔记本建议在设置页勾选 **“同时锁住鼠标和触控板”**，这样光标不会动、点击无效、触发角也不会触发，退出只能用键盘输入 `quitpiano`。不锁的话，建议在 系统设置 › 桌面与程序坞 › 触发角 里把触发角都关掉。
-- **安全键盘输入**：如果其他程序开启了安全键盘输入（终端的“安全键盘输入”、密码框等），键盘锁不住，程序会提示你先关闭。
-- **万一程序卡住**：几秒后系统会停用拦截，键盘恢复，这时按 **Cmd+Option+Esc** 强制退出即可。
-- **不要在弹琴时**去系统设置里关掉“辅助功能”权限，这可能让键盘鼠标暂时卡住。
-- 有多个显示器时，其他屏幕会盖上黑色窗口。
-- **更新版本后**：签名变了的话，需要在“辅助功能”里先删掉旧的“宝宝钢琴”（选中按 −），再重新添加。
-- **换音色（可选）**：把任意 `.sf2` 音色文件放到 `~/Music/BabyPiano.sf2`，会优先使用它的第一个音色。
+### Mac
+
+- 下载 `macos-arm64.dmg`（Apple 芯片）或 `macos-x64.dmg`（Intel），把「宝宝钢琴」拖进「应用程序」。
+- 第一次使用要授予 **辅助功能** 权限（系统设置 › 隐私与安全性 › 辅助功能 › 打开“宝宝钢琴”）。拦截 Cmd+Q、Cmd+Tab 这类系统快捷键，macOS 只允许有这个权限的程序做。本程序不联网，也不记录任何按键。
+- 弹琴时 Dock、菜单栏、Cmd+Tab、调度中心、触控板手势、媒体键都被拦下；多个显示器时其他屏幕盖上黑色窗口。
+- **拦不住的**：电源键 / Touch ID 键、合上屏幕、旧款 Touch Bar 上的按钮。其他程序开启了“安全键盘输入”（终端、密码框）时键盘锁不住，程序会提示。
+- 万一程序卡住：按 **Cmd+Option+Esc** 强制退出。
+- 如果 Release 说明写的是“本机自签名”，第一次打开会提示“无法验证开发者”：到 系统设置 › 隐私与安全性 最下面点“仍要打开”。
+
+### Windows
+
+- 下载 `windows-x64-setup.exe`（大多数电脑）或 `windows-arm64-setup.exe`（ARM 电脑）安装。不需要管理员权限。
+- 弹琴时 Win 键、Alt+Tab、Alt+F4、媒体键都被拦下；连按 5 次 Shift 之类的辅助功能快捷键和 **Win+L 锁屏** 会暂时关掉，退出后（即使程序意外退出，下次打开时）自动恢复。
+- **拦不住的**：Ctrl+Alt+Del（任何程序都拦不住）、电源键、合上屏幕。
+
+## 手机和平板（iPhone、iPad、Android）
+
+大大的彩色琴键，宝宝每根手指都能弹（可以多指同时弹）。家长在右上角按住 3 秒回到设置页。
+
+- **iPhone / iPad**：想让宝宝出不去，打开“引导式访问”：设置 › 辅助功能 › 引导式访问，弹琴时连按三下侧边按钮。
+- **Android**：下载 `.apk` 安装。想让宝宝出不去，打开“应用固定”：设置 › 安全 › 应用固定，然后在最近任务里固定“宝宝钢琴”。
 
 ## 自己编译
 
+需要 Go（版本见 `.mise.toml`）。
+
 ```bash
-xcode-select --install   # 第一次需要
-bash build.sh            # 生成 宝宝钢琴.app（本机自签名）
+go tool nsgo dev                                 # 在本机运行
+go tool nsgo test ./...                          # 测试
+go tool nsgo build -target macos_arm64           # Mac
+go tool nsgo build -target windows_x64           # Windows（在 Mac 上也能编译）
+go tool nsgo build -target android_arm64         # Android
+go tool nsgo build -target ios                   # iPhone / iPad（需要 Xcode）
 ```
+
+采样从 Salamander Grand Piano 的 FLAC 重新生成：`tools/make-samples.sh <salamander 目录>`（需要 ffmpeg）。
 
 ## 发布与签名（维护者）
 
-推送 `v*` 标签（如 `git tag v1.0.0 && git push --tags`）会由 GitHub Actions 在 macOS 上编译通用版（Apple 芯片 + Intel）并发布 Release。
-
-默认是 ad-hoc 自签名。如需 **Developer ID 签名 + 苹果公证**（下载后双击直接打开，不再有警告），在仓库 Settings › Secrets and variables › Actions 中添加：
+推送 `v*` 标签会由 GitHub Actions 编译所有平台并发布 Release。Mac 的签名和公证用仓库 Secrets：
 
 | Secret | 内容 |
 |---|---|
-| `MACOS_CERT_P12` | “Developer ID Application” 证书导出的 .p12，做 base64：`base64 -i cert.p12 \| pbcopy` |
+| `MACOS_CERT_P12` | “Developer ID Application” 证书导出的 .p12，做 base64 |
 | `MACOS_CERT_PASSWORD` | 导出 .p12 时设的密码 |
-| `APPLE_ID` | Apple 开发者账号邮箱 |
-| `APPLE_APP_PASSWORD` | 在 appleid.apple.com 生成的“App 专用密码” |
+| `APPLE_ID` | Apple 开发者账号邮箱（公证用） |
+| `APPLE_APP_PASSWORD` | 在 appleid.apple.com 生成的“App 专用密码”（公证用） |
 | `APPLE_TEAM_ID` | 10 位 Team ID（可选，默认 HK2CBGL2Q2） |
 
-只配前两个 = 正式签名但不公证；再配 `APPLE_ID` 和 `APPLE_APP_PASSWORD` = 签名 + 公证。配好后重新打一个标签即可。
+只配前两个 = 正式签名但不公证；再配 `APPLE_ID` 和 `APPLE_APP_PASSWORD` = 签名 + 公证。
+
+## 致谢
+
+钢琴采样：[Salamander Grand Piano V3](https://archive.org/details/SalamanderGrandPianoV3) by Alexander Holm，[CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)。`sound/notes` 里的文件经过裁剪、淡出和音量统一。
