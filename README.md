@@ -70,11 +70,14 @@ Mac 的签名和公证用仓库 Secrets：
 |---|---|
 | `MACOS_CERT_P12` | “Developer ID Application” 证书导出的 .p12，做 base64 |
 | `MACOS_CERT_PASSWORD` | 导出 .p12 时设的密码 |
-| `APPLE_ID` | Apple 开发者账号邮箱（公证用） |
-| `APPLE_APP_PASSWORD` | 在 appleid.apple.com 生成的“App 专用密码”（公证用） |
-| `APPLE_TEAM_ID` | 10 位 Team ID（可选，默认 HK2CBGL2Q2） |
+| `APPLE_API_KEY_P8` | App Store Connect API 密钥的 .p8 文件内容（公证用，首选） |
+| `APPLE_API_KEY_ID` | 该密钥的 Key ID |
+| `APPLE_API_ISSUER` | 该密钥的 Issuer ID |
+| `APPLE_ID` | Apple 开发者账号邮箱（公证的另一种方式） |
+| `APPLE_APP_PASSWORD` | 在 account.apple.com 生成的“App 专用密码” |
+| `APPLE_TEAM_ID` | 10 位 Team ID（可选，默认 HK2CBGL2Q2，仅 Apple ID 方式用） |
 
-只配前两个 = 正式签名但不公证；再配 `APPLE_ID` 和 `APPLE_APP_PASSWORD` = 签名 + 公证。
+只配前两个 = 正式签名但不公证；再配三个 `APPLE_API_*`（或者 `APPLE_ID` 和 `APPLE_APP_PASSWORD`）= 签名 + 公证。两种都配时用 API 密钥。
 
 ## 致谢
 
