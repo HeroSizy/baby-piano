@@ -42,7 +42,9 @@ jobs:
       contents: write # 发版时建标签和 Release
     env:
       HAS_CERT: ${{ secrets.MACOS_CERT_P12 != '' }}
-      HAS_NOTARY: ${{ secrets.APPLE_ID != '' && secrets.APPLE_APP_PASSWORD != '' }}
+      HAS_NOTARY_KEY: ${{ secrets.APPLE_API_KEY_P8 != '' && secrets.APPLE_API_KEY_ID != '' && secrets.APPLE_API_ISSUER != '' }}
+      HAS_NOTARY_PW: ${{ secrets.APPLE_ID != '' && secrets.APPLE_APP_PASSWORD != '' }}
+      HAS_NOTARY: ${{ (secrets.APPLE_API_KEY_P8 != '' && secrets.APPLE_API_KEY_ID != '' && secrets.APPLE_API_ISSUER != '') || (secrets.APPLE_ID != '' && secrets.APPLE_APP_PASSWORD != '') }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -93,9 +95,26 @@ jobs:
           echo "SIGN_ARGS=-sign $IDENTITY" >> "$GITHUB_ENV"
           rm "$RUNNER_TEMP/cert.p12"
 
-      # ---- 公证（可选，仅发版时）：需要正式证书 + Apple ID 应用专用密码 ----
-      - name: Notary profile
-        if: env.HAS_CERT == 'true' && env.HAS_NOTARY == 'true' && steps.ver.outputs.release == 'true'
+      # ---- 公证（可选，仅发版时）：需要正式证书，再加下面两种凭证之一 ----
+      # 首选 App Store Connect API 密钥（不涉及密码）；没有的话用 Apple ID + App 专用密码。
+      - name: Notary key (App Store Connect API key)
+        if: env.HAS_CERT == 'true' && env.HAS_NOTARY_KEY == 'true' && steps.ver.outputs.release == 'true'
+        env:
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+        run: |
+          # NSGo 自带公证：有这三个环境变量，nsgo build 就会提交、等待结果并装订票据。
+          KEY="$RUNNER_TEMP/AuthKey.p8"
+          printf '%s\n' "$APPLE_API_KEY_P8" > "$KEY"
+          {
+            echo "NSGO_NOTARY_KEY=$KEY"
+            echo "NSGO_NOTARY_KEY_ID=$APPLE_API_KEY_ID"
+            echo "NSGO_NOTARY_ISSUER=$APPLE_API_ISSUER"
+          } >> "$GITHUB_ENV"
+
+      - name: Notary profile (Apple ID)
+        if: env.HAS_CERT == 'true' && env.HAS_NOTARY_KEY != 'true' && env.HAS_NOTARY_PW == 'true' && steps.ver.outputs.release == 'true'
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
