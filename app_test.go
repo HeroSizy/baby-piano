@@ -183,3 +183,24 @@ func TestScreens(t *testing.T) {
 	app.Screenshot("setup-computer")
 	t.Logf("status: %q", app.Find("id:status").Text)
 }
+
+// TestFireworksKeepUpWithMashing plays more notes than the effects' pools
+// hold, with and without reduced motion: every note still sounds as the
+// oldest firework is reused.
+func TestFireworksKeepUpWithMashing(t *testing.T) {
+	for _, still := range []bool{false, true} {
+		k := &fakeKiosk{supported: true}
+		app := start(t, k, nsgotest.Environment(core.Environment{Audio: true, OS: core.OSMacOS, Idiom: core.IdiomDesktop, ReduceMotion: still}))
+		app.GrantPermission(core.PermissionAccessibility)
+		app.Advance(time.Second)
+		app.Press("id:visuals")
+		app.Press("id:start")
+		for i := range 3 * burstSlots {
+			k.onKey(kiosk.Key{Name: string(rune('a' + i%26))})
+			app.Advance(100 * time.Millisecond)
+		}
+		if got := total(plays(app)); got != 3*burstSlots {
+			t.Errorf("reduced motion %v: %d notes sounded, want %d", still, got, 3*burstSlots)
+		}
+	}
+}
