@@ -34,6 +34,12 @@ Mac signing and notarization use repository secrets:
 | `APPLE_APP_PASSWORD` | An app-specific password created at account.apple.com |
 | `APPLE_TEAM_ID` | The 10-character Team ID (optional, defaults to HK2CBGL2Q2; Apple ID route only) |
 
+| `IOS_DIST_CERT_P12` | The "Apple Distribution" certificate exported as .p12, base64-encoded (App Store builds) |
+| `IOS_DIST_CERT_PASSWORD` | The password set when exporting that .p12 |
+| `IOS_PROFILE` | The App Store provisioning profile for dev.herosizy.babypiano, base64-encoded |
+
 With only the first two, the app is signed but not notarized. Adding the three `APPLE_API_*` secrets (or `APPLE_ID` and `APPLE_APP_PASSWORD`) signs and notarizes it. When both kinds are set, the API key is used.
+
+With the three `IOS_*` secrets and the `APPLE_API_*` key, every release also signs the iPhone/iPad package for the App Store and uploads it to App Store Connect. Submitting the build for review is still done by hand in App Store Connect.
 
 The samples' source and license are in the [README's credits](../README.md#credits).
