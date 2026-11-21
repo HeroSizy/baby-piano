@@ -130,7 +130,8 @@ jobs:
         run: |
           go tool nsgo build -version "${{ steps.ver.outputs.version }}" \
             -target macos_arm64,macos_x64,windows_x64,windows_arm64,android_arm64 $SIGN_ARGS
-          go tool nsgo build -version "${{ steps.ver.outputs.version }}" -target ios -installers=false
+          # 公证只针对 Mac；NSGo 看到 NSGO_NOTARY_KEY 就会要求 Developer ID，iOS 这一步要去掉它。
+          env -u NSGO_NOTARY_KEY go tool nsgo build -version "${{ steps.ver.outputs.version }}" -target ios -installers=false
           ls -la dist/releases
 
       - uses: actions/upload-artifact@v4
