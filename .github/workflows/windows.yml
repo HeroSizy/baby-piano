@@ -1,0 +1,97 @@
+name: Windows Build & Release
+
+# Windows 版单独一个工作流，不影响 macOS 的 Build & Release。
+# 推 v* 标签时：编译 → 等 macOS 工作流建好同名 Release → 把 Windows 包传上去并补一段说明。
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "把 Windows 包补传到已有的 Release（例如 v1.0.0）；留空只编译"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version
+        id: ver
+        run: |
+          TAG="${{ github.event.inputs.release_tag }}"
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then TAG="$GITHUB_REF_NAME"; fi
+          if [[ -n "$TAG" ]]; then
+            VERSION="${TAG#v}"
+          else
+            VERSION="0.0.0-dev.${GITHUB_RUN_NUMBER}"
+          fi
+          # 程序集版本只能是数字：去掉 -dev.N 之类的后缀
+          NUMERIC="${VERSION%%-*}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "numeric=$NUMERIC" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        run: >
+          dotnet build windows/BabyPiano.csproj -c Release
+          -p:Version=${{ steps.ver.outputs.numeric }}
+          -p:InformationalVersion=${{ steps.ver.outputs.version }}
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $zip = "BabyPiano-${{ steps.ver.outputs.version }}-Windows.zip"
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Copy-Item windows/bin/Release/net48/BabyPiano.exe dist/
+          Copy-Item windows/使用说明.txt dist/
+          # PowerShell 7 写入 UTF-8 文件名，中文文件名在资源管理器里不会乱码
+          Compress-Archive -Path dist/* -DestinationPath $zip -Force
+          "ZIP=$zip" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BabyPiano-Windows
+          path: ${{ env.ZIP }}
+
+      - name: Publish to GitHub Release
+        if: steps.ver.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.ver.outputs.tag }}
+        run: |
+          # macOS 工作流负责创建 Release（带它的说明）；这里最多等 30 分钟
+          for i in $(seq 1 60); do
+            if gh release view "$TAG" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1; then break; fi
+            echo "等待 Release $TAG 创建……（$i/60）"
+            sleep 30
+          done
+          if ! gh release view "$TAG" -R "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "macOS 工作流没有创建 Release，由这里创建"
+            gh release create "$TAG" -R "$GITHUB_REPOSITORY" --title "$TAG" --notes ""
+          fi
+
+          gh release upload "$TAG" "$ZIP" --clobber -R "$GITHUB_REPOSITORY"
+
+          gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json body -q .body > notes.md
+          if ! grep -q "BABYPIANO-WINDOWS" notes.md; then
+            cat >> notes.md <<EOF
+
+          <!-- BABYPIANO-WINDOWS -->
+          ## Windows 版
+          下载 \`$ZIP\`，解压后双击 **BabyPiano.exe** 即可，无需安装（Windows 10 / 11）。
+
+          程序没有做代码签名，第一次打开 Windows 会提示“Windows 已保护你的电脑”：点 **更多信息 › 仍要运行**。详见 [README](https://github.com/${GITHUB_REPOSITORY}#windows-版)。
+          EOF
+            gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --notes-file notes.md
+          fi

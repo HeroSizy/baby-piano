@@ -2,6 +2,8 @@
 
 给小宝宝用的“键盘钢琴”：宝宝怎么乱按键盘，都只会弹出好听的钢琴声，**不会退出、切走程序或触发系统快捷键**。
 
+> 也有 **Windows 版**，见文末 [Windows 版](#windows-版)。
+
 ## 它能做什么
 
 - **整块键盘被接管**：字母、数字、空格、Cmd/Ctrl/Option/Shift/Fn、F1–F12、音量/亮度键、Cmd+Q、Cmd+Tab、Cmd+Space、调度中心、截屏快捷键……全部被拦下，只用来弹琴。
@@ -68,3 +70,46 @@ bash build.sh            # 生成 宝宝钢琴.app（本机自签名）
 | `APPLE_TEAM_ID` | 10 位 Team ID（可选，默认 HK2CBGL2Q2） |
 
 只配前两个 = 正式签名但不公证；再配 `APPLE_ID` 和 `APPLE_APP_PASSWORD` = 签名 + 公证。配好后重新打一个标签即可。
+
+---
+
+## Windows 版
+
+功能和 macOS 版一致：整块键盘被接管，每个键固定一个五声音阶钢琴音（左低右高），默认黑屏，家长用鼠标右上角长按 3 秒或键盘输入 `quitpiano` 退出。
+
+### 下载使用
+
+1. 到 [Releases](../../releases/latest) 下载 `BabyPiano-x.y.z-Windows.zip`，解压，双击 **BabyPiano.exe**。不用安装，不要管理员权限，Windows 10 / 11 自带运行环境。
+2. **第一次打开**：程序没有代码签名，会出现蓝色的“Windows 已保护你的电脑”（SmartScreen），点 **更多信息 › 仍要运行**。杀毒软件如果误报（键盘钩子类程序偶尔会），选“允许”。
+3. 调好音量、点 **试听**，再点 **开始弹琴**。
+
+### 和 macOS 版的区别
+
+- **键盘拦截**：用低级键盘钩子（`WH_KEYBOARD_LL`），不需要授予任何权限。Win 键、Alt+Tab、Alt+F4、Ctrl+Esc、Win+D、音量/媒体键等都被吞掉。钩子万一被系统摘掉（电脑卡顿时会发生），全屏窗口会兜底吞键并自动重新挂上。
+- **音色**：Windows 没有可直接调用的钢琴采样，程序内置合成的钢琴音（带琴弦泛音、双弦拍频、击弦声），不需要音色文件。输出经过限幅器，峰值固定在约 −5 dBFS；同样限流约每秒 12 个音。
+- **系统音量**：弹琴时 Windows 主音量最高 50%，每秒检查一次（换了耳机/蓝牙音箱也会压回去）。
+- **Win+L 锁屏**：系统在钩子之前处理，只能临时把当前用户的 `DisableLockWorkstation` 策略设为 1；退出时恢复原值，程序意外退出则下次启动时恢复。设置页可关闭这一项。
+- “连按 5 次 Shift”（粘滞键）等辅助功能快捷键弹琴时临时关闭，退出恢复（只对本次登录生效）。
+
+### 拦不住的
+
+- **Ctrl+Alt+Del**：Windows 安全机制，任何普通程序都拦不住。宝宝按出来会显示蓝色菜单，点“取消”即可回到钢琴。
+- 电源键、合上笔记本盖子：可在 控制面板 › 电源选项 里设为“不采取任何操作”。
+- 部分笔记本 Fn 组合键（亮度、飞行模式）由硬件/固件直接处理。
+- 精确式触控板的三指/四指手势、触摸屏边缘滑动：勾选“锁住鼠标”也拦不住手势，可在 设置 › 蓝牙和其他设备 › 触摸板 里关掉。
+- 万一程序卡住：Ctrl+Alt+Del › 任务管理器 › 结束 BabyPiano。
+
+### 自己编译
+
+需要 [.NET SDK 8](https://dotnet.microsoft.com/download)（Windows、macOS、Linux 都能编译出 Windows 版）：
+
+```bash
+dotnet build windows/BabyPiano.csproj -c Release
+# 输出：windows/bin/Release/net48/BabyPiano.exe
+```
+
+### 发布（维护者）
+
+推 `v*` 标签时，`.github/workflows/windows.yml` 会在 Windows 上编译，等 macOS 工作流建好同名 Release 后，把 `BabyPiano-x.y.z-Windows.zip` 传上去并在说明里补一段 Windows 下载说明。已经发布过的版本，可以在 Actions › Windows Build & Release › Run workflow 里填 `release_tag`（如 `v1.0.0`）补传。
+
+代码签名：默认不签。要去掉 SmartScreen 提示需要购买代码签名证书（或使用 Azure Trusted Signing），之后可以在工作流里加签名步骤。
