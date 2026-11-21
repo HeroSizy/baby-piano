@@ -33,4 +33,4 @@ require (
 
 tool github.com/nsgo-dev/nsgo/cmd/nsgo
 
-replace github.com/nsgo-dev/nsgo => github.com/HeroSizy/nsgo v0.0.0-20261121131941-e1faa1b35c0c
+replace github.com/nsgo-dev/nsgo => github.com/HeroSizy/nsgo v0.0.0-20261121133204-95149facdd79
