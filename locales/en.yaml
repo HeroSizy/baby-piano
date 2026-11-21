@@ -1,0 +1,28 @@
+appName:
+  message: Baby Piano
+  description: The app's name, which its packages list it under.
+title: Baby Piano
+desktopIntro: Once started, the piano fills the screen and takes the whole keyboard. Whatever the baby presses plays a gentle piano note, and nothing quits, switches apps or opens system shortcuts. Every key has its own note, low at the bottom left and high at the top right.
+exitHow: "To stop: hold the mouse in the screen's top-right corner for 3 seconds, or type quitpiano on the keyboard."
+exitHowTyped: "To stop: type quitpiano on the keyboard."
+permissionMissing: The piano needs the Accessibility permission to take the keyboard. Open the setting and switch Baby Piano on; this line turns green by itself.
+permissionGranted: The piano may take the whole keyboard.
+openSettings: Open Accessibility settings
+soundLoading: Loading the piano…
+soundFailed: "Sound could not start: {error}. Check the sound output, then open the piano again."
+volume: Volume. The keyboard's volume keys are locked while the baby plays, so set it here first.
+tryIt: Try it
+systemVolumeOver: "The computer's volume is {percent, number}%. It drops to {cap, number}% when the baby starts, to protect their ears."
+systemVolumeOk: "The computer's volume is {percent, number}%, and stays at {cap, number}% or below while the baby plays."
+systemVolumeUnknown: This output's volume cannot be read, as with HDMI and some speakers. Check it is not too loud.
+lockMouse: Also lock the mouse and trackpad (recommended on laptops; then stop by typing quitpiano)
+showVisuals: Show a colored circle for each note (not needed if the baby cannot see the screen)
+start: Start playing (full screen, keyboard locked)
+secureInput: Another app turned on secure keyboard entry, such as Terminal's Secure Keyboard Entry or a password field, and no app can lock the keyboard through it. Turn it off, or restart the computer, then start again.
+lockFailed: The keyboard could not be locked. Check that Baby Piano is switched on in System Settings › Privacy & Security › Accessibility; after an update, remove its old entry (−) and add it again.
+windowsLimits: Ctrl+Alt+Del cannot be blocked by any app; Win+L is blocked while the baby plays.
+cornerHint: "Parents: hold the top-right corner for 3 seconds to stop"
+touchIntro: Big colored keys the baby can tap with every finger, all in a scale that always sounds well together.
+touchLockIOS: "To keep the baby in the piano, turn on Guided Access: Settings › Accessibility › Guided Access, then triple-click the side button while the piano plays."
+touchLockAndroid: "To keep the baby in the piano, pin it: Settings › Security › App pinning, then pin Baby Piano from the recent apps."
+touchStart: Start playing

@@ -1,0 +1,12 @@
+name: 宝宝钢琴
+id: dev.herosizy.babypiano
+version: 1.0.0
+
+dev:
+  target: native
+
+build:
+  output: dist
+  targets: [macos_arm64, macos_x64, windows_x64, windows_arm64, ios, android_arm64]
+
+i18n: { dir: locales, source: en }
