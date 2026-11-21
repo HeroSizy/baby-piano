@@ -62,7 +62,9 @@ go tool nsgo build -target ios                   # iPhone / iPad（需要 Xcode�
 
 ## 发布与签名（维护者）
 
-推送 `v*` 标签会由 GitHub Actions 编译所有平台并发布 Release。Mac 的签名和公证用仓库 Secrets：
+GitHub Actions 自动发版：把 `nsgo.yaml` 里的 `version` 改成新版本号（比如 `1.0.1`），合并进 `main`，就会编译所有平台、打上 `v1.0.1` 标签并发布 Release，附上 Mac、Windows、Android 安装包。版本号已经有标签时只编译、不发版；手动推送 `v*` 标签也照样发版。
+
+Mac 的签名和公证用仓库 Secrets：
 
 | Secret | 内容 |
 |---|---|
