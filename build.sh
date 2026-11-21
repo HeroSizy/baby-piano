@@ -39,7 +39,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 <plist version="1.0">
 <dict>
   <key>CFBundleExecutable</key><string>$BIN</string>
-  <key>CFBundleIdentifier</key><string>io.github.herosizy.babypiano</string>
+  <key>CFBundleIdentifier</key><string>dev.herosizy.babypiano</string>
   <key>CFBundleName</key><string>宝宝钢琴</string>
   <key>CFBundleDisplayName</key><string>宝宝钢琴</string>
   <key>CFBundlePackageType</key><string>APPL</string>

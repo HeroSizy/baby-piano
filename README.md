@@ -65,6 +65,6 @@ bash build.sh            # 生成 宝宝钢琴.app（本机自签名）
 | `MACOS_CERT_PASSWORD` | 导出 .p12 时设的密码 |
 | `APPLE_ID` | Apple 开发者账号邮箱 |
 | `APPLE_APP_PASSWORD` | 在 appleid.apple.com 生成的“App 专用密码” |
-| `APPLE_TEAM_ID` | 10 位 Team ID（developer.apple.com › Membership） |
+| `APPLE_TEAM_ID` | 10 位 Team ID（可选，默认 HK2CBGL2Q2） |
 
-只配前两个 = 正式签名但不公证；五个都配 = 签名 + 公证。配好后重新打一个标签即可。
+只配前两个 = 正式签名但不公证；再配 `APPLE_ID` 和 `APPLE_APP_PASSWORD` = 签名 + 公证。配好后重新打一个标签即可。
