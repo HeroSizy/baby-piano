@@ -31,9 +31,15 @@ func (a *app) playScreen(cx *core.Scope) core.Node {
 	// hidden that the platform lets an app hide; desktops have none.
 	cx.SetStatusBar(core.StatusBarSetting{Immersive: core.ToggleOn})
 	cx.Cleanup(func() { a.cx.SetStatusBar(core.StatusBarSetting{Immersive: core.ToggleOff}) })
+	// A locked mouse plays nothing and moves nothing: no pointer either.
+	cursor := core.CursorAuto
+	if a.locked && a.settings.lockMouse.Get() {
+		cursor = core.CursorNone
+	}
 	root := &core.Ref{}
 	cx.RequestAnimationFrame(func(time.Time) { root.Focus() })
 	return core.View{
+		TestID:    "piano",
 		Ref:       root,
 		Focusable: func() bool { return true },
 		// Should the lock miss a key, as while another app holds secure
@@ -59,7 +65,7 @@ func (a *app) playScreen(cx *core.Scope) core.Node {
 				fx.burstAt(i, e.PagePosition)
 			}
 		},
-		Style: core.Style{FlexGrow: 1, FlexShrink: 1, Background: core.RGB(0x000000), Overflow: core.Hidden},
+		Style: core.Style{FlexGrow: 1, FlexShrink: 1, Background: core.RGB(0x000000), Overflow: core.Hidden, Cursor: cursor},
 		Children: []core.Node{
 			keys,
 			fx.node(),
