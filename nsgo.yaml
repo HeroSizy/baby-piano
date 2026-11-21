@@ -1,6 +1,6 @@
 name: 宝宝钢琴
 id: dev.herosizy.babypiano
-version: 1.0.1
+version: 1.0.2
 
 dev:
   target: native
