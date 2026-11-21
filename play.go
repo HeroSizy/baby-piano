@@ -27,6 +27,10 @@ func (a *app) playScreen(cx *core.Scope) core.Node {
 	if !a.locked && !a.kiosk.Supported() {
 		keys = a.touchKeys(cx, fx.burstAt)
 	}
+	// Phones and tablets play with every system bar and gesture hint
+	// hidden that the platform lets an app hide; desktops have none.
+	cx.SetStatusBar(core.StatusBarSetting{Immersive: core.ToggleOn})
+	cx.Cleanup(func() { a.cx.SetStatusBar(core.StatusBarSetting{Immersive: core.ToggleOff}) })
 	// A locked mouse plays nothing and moves nothing: no pointer either.
 	cursor := core.CursorAuto
 	if a.locked && a.settings.lockMouse.Get() {

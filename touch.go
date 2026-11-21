@@ -92,7 +92,10 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 				}
 			}
 		},
-		Style:    core.Style{FlexGrow: 1, Direction: core.Row, Wrap: core.Wrap, Padding: core.All(6), PaddingEnv: core.EnvAll(core.EnvSafeArea)},
+		// To the screen's edges, clear of a notch or camera cutout; the
+		// bottom's inset is only the home indicator, which hides.
+		Style: core.Style{FlexGrow: 1, Direction: core.Row, Wrap: core.Wrap, Padding: core.All(6),
+			PaddingEnv: core.EnvEdges{Top: core.EnvSafeArea, Right: core.EnvSafeArea, Left: core.EnvSafeArea}},
 		Children: keys,
 	}
 }
