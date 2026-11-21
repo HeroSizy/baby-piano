@@ -130,7 +130,8 @@ jobs:
         run: |
           go tool nsgo build -version "${{ steps.ver.outputs.version }}" \
             -target macos_arm64,macos_x64,windows_x64,windows_arm64,android_arm64 $SIGN_ARGS
-          go tool nsgo build -version "${{ steps.ver.outputs.version }}" -target ios -installers=false
+          # iOS 只做编译检查，不签名也不公证：去掉公证密钥，否则 NSGo 会要求签名身份。
+          env -u NSGO_NOTARY_KEY go tool nsgo build -version "${{ steps.ver.outputs.version }}" -target ios -installers=false
           ls -la dist/releases
 
       - uses: actions/upload-artifact@v4
