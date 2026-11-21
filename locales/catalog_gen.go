@@ -119,12 +119,12 @@ var keyOfText = [numTexts]string{
 
 // textsEn are the messages without arguments in en.
 var textsEn = i18n.NewTexts(""+
-	"Baby Piano"+
-	"Baby Piano"+
+	"Mash Piano"+
+	"Mash Piano"+
 	"Once started, the piano fills the screen and takes the whole keyboard. Whatever the baby presses plays a gentle piano note, and nothing quits, switches apps or opens system shortcuts. Every key has its own note, low at the bottom left and high at the top right."+
 	"To stop: hold the mouse in the screen's top-right corner for 3 seconds, or type quitpiano on the keyboard."+
 	"To stop: type quitpiano on the keyboard."+
-	"The piano needs the Accessibility permission to take the keyboard. Open the setting and switch Baby Piano on; this line turns green by itself."+
+	"The piano needs the Accessibility permission to take the keyboard. Open the setting and switch Mash Piano on; this line turns green by itself."+
 	"The piano may take the whole keyboard."+
 	"Open Accessibility settings"+
 	"Loading the piano…"+
@@ -135,12 +135,12 @@ var textsEn = i18n.NewTexts(""+
 	"Show colorful fireworks for each note (not needed if the baby cannot see the screen)"+
 	"Start playing (full screen, keyboard locked)"+
 	"Another app turned on secure keyboard entry, such as Terminal's Secure Keyboard Entry or a password field, and no app can lock the keyboard through it. Turn it off, or restart the computer, then start again."+
-	"The keyboard could not be locked. Check that Baby Piano is switched on in System Settings › Privacy & Security › Accessibility; after an update, remove its old entry (−) and add it again."+
+	"The keyboard could not be locked. Check that Mash Piano is switched on in System Settings › Privacy & Security › Accessibility; after an update, remove its old entry (−) and add it again."+
 	"Ctrl+Alt+Del cannot be blocked by any app; Win+L is blocked while the baby plays."+
 	"Parents: hold the top-right corner for 3 seconds to stop"+
 	"Big colored keys the baby can tap with every finger, all in a scale that always sounds well together."+
 	"To keep the baby in the piano, turn on Guided Access: Settings › Accessibility › Guided Access, then triple-click the side button while the piano plays."+
-	"To keep the baby in the piano, pin it: Settings › Security › App pinning, then pin Baby Piano from the recent apps."+
+	"To keep the baby in the piano, pin it: Settings › Security › App pinning, then pin Mash Piano from the recent apps."+
 	"Start playing",
 	[]uint16{
 		10,
@@ -170,12 +170,12 @@ var textsEn = i18n.NewTexts(""+
 
 // textsZhHans are the messages without arguments in zh-Hans.
 var textsZhHans = i18n.NewTexts(""+
-	"Baby Piano"+
+	"Mash Piano"+
 	"宝宝钢琴"+
 	"开始后会全屏，并接管整块键盘：宝宝随便按都只会弹出好听的钢琴声，不会退出、切换程序或触发系统快捷键。每个键都有自己的音，左下最低，右上最高。"+
 	"家长退出：用鼠标在屏幕右上角按住不放 3 秒，或在键盘上输入 quitpiano。"+
 	"家长退出：在键盘上输入 quitpiano。"+
-	"锁住键盘需要“辅助功能”权限。请打开设置，打开“Baby Piano”的开关，打开后这里会自动变绿。"+
+	"锁住键盘需要“辅助功能”权限。请打开设置，打开“Mash Piano”的开关，打开后这里会自动变绿。"+
 	"已获得权限，可以锁住整块键盘。"+
 	"打开“辅助功能”设置"+
 	"正在载入钢琴……"+
@@ -186,12 +186,12 @@ var textsZhHans = i18n.NewTexts(""+
 	"按键时放彩色烟花（宝宝看不到屏幕的话不用开）"+
 	"开始弹琴（全屏锁定键盘）"+
 	"有程序开启了“安全键盘输入”（如终端的“安全键盘输入”、正在输入的密码框），这时任何程序都锁不住键盘。请关闭它（或重启电脑）后再开始。"+
-	"无法锁定键盘。请确认已在 系统设置 › 隐私与安全性 › 辅助功能 中打开“Baby Piano”；更新版本后，请先删掉旧条目（−）再重新添加。"+
+	"无法锁定键盘。请确认已在 系统设置 › 隐私与安全性 › 辅助功能 中打开“Mash Piano”；更新版本后，请先删掉旧条目（−）再重新添加。"+
 	"Ctrl+Alt+Del 任何程序都拦不住；Win+L 在弹琴时会被禁用。"+
 	"家长：在右上角按住 3 秒退出"+
 	"大大的彩色琴键，宝宝每根手指都能弹，所有的音都在同一个音阶里，怎么弹都好听。"+
 	"想让宝宝出不去，请打开“引导式访问”：设置 › 辅助功能 › 引导式访问，然后在弹琴时连按三下侧边按钮。"+
-	"想让宝宝出不去，请固定应用：设置 › 安全 › 应用固定，然后在最近任务里固定“Baby Piano”。"+
+	"想让宝宝出不去，请固定应用：设置 › 安全 › 应用固定，然后在最近任务里固定“Mash Piano”。"+
 	"开始弹琴",
 	[]uint16{
 		10,
@@ -295,7 +295,7 @@ func (msgs Messages) arg(s string) string {
 	return s
 }
 
-// AppName says "Baby Piano"
+// AppName says "Mash Piano"
 // in the language the app shows under cx.
 //
 // The app's name, which its packages list it under.
@@ -304,7 +304,7 @@ func AppName(cx *core.Scope) string { return For(cx).AppName() }
 // AppName is the package's AppName in the language of msgs.
 func (msgs Messages) AppName() string { return msgs.text(textAppName) }
 
-// Title says "Baby Piano"
+// Title says "Mash Piano"
 // in the language the app shows under cx.
 func Title(cx *core.Scope) string { return For(cx).Title() }
 
@@ -332,7 +332,7 @@ func ExitHowTyped(cx *core.Scope) string { return For(cx).ExitHowTyped() }
 // ExitHowTyped is the package's ExitHowTyped in the language of msgs.
 func (msgs Messages) ExitHowTyped() string { return msgs.text(textExitHowTyped) }
 
-// PermissionMissing says "The piano needs the Accessibility permission to take the keyboard. Open the setting and switch Baby Piano on; this line turns green by itself."
+// PermissionMissing says "The piano needs the Accessibility permission to take the keyboard. Open the setting and switch Mash Piano on; this line turns green by itself."
 // in the language the app shows under cx.
 func PermissionMissing(cx *core.Scope) string { return For(cx).PermissionMissing() }
 
@@ -479,7 +479,7 @@ func SecureInput(cx *core.Scope) string { return For(cx).SecureInput() }
 // SecureInput is the package's SecureInput in the language of msgs.
 func (msgs Messages) SecureInput() string { return msgs.text(textSecureInput) }
 
-// LockFailed says "The keyboard could not be locked. Check that Baby Piano is switched on in System Settings › Privacy & Security › Accessibility; after an update, remove its old entry (−) and add it again."
+// LockFailed says "The keyboard could not be locked. Check that Mash Piano is switched on in System Settings › Privacy & Security › Accessibility; after an update, remove its old entry (−) and add it again."
 // in the language the app shows under cx.
 func LockFailed(cx *core.Scope) string { return For(cx).LockFailed() }
 
@@ -514,7 +514,7 @@ func TouchLockIOS(cx *core.Scope) string { return For(cx).TouchLockIOS() }
 // TouchLockIOS is the package's TouchLockIOS in the language of msgs.
 func (msgs Messages) TouchLockIOS() string { return msgs.text(textTouchLockIOS) }
 
-// TouchLockAndroid says "To keep the baby in the piano, pin it: Settings › Security › App pinning, then pin Baby Piano from the recent apps."
+// TouchLockAndroid says "To keep the baby in the piano, pin it: Settings › Security › App pinning, then pin Mash Piano from the recent apps."
 // in the language the app shows under cx.
 func TouchLockAndroid(cx *core.Scope) string { return For(cx).TouchLockAndroid() }
 

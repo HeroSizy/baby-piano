@@ -1,6 +1,6 @@
-name: Baby Piano
+name: Mash Piano
 id: dev.herosizy.babypiano
-version: 1.0.2
+version: 1.0.3
 
 dev:
   target: native

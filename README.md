@@ -1,4 +1,4 @@
-# 🎹 Baby Piano
+# 🎹 Mash Piano
 
 A piano for babies: however they mash the keys, all that comes out is gentle piano music. On a computer **nothing quits, switches apps or triggers a system shortcut**; on phones and tablets it is rows of big colored keys.
 
@@ -21,7 +21,7 @@ For **Mac, Windows, iPhone, iPad and Android**. Get the installers from [Release
 
 ## Computers (Mac, Windows)
 
-1. Open **Baby Piano**, set the volume with the slider and press **Try it** (the keyboard's volume keys are locked once playing starts).
+1. Open **Mash Piano**, set the volume with the slider and press **Try it** (the keyboard's volume keys are locked once playing starts).
 2. Press **Start playing (full screen, keyboard locked)** and hand the keyboard to the baby.
 3. **To stop** (either works):
    - hold the mouse in the screen's **top-right corner** for **3 seconds** (not available when the mouse is locked);
@@ -31,8 +31,8 @@ On a laptop, turn on **"Also lock the mouse and trackpad"**: the pointer stays p
 
 ### Mac
 
-- Download `macos-arm64.dmg` (Apple silicon) or `macos-x64.dmg` (Intel) and drag Baby Piano into Applications.
-- The first time, grant the **Accessibility** permission (System Settings › Privacy & Security › Accessibility › switch Baby Piano on). macOS lets only apps with this permission intercept system shortcuts such as Cmd+Q and Cmd+Tab. The app never connects to the network and records no keys.
+- Download `macos-arm64.dmg` (Apple silicon) or `macos-x64.dmg` (Intel) and drag Mash Piano into Applications.
+- The first time, grant the **Accessibility** permission (System Settings › Privacy & Security › Accessibility › switch Mash Piano on). macOS lets only apps with this permission intercept system shortcuts such as Cmd+Q and Cmd+Tab. The app never connects to the network and records no keys.
 - While playing, the Dock, the menu bar, Cmd+Tab, Mission Control, trackpad gestures and the media keys are all blocked; with several displays, the others are covered in black.
 - **What cannot be blocked**: the power / Touch ID button, closing the lid, and the buttons on an old Touch Bar. If another app has turned on secure keyboard entry (Terminal, a password field), the keyboard cannot be locked, and the app says so.
 - If the app ever hangs: force quit with **Cmd+Option+Esc**.
@@ -48,7 +48,7 @@ On a laptop, turn on **"Also lock the mouse and trackpad"**: the pointer stays p
 Big colored keys the baby can play with every finger, several at once. Parents hold the top-right corner for 3 seconds to return to the setup page.
 
 - **iPhone / iPad**: to keep the baby in the app, turn on Guided Access: Settings › Accessibility › Guided Access, then triple-click the side button while the piano plays.
-- **Android**: download and install the `.apk`. To keep the baby in the app, turn on app pinning: Settings › Security › App pinning, then pin Baby Piano from the recent apps.
+- **Android**: download and install the `.apk`. To keep the baby in the app, turn on app pinning: Settings › Security › App pinning, then pin Mash Piano from the recent apps.
 
 ## Credits
 

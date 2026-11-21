@@ -1,6 +1,6 @@
 # Developing, building and releasing
 
-Baby Piano is written in Go with [NSGo](https://github.com/nsgo-dev/nsgo): one codebase for Mac, Windows, iPhone, iPad and Android. The earlier Swift version is kept in [`legacy/macos-swift`](../legacy/macos-swift).
+Mash Piano is written in Go with [NSGo](https://github.com/nsgo-dev/nsgo): one codebase for Mac, Windows, iPhone, iPad and Android. The earlier Swift version is kept in [`legacy/macos-swift`](../legacy/macos-swift).
 
 ## Building
 
