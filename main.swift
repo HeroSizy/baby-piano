@@ -5,28 +5,85 @@
 //    一个都不交给系统，宝宝怎么按都不会退出或切走。
 //  - 每个键对应一个 C 大调五声音阶里的钢琴音，乱按也好听；同一个键永远是同一个音。
 //  - 全屏柔和彩色圆圈动画。
-//  - 家长退出：用鼠标在屏幕右上角长按 3 秒。
+//  - 家长退出：鼠标在屏幕右上角长按 3 秒，或在键盘上依次输入 quitpiano。
 //
 // 构建：见同目录 build.sh
 
 import Cocoa
 import AVFoundation
 import ApplicationServices
+import CoreAudio
+import Carbon   // IsSecureEventInputEnabled
 
 // MARK: - 设置
 
 enum Settings {
     static var volume: Float {
         get {
-            let v = UserDefaults.standard.object(forKey: "volume") as? Float
-            return v ?? 0.45
+            let v = UserDefaults.standard.object(forKey: "volume") as? Float ?? 0.45
+            return min(0.9, max(0.05, v))
         }
         set { UserDefaults.standard.set(newValue, forKey: "volume") }
     }
+    /// 弹琴时 Mac 系统音量的上限（0~1）
+    static let maxSystemVolume: Float = 0.5
+
     /// 宝宝一般看不到屏幕，默认不显示动画（纯黑屏，省电也不分散注意）
     static var showVisuals: Bool {
         get { UserDefaults.standard.bool(forKey: "showVisuals") }
         set { UserDefaults.standard.set(newValue, forKey: "showVisuals") }
+    }
+}
+
+// MARK: - 系统音量（最终响度 = 程序音量 × 系统音量）
+
+enum SystemVolume {
+    private static func defaultOutputDevice() -> AudioDeviceID? {
+        var dev = AudioDeviceID(0)
+        var size = UInt32(MemoryLayout<AudioDeviceID>.size)
+        var addr = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyDefaultOutputDevice,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: 0)
+        let st = AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject), &addr, 0, nil, &size, &dev)
+        return (st == noErr && dev != 0) ? dev : nil
+    }
+
+    /// 'vmvc' = kAudioHardwareServiceDeviceProperty_VirtualMainVolume（系统音量滑块对应的值）
+    private static func volumeAddress() -> AudioObjectPropertyAddress {
+        AudioObjectPropertyAddress(mSelector: 0x766D_7663,
+                                   mScope: kAudioDevicePropertyScopeOutput,
+                                   mElement: 0)
+    }
+
+    static func get() -> Float? {
+        guard let dev = defaultOutputDevice() else { return nil }
+        var addr = volumeAddress()
+        guard AudioObjectHasProperty(dev, &addr) else { return nil }
+        var v = Float32(0)
+        var size = UInt32(MemoryLayout<Float32>.size)
+        let st = AudioObjectGetPropertyData(dev, &addr, 0, nil, &size, &v)
+        return st == noErr ? v : nil
+    }
+
+    @discardableResult
+    static func set(_ value: Float) -> Bool {
+        guard let dev = defaultOutputDevice() else { return false }
+        var addr = volumeAddress()
+        var settable = DarwinBoolean(false)
+        guard AudioObjectHasProperty(dev, &addr),
+              AudioObjectIsPropertySettable(dev, &addr, &settable) == noErr,
+              settable.boolValue else { return false }
+        var v = Float32(value)
+        return AudioObjectSetPropertyData(dev, &addr, 0, nil, UInt32(MemoryLayout<Float32>.size), &v) == noErr
+    }
+
+    /// 系统音量高于上限就调回上限（例如中途连上了蓝牙音箱）
+    static func enforceCap() {
+        if let v = get(), v > Settings.maxSystemVolume {
+            set(Settings.maxSystemVolume)
+            NSLog("BabyPiano: system volume \(v) capped to \(Settings.maxSystemVolume)")
+        }
     }
 }
 
@@ -42,6 +99,8 @@ final class PianoSound: NSObject {
     /// C 大调五声音阶 C3 ~ C6（任意组合都和谐）
     let scale: [UInt8]
     private(set) var usingPianoBank = false
+    private(set) var engineError: String?
+    private var muteUntil: CFTimeInterval = 0
 
     override init() {
         var notes: [UInt8] = []
@@ -99,14 +158,28 @@ final class PianoSound: NSObject {
     }
 
     private func startEngine() {
-        do { try engine.start() } catch { NSLog("BabyPiano: engine start failed: \(error)") }
+        do {
+            try engine.start()
+            engineError = nil
+        } catch {
+            engineError = error.localizedDescription
+            NSLog("BabyPiano: engine start failed: \(error)")
+        }
     }
 
     @objc private func engineConfigChanged(_ note: Notification) {
-        // 插拔耳机/切换输出设备后引擎会停，重新启动
+        // 插拔耳机/连上蓝牙音箱后：新设备音量可能更大。
+        // 先静音所有音、暂停发声 1 秒，把系统音量压回上限，再重启引擎。
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            if !self.engine.isRunning { self.startEngine() }
+            self.sampler.sendController(123, withValue: 0, onChannel: 0)   // All Notes Off
+            self.muteUntil = CACurrentMediaTime() + 1.0
+            SystemVolume.enforceCap()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                guard let self = self else { return }
+                SystemVolume.enforceCap()
+                if !self.engine.isRunning { self.startEngine() }
+            }
         }
     }
 
@@ -119,20 +192,22 @@ final class PianoSound: NSObject {
     @discardableResult
     func play(index: Int) -> Bool {
         let now = CACurrentMediaTime()
-        recentHits = recentHits.filter { now - $0 < 0.3 }
-        if recentHits.count >= 8 { return false }
+        if now < muteUntil { return false }
+        // 最多约每秒 12 个音：一巴掌拍下去也不会太吵
+        recentHits = recentHits.filter { now - $0 < 0.4 }
+        if recentHits.count >= 5 { return false }
         recentHits.append(now)
 
         if !engine.isRunning { startEngine() }
 
         let note = scale[max(0, min(scale.count - 1, index))]
         let velocity = UInt8.random(in: 58...72)   // 中等力度，不刺耳
-        sampler.stopNote(note, onChannel: 0)
+        // 不先 stopNote：硬切采样会有“咔”声，让采样器自己处理重新触发
         sampler.startNote(note, withVelocity: velocity, onChannel: 0)
 
         let g = (generation[note] ?? 0) + 1
         generation[note] = g
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) { [weak self] in
             guard let self = self, self.generation[note] == g else { return }
             self.sampler.stopNote(note, onChannel: 0)
         }
@@ -169,6 +244,28 @@ enum KeyMap {
     }
 }
 
+// MARK: - 键盘退出暗号
+
+/// 家长在键盘上依次输入 quitpiano（3 秒内不停顿）即可退出。
+/// 宝宝乱按恰好按出这 9 个字母的概率可以忽略。
+final class ExitSequence {
+    static let word = Array("quitpiano")
+    private var buffer: [Character] = []
+    private var lastTime: CFTimeInterval = 0
+
+    func feed(_ text: String?) -> Bool {
+        guard let text = text, !text.isEmpty else { return false }
+        let now = CACurrentMediaTime()
+        if now - lastTime > 3 { buffer.removeAll() }
+        lastTime = now
+        for c in text.lowercased() {
+            buffer.append(c)
+        }
+        if buffer.count > Self.word.count { buffer.removeFirst(buffer.count - Self.word.count) }
+        return buffer == Self.word
+    }
+}
+
 // MARK: - 全局键盘锁（CGEventTap）
 
 /// 事件回调是 C 函数指针，不能捕获上下文，所以用单例。
@@ -176,10 +273,8 @@ final class KeyboardLock {
     static let shared = KeyboardLock()
     fileprivate(set) var tap: CFMachPort?
     private var source: CFRunLoopSource?
-    private var pressedModifiers = Set<Int>()
-
-    /// 收到“按下”的键时回调（在主线程）
-    var onKeyDown: ((Int) -> Void)?
+    /// 收到“按下”的键时回调（在主线程）。参数：键码、该键打出的字符（可能为 nil）
+    var onKeyDown: ((Int, String?) -> Void)?
 
     var isActive: Bool { tap != nil }
 
@@ -221,16 +316,15 @@ final class KeyboardLock {
         case 10: // keyDown
             if event.getIntegerValueField(.keyboardEventAutorepeat) != 0 { return }  // 按住不放不重复响
             let code = Int(event.getIntegerValueField(.keyboardEventKeycode))
-            fire(code)
+            var length = 0
+            var chars = [UniChar](repeating: 0, count: 4)
+            event.keyboardGetUnicodeString(maxStringLength: 4, actualStringLength: &length, unicodeString: &chars)
+            let text = length > 0 ? String(utf16CodeUnits: chars, count: length) : nil
+            fire(code, text)
 
         case 12: // flagsChanged：Shift/Ctrl/Option/Cmd/Fn/CapsLock，按下和松开都会来一次
             let code = Int(event.getIntegerValueField(.keyboardEventKeycode))
-            if pressedModifiers.contains(code) {
-                pressedModifiers.remove(code)
-            } else {
-                pressedModifiers.insert(code)
-                fire(code)
-            }
+            if KeyboardLock.isModifierDown(code: code, flags: event.flags) { fire(code, nil) }
 
         case 14: // 系统定义事件：媒体键、亮度、音量等
             guard let ns = NSEvent(cgEvent: event), ns.subtype.rawValue == 8 else { return }
@@ -239,16 +333,29 @@ final class KeyboardLock {
             let keyFlags = data1 & 0x0000FFFF
             let isDown = ((keyFlags & 0xFF00) >> 8) == 0x0A
             let isRepeat = (keyFlags & 0x1) == 1
-            if isDown && !isRepeat { fire(200 + keyCode) }
+            if isDown && !isRepeat { fire(200 + keyCode, nil) }
 
         default:
             break // keyUp、手势：直接吞掉
         }
     }
 
-    private func fire(_ code: Int) {
+    /// 根据事件里的修饰键标志位判断是按下还是松开（Caps Lock 每次切换都算按下）
+    static func isModifierDown(code: Int, flags: CGEventFlags) -> Bool {
+        switch code {
+        case 56, 60: return flags.contains(.maskShift)
+        case 59, 62: return flags.contains(.maskControl)
+        case 58, 61: return flags.contains(.maskAlternate)
+        case 55, 54: return flags.contains(.maskCommand)
+        case 63:     return flags.contains(.maskSecondaryFn)
+        case 57:     return true
+        default:     return false
+        }
+    }
+
+    private func fire(_ code: Int, _ text: String?) {
         DispatchQueue.main.async {
-            KeyboardLock.shared.onKeyDown?(code)
+            KeyboardLock.shared.onKeyDown?(code, text)
         }
     }
 }
@@ -274,11 +381,20 @@ private func keyboardLockCallback(
 final class KioskWindow: NSWindow {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { true }
+    override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        _ = contentView?.performKeyEquivalent(with: event)
+        return true
+    }
+    override func keyDown(with event: NSEvent) {
+        contentView?.keyDown(with: event)
+    }
 }
 
 final class PlayView: NSView {
     var onExit: (() -> Void)?
     var onClickNote: ((CGPoint) -> Void)?
+    /// 事件拦截万一失效时，按键会落到窗口上：在这里吞掉并照样弹琴
+    var onFallbackKey: ((Int, String?) -> Void)?
 
     private let exitSize: CGFloat = 90
     private let exitHold: TimeInterval = 3.0
@@ -316,6 +432,22 @@ final class PlayView: NSView {
 
     override var acceptsFirstResponder: Bool { true }
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+
+    // MARK: 第二道防线：窗口自己吞掉所有按键（不响系统提示音、不触发菜单快捷键）
+
+    override func keyDown(with event: NSEvent) {
+        if !event.isARepeat { onFallbackKey?(Int(event.keyCode), event.charactersIgnoringModifiers) }
+    }
+    override func keyUp(with event: NSEvent) {}
+    override func flagsChanged(with event: NSEvent) {}
+    override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        if event.type == .keyDown && !event.isARepeat {
+            onFallbackKey?(Int(event.keyCode), event.charactersIgnoringModifiers)
+        }
+        return true
+    }
+    override func cancelOperation(_ sender: Any?) {}
+    override func doCommand(by selector: Selector) {}
 
     private var exitRect: NSRect {
         NSRect(x: bounds.maxX - exitSize, y: bounds.maxY - exitSize, width: exitSize, height: exitSize)
@@ -422,6 +554,7 @@ final class SetupController: NSObject {
     private let statusLabel = NSTextField(labelWithString: "")
     private let startButton = NSButton(title: "开始弹琴（全屏锁定键盘）", target: nil, action: nil)
     private let openSettingsButton = NSButton(title: "打开“辅助功能”设置", target: nil, action: nil)
+    private let systemVolumeLabel = NSTextField(labelWithString: "")
     private var pollTimer: Timer?
     private let sound: PianoSound
     var onStart: (() -> Void)?
@@ -471,6 +604,9 @@ final class SetupController: NSObject {
         let volRow = NSStackView(views: [slider, testButton])
         volRow.orientation = .horizontal
 
+        systemVolumeLabel.font = NSFont.systemFont(ofSize: 12)
+        systemVolumeLabel.textColor = .secondaryLabelColor
+
         let visualsBox = NSButton(checkboxWithTitle: "按键时显示彩色动画（宝宝看不到屏幕的话不用开）",
                                   target: self, action: #selector(visualsToggled(_:)))
         visualsBox.state = Settings.showVisuals ? .on : .off
@@ -481,7 +617,7 @@ final class SetupController: NSObject {
         startButton.controlSize = .large
         startButton.keyEquivalent = "\r"
 
-        let stack = NSStackView(views: [title, desc, exitTip, statusLabel, openSettingsButton, volLabel, volRow, visualsBox, startButton])
+        let stack = NSStackView(views: [title, desc, exitTip, statusLabel, openSettingsButton, volLabel, volRow, systemVolumeLabel, visualsBox, startButton])
         stack.orientation = .vertical
         stack.alignment = .leading
         stack.spacing = 12
@@ -520,6 +656,24 @@ final class SetupController: NSObject {
     private func refreshStatus(prompt: Bool) {
         let key = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String
         let trusted = AXIsProcessTrustedWithOptions([key: prompt] as CFDictionary)
+
+        if let v = SystemVolume.get() {
+            let pct = Int((v * 100).rounded())
+            let cap = Int(Settings.maxSystemVolume * 100)
+            systemVolumeLabel.stringValue = v > Settings.maxSystemVolume
+                ? "Mac 系统音量现在是 \(pct)%，开始弹琴时会自动降到 \(cap)%（保护宝宝耳朵）。"
+                : "Mac 系统音量：\(pct)%（弹琴时不会超过 \(cap)%）。"
+        } else {
+            systemVolumeLabel.stringValue = "当前输出设备无法读取音量（如 HDMI/外接音箱），请手动确认音量不要太大。"
+        }
+
+        if let err = sound.engineError {
+            statusLabel.stringValue = "❌ 声音无法启动：\(err)。请检查声音输出设备后重新打开程序。"
+            statusLabel.textColor = .systemRed
+            startButton.isEnabled = false
+            return
+        }
+
         if trusted {
             statusLabel.stringValue = "✅ 已获得“辅助功能”权限，可以锁定整块键盘。"
             statusLabel.textColor = .systemGreen
@@ -560,12 +714,18 @@ final class SetupController: NSObject {
 
 // MARK: - App
 
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private let sound = PianoSound()
     private var setup: SetupController!
     private var kioskWindow: KioskWindow?
+    private var coverWindows: [NSWindow] = []
     private var playView: PlayView?
     private var activity: NSObjectProtocol?
+    private var isPlaying = false
+    private var parentExit = false
+    private var watchdog: Timer?
+    private let exitSequence = ExitSequence()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         buildMenu()
@@ -574,7 +734,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         setup.show()
     }
 
-    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { !isPlaying }
+
+    /// 弹琴中只有家长的退出方式能退出（防止拦截失效时 Cmd+Q 漏进来）
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        (isPlaying && !parentExit) ? .terminateCancel : .terminateNow
+    }
+
+    /// 被系统弹窗/通知/键盘设置助理抢走前台后，立刻抢回来
+    func applicationDidResignActive(_ notification: Notification) {
+        guard isPlaying else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            self?.bringToFront()
+        }
+    }
+
+    private func bringToFront() {
+        guard isPlaying, let win = kioskWindow else { return }
+        NSApp.activate(ignoringOtherApps: true)
+        win.makeKeyAndOrderFront(nil)
+        if let v = playView { win.makeFirstResponder(v) }
+    }
 
     private func buildMenu() {
         let main = NSMenu()
@@ -587,6 +767,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func startPlaying() {
+        // 安全键盘输入开启时，事件拦截收不到任何按键
+        if IsSecureEventInputEnabled() == true {
+            let alert = NSAlert()
+            alert.messageText = "有程序开启了“安全键盘输入”"
+            alert.informativeText = "这时键盘无法被锁住。常见原因：终端里勾选了“安全键盘输入”、密码管理器或浏览器的密码框正在输入。请关闭它们（或重启电脑）后再开始。"
+            alert.runModal()
+            return
+        }
         guard KeyboardLock.shared.start() else {
             let alert = NSAlert()
             alert.messageText = "无法锁定键盘"
@@ -595,8 +783,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         setup.close()
+        isPlaying = true
+        NSApp.mainMenu = NSMenu()   // 清掉菜单和 Cmd+Q 快捷键
+        SystemVolume.enforceCap()
 
-        let screen = NSScreen.main ?? NSScreen.screens[0]
+        guard let screen = NSScreen.main ?? NSScreen.screens.first else { return }
         let win = KioskWindow(contentRect: screen.frame, styleMask: .borderless,
                               backing: .buffered, defer: false)
         win.level = .screenSaver
@@ -608,12 +799,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         kioskWindow = win
         playView = view
 
+        // 其他显示器盖上黑色窗口，防止鼠标点到别的程序
+        for other in NSScreen.screens where other != screen {
+            let cover = KioskWindow(contentRect: other.frame, styleMask: .borderless,
+                                    backing: .buffered, defer: false)
+            cover.level = .screenSaver
+            cover.backgroundColor = .black
+            cover.isReleasedWhenClosed = false
+            cover.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
+            cover.setFrame(other.frame, display: true)
+            cover.orderFront(nil)
+            coverWindows.append(cover)
+        }
+
         win.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         // 系统级“展台模式”：隐藏 Dock/菜单栏，禁止切换程序、强制退出、注销/关机对话框
         NSApp.presentationOptions = [
             .hideDock, .hideMenuBar,
-            .disableProcessSwitching, .disableForceQuit,
+            .disableProcessSwitching,
+            // 不禁用“强制退出”：正常时 Cmd+Option+Esc 已被拦截吞掉；
+            // 万一程序卡死，拦截会被系统停用，家长还能用它强制退出。
             .disableSessionTermination, .disableHideApplication,
             .disableAppleMenu,
         ]
@@ -625,9 +831,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             options: [.idleDisplaySleepDisabled, .idleSystemSleepDisabled, .userInitiated],
             reason: "Baby is playing piano")
 
-        KeyboardLock.shared.onKeyDown = { [weak self] code in
-            self?.handleKey(code)
+        KeyboardLock.shared.onKeyDown = { [weak self] code, text in
+            self?.handleKey(code, text)
         }
+        view.onFallbackKey = { [weak self] code, text in
+            self?.handleKey(code, text)
+        }
+
+        // 每 2 秒：系统音量不超上限；事件拦截如被系统停用就重新打开
+        watchdog = Timer.scheduledTimer(timeInterval: 2.0, target: self,
+                                        selector: #selector(watchdogTick),
+                                        userInfo: nil, repeats: true)
         view.onClickNote = { [weak self] point in
             guard let self = self else { return }
             let idx = Int.random(in: 0..<self.sound.scale.count)
@@ -635,14 +849,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 self.playView?.burst(noteIndex: idx, noteCount: self.sound.scale.count, at: point)
             }
         }
-        view.onExit = {
-            KeyboardLock.shared.stop()
-            NSApp.presentationOptions = []
-            NSApp.terminate(nil)
-        }
+        view.onExit = { [weak self] in self?.exitByParent() }
     }
 
-    private func handleKey(_ code: Int) {
+    @objc private func watchdogTick() {
+        SystemVolume.enforceCap()
+        if let t = KeyboardLock.shared.tap, !CGEvent.tapIsEnabled(tap: t) {
+            CGEvent.tapEnable(tap: t, enable: true)
+        }
+        if !NSApp.isActive { bringToFront() }
+    }
+
+    private func exitByParent() {
+        parentExit = true
+        watchdog?.invalidate()
+        KeyboardLock.shared.stop()
+        NSApp.presentationOptions = []
+        NSApp.terminate(nil)
+    }
+
+    private func handleKey(_ code: Int, _ text: String?) {
+        if exitSequence.feed(text) {
+            exitByParent()
+            return
+        }
         let count = sound.scale.count
         let idx = KeyMap.noteIndex(forKeyCode: code, scaleCount: count)
         if sound.play(index: idx) {
