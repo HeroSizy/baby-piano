@@ -16,7 +16,7 @@ systemVolumeOver: "The computer's volume is {percent, number}%. It drops to {cap
 systemVolumeOk: "The computer's volume is {percent, number}%, and stays at {cap, number}% or below while the baby plays."
 systemVolumeUnknown: This output's volume cannot be read, as with HDMI and some speakers. Check it is not too loud.
 lockMouse: Also lock the mouse and trackpad (recommended on laptops; then stop by typing quitpiano)
-showVisuals: Show a colored circle for each note (not needed if the baby cannot see the screen)
+showVisuals: Show colorful fireworks for each note (not needed if the baby cannot see the screen)
 start: Start playing (full screen, keyboard locked)
 secureInput: Another app turned on secure keyboard entry, such as Terminal's Secure Keyboard Entry or a password field, and no app can lock the keyboard through it. Turn it off, or restart the computer, then start again.
 lockFailed: The keyboard could not be locked. Check that Baby Piano is switched on in System Settings › Privacy & Security › Accessibility; after an update, remove its old entry (−) and add it again.

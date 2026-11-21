@@ -132,7 +132,7 @@ var textsEn = i18n.NewTexts(""+
 	"Try it"+
 	"This output's volume cannot be read, as with HDMI and some speakers. Check it is not too loud."+
 	"Also lock the mouse and trackpad (recommended on laptops; then stop by typing quitpiano)"+
-	"Show a colored circle for each note (not needed if the baby cannot see the screen)"+
+	"Show colorful fireworks for each note (not needed if the baby cannot see the screen)"+
 	"Start playing (full screen, keyboard locked)"+
 	"Another app turned on secure keyboard entry, such as Terminal's Secure Keyboard Entry or a password field, and no app can lock the keyboard through it. Turn it off, or restart the computer, then start again."+
 	"The keyboard could not be locked. Check that Baby Piano is switched on in System Settings › Privacy & Security › Accessibility; after an update, remove its old entry (−) and add it again."+
@@ -156,7 +156,7 @@ var textsEn = i18n.NewTexts(""+
 		6,
 		94,
 		88,
-		82,
+		84,
 		44,
 		207,
 		193,
@@ -183,7 +183,7 @@ var textsZhHans = i18n.NewTexts(""+
 	"试听"+
 	"当前输出设备无法读取音量（如 HDMI、部分外接音箱），请手动确认音量不要太大。"+
 	"同时锁住鼠标和触控板（笔记本推荐；打开后只能用键盘输入 quitpiano 退出）"+
-	"按键时显示彩色圆圈（宝宝看不到屏幕的话不用开）"+
+	"按键时放彩色烟花（宝宝看不到屏幕的话不用开）"+
 	"开始弹琴（全屏锁定键盘）"+
 	"有程序开启了“安全键盘输入”（如终端的“安全键盘输入”、正在输入的密码框），这时任何程序都锁不住键盘。请关闭它（或重启电脑）后再开始。"+
 	"无法锁定键盘。请确认已在 系统设置 › 隐私与安全性 › 辅助功能 中打开“宝宝钢琴”；更新版本后，请先删掉旧条目（−）再重新添加。"+
@@ -207,7 +207,7 @@ var textsZhHans = i18n.NewTexts(""+
 		6,
 		110,
 		101,
-		69,
+		66,
 		36,
 		201,
 		186,
@@ -458,7 +458,7 @@ func LockMouse(cx *core.Scope) string { return For(cx).LockMouse() }
 // LockMouse is the package's LockMouse in the language of msgs.
 func (msgs Messages) LockMouse() string { return msgs.text(textLockMouse) }
 
-// ShowVisuals says "Show a colored circle for each note (not needed if the baby cannot see the screen)"
+// ShowVisuals says "Show colorful fireworks for each note (not needed if the baby cannot see the screen)"
 // in the language the app shows under cx.
 func ShowVisuals(cx *core.Scope) string { return For(cx).ShowVisuals() }
 

@@ -17,8 +17,9 @@ const (
 
 // touchKeys are big colored keys, low at the top left: four rows of four
 // held upright, two rows of eight held sideways. Every finger plays its own
-// key, and a key glows as it sounds.
-func (a *app) touchKeys(cx *core.Scope) core.Node {
+// key, which bounces and glows as it sounds and sends burst its note from
+// where the finger landed.
+func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) core.Node {
 	size := core.NewSignal(cx, core.Size{})
 	cols := func() int {
 		if s := size.Get(); s.Width > s.Height {
@@ -27,8 +28,10 @@ func (a *app) touchKeys(cx *core.Scope) core.Node {
 		return 4
 	}
 	glows := make([]*core.AnimatedValue, touchCount)
+	bounces := make([]*core.AnimatedValue, touchCount)
 	for i := range glows {
 		glows[i] = core.NewAnimatedValue(cx, 0)
+		bounces[i] = core.NewAnimatedValue(cx, 1)
 	}
 	// keyAt is the key under p, or -1 in the parents' corner.
 	keyAt := func(p core.Point) int {
@@ -42,12 +45,18 @@ func (a *app) touchKeys(cx *core.Scope) core.Node {
 		row := min(int(float64(p.Y)/float64(s.Height)*float64(rows)), rows-1)
 		return row*c + col
 	}
-	press := func(k int) {
+	press := func(k int, at core.Point) {
 		if k < 0 || !a.play(touchFirst+k) {
 			return
 		}
 		glows[k].Set(1)
 		cx.StartAnimation(core.Timing(glows[k], 0, core.TimingConfig{Duration: 900 * time.Millisecond, Easing: core.BezierEasing(core.EaseOut)}), nil)
+		if !core.Untracked(cx, cx.Env().ReduceMotion) {
+			// Squashed, then sprung back past its size and settled.
+			bounces[k].Set(0.86)
+			cx.StartAnimation(core.Spring(bounces[k], 1, core.SpringConfig{Stiffness: 320, Damping: 8}), nil)
+		}
+		burst(touchFirst+k, at)
 	}
 
 	var keys []core.Node
@@ -60,7 +69,8 @@ func (a *app) touchKeys(cx *core.Scope) core.Node {
 			},
 			Children: []core.Node{core.View{
 				Style: core.Style{FlexGrow: 1, CornerRadius: 22, Background: hsl(hue, 0.75, 0.62),
-					Animated: &core.AnimatedStyle{Scale: core.Interpolate(glows[k], core.Interpolation{Input: []float64{0, 1}, Output: []float64{1, 0.94}})}},
+					ShadowColor: hsl(hue, 1, 0.65), ShadowRadius: 26,
+					Animated: &core.AnimatedStyle{Scale: bounces[k], ShadowOpacity: glows[k]}},
 				Children: []core.Node{core.View{
 					Style: core.Style{FlexGrow: 1, CornerRadius: 22, Background: core.RGB(0xffffff),
 						Animated: &core.AnimatedStyle{Opacity: core.Interpolate(glows[k], core.Interpolation{Input: []float64{0, 1}, Output: []float64{0, 0.55}})}},
@@ -78,7 +88,7 @@ func (a *app) touchKeys(cx *core.Scope) core.Node {
 			}
 			for _, t := range e.Touches {
 				if t.Changed {
-					press(keyAt(t.Position))
+					press(keyAt(t.Position), t.PagePosition)
 				}
 			}
 		},

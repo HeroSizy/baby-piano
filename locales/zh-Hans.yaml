@@ -14,7 +14,7 @@ systemVolumeOver: 电脑音量现在是 {percent, number}%，开始弹琴时会�
 systemVolumeOk: 电脑音量：{percent, number}%（弹琴时不会超过 {cap, number}%）。
 systemVolumeUnknown: 当前输出设备无法读取音量（如 HDMI、部分外接音箱），请手动确认音量不要太大。
 lockMouse: 同时锁住鼠标和触控板（笔记本推荐；打开后只能用键盘输入 quitpiano 退出）
-showVisuals: 按键时显示彩色圆圈（宝宝看不到屏幕的话不用开）
+showVisuals: 按键时放彩色烟花（宝宝看不到屏幕的话不用开）
 start: 开始弹琴（全屏锁定键盘）
 secureInput: 有程序开启了“安全键盘输入”（如终端的“安全键盘输入”、正在输入的密码框），这时任何程序都锁不住键盘。请关闭它（或重启电脑）后再开始。
 lockFailed: 无法锁定键盘。请确认已在 系统设置 › 隐私与安全性 › 辅助功能 中打开“宝宝钢琴”；更新版本后，请先删掉旧条目（−）再重新添加。
