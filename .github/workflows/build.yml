@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  # 键位、限流、界面和退出方式的测试（NSGo 无头测试）。
+  # Key map, rate limit, screens and the ways out (NSGo headless tests).
   test:
     runs-on: macos-latest
     steps:
@@ -22,7 +22,7 @@ jobs:
       - name: Test
         run: go tool nsgo test ./...
 
-  # Windows 真机：编译检查，并跑 NSGo 在 Windows 上解码、播放声音的测试（XAudio2 + Media Foundation）。
+  # On real Windows: vet, and NSGo's test of decoding and playing sound there (XAudio2 + Media Foundation).
   windows:
     runs-on: windows-latest
     steps:
@@ -39,7 +39,7 @@ jobs:
     needs: [test, windows]
     runs-on: macos-latest
     permissions:
-      contents: write # 发版时建标签和 Release
+      contents: write # a release creates the tag and the GitHub Release
     env:
       HAS_CERT: ${{ secrets.MACOS_CERT_P12 != '' }}
       HAS_NOTARY_KEY: ${{ secrets.APPLE_API_KEY_P8 != '' && secrets.APPLE_API_KEY_ID != '' && secrets.APPLE_API_ISSUER != '' }}
@@ -56,7 +56,7 @@ jobs:
       - name: Version
         id: ver
         run: |
-          # 发版：推送 v* 标签，或者 main 上 nsgo.yaml 的 version 换成了还没有标签的新版本。
+          # A release: a pushed v* tag, or main carrying an nsgo.yaml version that has no tag yet.
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
             echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
             echo "release=true" >> "$GITHUB_OUTPUT"
@@ -71,7 +71,7 @@ jobs:
             echo "release=false" >> "$GITHUB_OUTPUT"
           fi
 
-      # ---- 正式签名（可选）：仓库 Secrets 里配置了 Developer ID 证书才会执行 ----
+      # ---- Signing (optional): runs only when the Developer ID certificate secrets are set ----
       - name: Import Developer ID certificate
         if: env.HAS_CERT == 'true'
         env:
@@ -85,7 +85,7 @@ jobs:
           security set-keychain-settings -lut 21600 "$KEYCHAIN"
           security unlock-keychain -p "$KEYCHAIN_PW" "$KEYCHAIN"
           security import "$RUNNER_TEMP/cert.p12" -P "$MACOS_CERT_PASSWORD" -f pkcs12 -k "$KEYCHAIN" -T /usr/bin/codesign
-          # Developer ID 中间证书，保证证书链完整
+          # The Developer ID intermediate certificate, so the chain is complete
           curl -fsSL https://www.apple.com/certificateauthority/DeveloperIDG2CA.cer -o "$RUNNER_TEMP/DeveloperIDG2CA.cer"
           security import "$RUNNER_TEMP/DeveloperIDG2CA.cer" -k "$KEYCHAIN" || true
           security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PW" "$KEYCHAIN"
@@ -95,8 +95,8 @@ jobs:
           echo "SIGN_ARGS=-sign $IDENTITY" >> "$GITHUB_ENV"
           rm "$RUNNER_TEMP/cert.p12"
 
-      # ---- 公证（可选，仅发版时）：需要正式证书，再加下面两种凭证之一 ----
-      # 首选 App Store Connect API 密钥（不涉及密码）；没有的话用 Apple ID + App 专用密码。
+      # ---- Notarization (optional, releases only): needs the certificate and one of two credentials ----
+      # Preferred: an App Store Connect API key (no password); otherwise an Apple ID with an app-specific password.
       - name: Notary key (App Store Connect API key)
         if: env.HAS_CERT == 'true' && env.HAS_NOTARY_KEY == 'true' && steps.ver.outputs.release == 'true'
         env:
@@ -104,7 +104,7 @@ jobs:
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
         run: |
-          # NSGo 自带公证：有这三个环境变量，nsgo build 就会提交、等待结果并装订票据。
+          # NSGo notarizes by itself: with these three variables nsgo build submits, waits and staples the ticket.
           KEY="$RUNNER_TEMP/AuthKey.p8"
           printf '%s\n' "$APPLE_API_KEY_P8" > "$KEY"
           {
@@ -124,13 +124,13 @@ jobs:
             --team-id "$APPLE_TEAM_ID" --keychain "$RUNNER_TEMP/build.keychain-db"
           echo "SIGN_ARGS=$SIGN_ARGS -notarize babypiano" >> "$GITHUB_ENV"
 
-      # Mac（Apple 芯片 + Intel）、Windows（x64 + ARM）和 Android 的安装包；
-      # iPhone/iPad 需要描述文件才能装到设备上，这里只编译检查。
+      # Packages for Mac (Apple silicon + Intel), Windows (x64 + ARM) and Android;
+      # iPhone and iPad need a provisioning profile to install, so they are only compiled here.
       - name: Build
         run: |
           go tool nsgo build -version "${{ steps.ver.outputs.version }}" \
             -target macos_arm64,macos_x64,windows_x64,windows_arm64,android_arm64 $SIGN_ARGS
-          # 公证只针对 Mac；NSGo 看到 NSGO_NOTARY_KEY 就会要求 Developer ID，iOS 这一步要去掉它。
+          # Only the Mac is notarized; NSGo asks for a Developer ID whenever NSGO_NOTARY_KEY is set, so drop it here.
           env -u NSGO_NOTARY_KEY go tool nsgo build -version "${{ steps.ver.outputs.version }}" -target ios -installers=false
           ls -la dist/releases
 
@@ -148,18 +148,18 @@ jobs:
         with:
           tag_name: v${{ steps.ver.outputs.version }}
           target_commitish: ${{ github.sha }}
-          name: 宝宝钢琴 ${{ steps.ver.outputs.version }}
+          name: Baby Piano ${{ steps.ver.outputs.version }}
           files: |
             dist/releases/*.dmg
             dist/releases/*.exe
             dist/releases/*.apk
           body: |
-            ## 下载
-            - **Mac**：`macos-arm64.dmg`（Apple 芯片）或 `macos-x64.dmg`（Intel）。打开后把「宝宝钢琴」拖进「应用程序」。
-            - **Windows**：`windows-x64-setup.exe`（大多数电脑）或 `windows-arm64-setup.exe`（ARM 电脑）。
-            - **Android 手机/平板**：`android-arm64.apk`。
-            - **iPhone / iPad**：用 Xcode 自己装，见 README。
+            ## Download
+            - **Mac**: `macos-arm64.dmg` (Apple silicon) or `macos-x64.dmg` (Intel). Open it and drag Baby Piano into Applications.
+            - **Windows**: `windows-x64-setup.exe` (most PCs) or `windows-arm64-setup.exe` (ARM PCs).
+            - **Android phones and tablets**: `android-arm64.apk`.
+            - **iPhone / iPad**: build and install with Xcode; see docs/DEVELOPMENT.md.
 
-            Mac 签名方式：${{ env.HAS_CERT == 'true' && (env.HAS_NOTARY == 'true' && 'Developer ID 签名 + Apple 公证，双击即可打开。' || 'Developer ID 签名（未公证）。') || '本机自签名（ad-hoc）。第一次打开会提示“无法验证开发者”，请看 README 里的“第一次打开”。' }}
+            Mac signing: ${{ env.HAS_CERT == 'true' && (env.HAS_NOTARY == 'true' && 'signed with a Developer ID and notarized by Apple, so it opens with a double-click.' || 'signed with a Developer ID, not notarized.') || 'ad-hoc signed. The first launch says the developer cannot be verified: open System Settings › Privacy & Security and choose Open Anyway.' }}
 
-            使用说明见 [README](https://github.com/${{ github.repository }}#readme)。
+            How to use it: [README](https://github.com/${{ github.repository }}#readme).

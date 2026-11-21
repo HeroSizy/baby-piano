@@ -1,57 +1,57 @@
-# 🎹 宝宝钢琴 BabyPiano
+# 🎹 Baby Piano
 
-给小宝宝用的钢琴：宝宝怎么乱按，都只会弹出好听的钢琴声。电脑上 **不会退出、切走程序或触发系统快捷键**；手机和平板上是一排排大大的彩色琴键。
+A piano for babies: however they mash the keys, all that comes out is gentle piano music. On a computer **nothing quits, switches apps or triggers a system shortcut**; on phones and tablets it is rows of big colored keys.
 
-支持 **Mac、Windows、iPhone、iPad、Android**。到 [Releases](../../releases/latest) 下载安装包。
+For **Mac, Windows, iPhone, iPad and Android**. Get the installers from [Releases](../../releases/latest).
 
 <p align="center">
-  <img src="docs/screenshots/setup.png" alt="设置页：调音量、试听、开始弹琴" height="360">
-  <img src="docs/screenshots/play.png" alt="弹琴时每个音放一朵彩色烟花" height="360">
-  <img src="docs/screenshots/touch.png" alt="手机和平板上的彩色琴键" height="360">
+  <img src="docs/screenshots/setup.png" alt="The setup page: set the volume, try it, start playing" height="360">
+  <img src="docs/screenshots/play.png" alt="Each note sets off a colored firework while playing" height="360">
+  <img src="docs/screenshots/touch.png" alt="The colored keys on phones and tablets" height="360">
 </p>
 
-## 它能做什么
+## What it does
 
-- **乱按也好听**：所有音都在 C 大调五声音阶里（C D E G A），从 C1 到 C8 共 36 个音，任意组合都和谐。
-- **整块键盘都能弹**：字母、数字、符号、F1–F12、方向键、小键盘、Ctrl/Alt/Cmd/Shift……每个键都有自己的音。键盘每往上一排高一个八度，同一排从左到右越来越高；同一个键永远是同一个音。
-- **真钢琴音色**：Salamander Grand Piano 采样（雅马哈 C5 三角钢琴）。
-- **保护耳朵**：高音自动更轻；一巴掌按下十几个键只会响几个；弹琴时电脑系统音量最高 50%，中途连上蓝牙音箱/耳机也会自动压回去。
-- **默认黑屏**：宝宝只听声音；想要的话可以勾选“按键时放彩色烟花”，每个音都会炸开一朵跟音高同色的烟花。
-- 玩的时候屏幕不熄灭、电脑不休眠。
+- **Mashing sounds good**: every note is in the C major pentatonic scale (C D E G A), 36 notes from C1 to C8, so any combination is in harmony.
+- **The whole keyboard plays**: letters, digits, symbols, F1–F12, arrows, the number pad, Ctrl/Alt/Cmd/Shift… every key has its own note. Each row up is an octave higher, and a row rises from left to right. A key always plays the same note.
+- **A real piano sound**: Salamander Grand Piano samples (a Yamaha C5 grand).
+- **Kind to small ears**: high notes are quieter; a slap on a dozen keys plays only a few; the computer's volume is capped at 50% while playing, and is pulled back down if a Bluetooth speaker or headphones connect midway.
+- **A black screen by default**: the baby only listens. If you like, turn on "Show colorful fireworks for each note" and every note bursts into a firework in the color of its pitch.
+- The screen stays on and the computer stays awake while playing.
 
-## 电脑（Mac、Windows）
+## Computers (Mac, Windows)
 
-1. 打开 **宝宝钢琴**，先用滑块调好音量，点 **试听**（开始后键盘上的音量键会被锁住）。
-2. 点 **开始弹琴（全屏锁定键盘）**，把键盘交给宝宝。
-3. **家长退出**（两种都行）：
-   - 用鼠标在屏幕 **右上角** 按住不放 **3 秒**（勾选了“锁住鼠标”时不可用）；
-   - 或在键盘上连续输入 **`quitpiano`**（字母之间停顿不超过 3 秒）。
+1. Open **Baby Piano**, set the volume with the slider and press **Try it** (the keyboard's volume keys are locked once playing starts).
+2. Press **Start playing (full screen, keyboard locked)** and hand the keyboard to the baby.
+3. **To stop** (either works):
+   - hold the mouse in the screen's **top-right corner** for **3 seconds** (not available when the mouse is locked);
+   - or type **`quitpiano`** on the keyboard (no more than 3 seconds between letters).
 
-笔记本建议勾选 **“同时锁住鼠标和触控板”**：光标不动、点击无效，退出只能输入 `quitpiano`。
+On a laptop, turn on **"Also lock the mouse and trackpad"**: the pointer stays put, clicks do nothing, and the only way out is typing `quitpiano`.
 
 ### Mac
 
-- 下载 `macos-arm64.dmg`（Apple 芯片）或 `macos-x64.dmg`（Intel），把「宝宝钢琴」拖进「应用程序」。
-- 第一次使用要授予 **辅助功能** 权限（系统设置 › 隐私与安全性 › 辅助功能 › 打开“宝宝钢琴”）。拦截 Cmd+Q、Cmd+Tab 这类系统快捷键，macOS 只允许有这个权限的程序做。本程序不联网，也不记录任何按键。
-- 弹琴时 Dock、菜单栏、Cmd+Tab、调度中心、触控板手势、媒体键都被拦下；多个显示器时其他屏幕盖上黑色窗口。
-- **拦不住的**：电源键 / Touch ID 键、合上屏幕、旧款 Touch Bar 上的按钮。其他程序开启了“安全键盘输入”（终端、密码框）时键盘锁不住，程序会提示。
-- 万一程序卡住：按 **Cmd+Option+Esc** 强制退出。
+- Download `macos-arm64.dmg` (Apple silicon) or `macos-x64.dmg` (Intel) and drag Baby Piano into Applications.
+- The first time, grant the **Accessibility** permission (System Settings › Privacy & Security › Accessibility › switch Baby Piano on). macOS lets only apps with this permission intercept system shortcuts such as Cmd+Q and Cmd+Tab. The app never connects to the network and records no keys.
+- While playing, the Dock, the menu bar, Cmd+Tab, Mission Control, trackpad gestures and the media keys are all blocked; with several displays, the others are covered in black.
+- **What cannot be blocked**: the power / Touch ID button, closing the lid, and the buttons on an old Touch Bar. If another app has turned on secure keyboard entry (Terminal, a password field), the keyboard cannot be locked, and the app says so.
+- If the app ever hangs: force quit with **Cmd+Option+Esc**.
 
 ### Windows
 
-- 下载 `windows-x64-setup.exe`（大多数电脑）或 `windows-arm64-setup.exe`（ARM 电脑）安装。不需要管理员权限。
-- 弹琴时 Win 键、Alt+Tab、Alt+F4、媒体键都被拦下；连按 5 次 Shift 之类的辅助功能快捷键和 **Win+L 锁屏** 会暂时关掉，退出后（即使程序意外退出，下次打开时）自动恢复。
-- **拦不住的**：Ctrl+Alt+Del（任何程序都拦不住）、电源键、合上屏幕。
+- Download and run `windows-x64-setup.exe` (most PCs) or `windows-arm64-setup.exe` (ARM PCs). No administrator rights needed.
+- While playing, the Win key, Alt+Tab, Alt+F4 and the media keys are blocked; accessibility shortcuts such as pressing Shift five times and **Win+L (lock screen)** are switched off for the session and restored on exit (after an unexpected exit, the next launch restores them).
+- **What cannot be blocked**: Ctrl+Alt+Del (no app can), the power button, and closing the lid.
 
-## 手机和平板（iPhone、iPad、Android）
+## Phones and tablets (iPhone, iPad, Android)
 
-大大的彩色琴键，宝宝每根手指都能弹（可以多指同时弹）。家长在右上角按住 3 秒回到设置页。
+Big colored keys the baby can play with every finger, several at once. Parents hold the top-right corner for 3 seconds to return to the setup page.
 
-- **iPhone / iPad**：想让宝宝出不去，打开“引导式访问”：设置 › 辅助功能 › 引导式访问，弹琴时连按三下侧边按钮。
-- **Android**：下载 `.apk` 安装。想让宝宝出不去，打开“应用固定”：设置 › 安全 › 应用固定，然后在最近任务里固定“宝宝钢琴”。
+- **iPhone / iPad**: to keep the baby in the app, turn on Guided Access: Settings › Accessibility › Guided Access, then triple-click the side button while the piano plays.
+- **Android**: download and install the `.apk`. To keep the baby in the app, turn on app pinning: Settings › Security › App pinning, then pin Baby Piano from the recent apps.
 
-## 致谢
+## Credits
 
-钢琴采样：[Salamander Grand Piano V3](https://archive.org/details/SalamanderGrandPianoV3) by Alexander Holm，[CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)。`sound/notes` 里的文件经过裁剪、淡出和音量统一。
+Piano samples: [Salamander Grand Piano V3](https://archive.org/details/SalamanderGrandPianoV3) by Alexander Holm, [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). The files in `sound/notes` were trimmed, faded and levelled.
 
-想自己编译或参与开发，见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)。
+To build it yourself or contribute, see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
