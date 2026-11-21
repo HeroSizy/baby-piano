@@ -10,6 +10,10 @@ For **Mac, Windows, iPhone, iPad and Android**. Get the installers from [Release
   <img src="docs/screenshots/touch.png" alt="The colored keys on phones and tablets" height="360">
 </p>
 
+## Why it exists
+
+It started with an old mechanical keyboard at home. Our baby loved slapping it, so it became a toy. But on a real computer every slap did something: apps quit, windows switched, shortcuts fired, and nothing sounded nice. Mash Piano turns that spare keyboard into an instrument: every key plays a piano note that fits with the others, and nothing else on the computer reacts.
+
 ## What it does
 
 - **Mashing sounds good**: every note is in the C major pentatonic scale (C D E G A), 36 notes from C1 to C8, so any combination is in harmony.
