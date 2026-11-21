@@ -23,7 +23,7 @@ echo "▶ 编译中……"
 rm -rf build "$APP"
 mkdir -p build "$APP/Contents/MacOS" "$APP/Contents/Resources"
 
-FLAGS=(-O -swift-version 5 -framework Cocoa -framework AVFoundation -framework ApplicationServices)
+FLAGS=(-O -swift-version 5 -parse-as-library -framework Cocoa -framework AVFoundation -framework ApplicationServices)
 
 if [[ "${UNIVERSAL:-0}" == "1" ]]; then
   swiftc main.swift "${FLAGS[@]}" -target arm64-apple-macos11  -o build/$BIN-arm64

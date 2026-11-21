@@ -151,8 +151,8 @@ final class PianoSound: NSObject {
             do {
                 try sampler.loadSoundBankInstrument(
                     at: url, program: 0,
-                    bankMSB: UInt8(kAUSampleBankMSBDefault),
-                    bankLSB: UInt8(kAUSampleBankLSBDefault))
+                    bankMSB: 0x79,   // kAUSampleBankMSBDefault（旋律乐器）
+                    bankLSB: 0)      // kAUSampleBankLSBDefault
                 usingPianoBank = true
                 NSLog("BabyPiano: loaded instrument \(url.path)")
                 return
@@ -912,8 +912,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 }
 
-let app = NSApplication.shared
-let delegate = AppDelegate()
-app.delegate = delegate
-app.setActivationPolicy(.regular)
-app.run()
+@main
+enum BabyPianoApp {
+    @MainActor private static var delegate: AppDelegate?
+
+    @MainActor static func main() {
+        let app = NSApplication.shared
+        let d = AppDelegate()
+        delegate = d            // NSApplication.delegate 是弱引用，这里保持住
+        app.delegate = d
+        app.setActivationPolicy(.regular)
+        app.run()
+    }
+}
