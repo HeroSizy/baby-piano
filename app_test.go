@@ -119,8 +119,21 @@ func TestComputerLocksAndKeysPlay(t *testing.T) {
 	for _, r := range "quitpiano" {
 		press(piano.MacKeyName(0), string(r))
 	}
-	if !k.stopped || app.Quits != 1 {
-		t.Errorf("quitpiano: keyboard given back %v, quits %d", k.stopped, app.Quits)
+	if !k.stopped || app.Quits != 0 || !app.Exists("id:start") {
+		t.Fatalf("quitpiano: keyboard given back %v, quits %d, back at the setup %v", k.stopped, app.Quits, app.Exists("id:start"))
+	}
+
+	// Parents can start again from the setup, and stop again.
+	k.started, k.entered, k.stopped = false, false, false
+	app.Press("id:start")
+	if !k.started || !k.entered {
+		t.Fatalf("second start: lock %v, screens covered %v", k.started, k.entered)
+	}
+	for _, r := range "quitpiano" {
+		press(piano.MacKeyName(0), string(r))
+	}
+	if !k.stopped || !app.Exists("id:start") {
+		t.Errorf("second quitpiano: keyboard given back %v, back at the setup %v", k.stopped, app.Exists("id:start"))
 	}
 }
 

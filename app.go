@@ -59,12 +59,16 @@ type app struct {
 	soundErr *core.Signal[error]
 	playing  *core.Signal[bool]
 	// locked is whether kiosk took the keyboard: a computer's way to play.
-	locked  bool
-	exiting bool
+	locked bool
+	// fullScreened is whether start put the window in full screen, for
+	// leave to take it out.
+	fullScreened bool
+	// stopTick ends tick's loop.
+	stopTick func() bool
 	// burst draws a note's colored circle, when the play screen shows them.
-	burst   func(note int)
-	exit    piano.ExitSequence
-	stop    []func()
+	burst func(note int)
+	exit  piano.ExitSequence
+	stop  []func()
 }
 
 // newRoot is the app on lock: the parents' setup, then the piano.
@@ -95,10 +99,10 @@ func (a *app) root() core.Node {
 		}
 	})
 	if desktop.IsAvailable(cx) {
-		// While the baby plays, only the parents' exit quits: should a
+		// While the baby plays, only the parents' exit ends it: should a
 		// Cmd+Q ever get past the lock, it does nothing.
 		desktop.OnQuitRequest(cx, func(q *core.QuitRequest) {
-			if a.playing.GetUntracked() && !a.exiting && !q.Forced() {
+			if a.playing.GetUntracked() && !q.Forced() {
 				q.Cancel()
 			}
 		})
@@ -132,6 +136,7 @@ func (a *app) start() error {
 		desktop.SetApplicationMenu(cx, nil) // no menu, no Cmd+Q
 		if cx.Env().OS() == core.OSWindows && !desktop.FullScreen(cx) {
 			desktop.ToggleFullScreen(cx) // the kiosk keeps it on top; macOS's covers the screens itself
+			a.fullScreened = true
 		}
 		a.kiosk.Enter()
 		a.stop = append(a.stop, cx.KeepAwake("A baby is playing the piano", core.KeepAwakeOptions{Display: true}))
@@ -147,16 +152,13 @@ func (a *app) start() error {
 // on, the volume capped, a moment's silence after the output changed, and
 // the piano in front.
 func (a *app) tick() {
-	if a.exiting {
-		return
-	}
 	if a.kiosk.Tick() {
 		if p := a.piano.GetUntracked(); p != nil {
 			p.Pause(time.Second)
 		}
 	}
 	a.kiosk.Front()
-	a.cx.AfterFunc(500*time.Millisecond, a.tick)
+	a.stopTick = a.cx.AfterFunc(500*time.Millisecond, a.tick)
 }
 
 // key plays the key named name, which typed text, unless it completes the
@@ -172,21 +174,28 @@ func (a *app) key(name, text string) {
 	}
 }
 
-// leave ends playing: a computer gives the keyboard back and quits, as the
-// parents asked for it; a phone or tablet goes back to the setup.
+// leave ends playing and goes back to the setup: a computer gives the
+// keyboard and the screens back first.
 func (a *app) leave() {
-	if a.exiting {
+	if !a.playing.GetUntracked() {
 		return
 	}
 	for _, stop := range a.stop {
 		stop()
 	}
 	a.stop = nil
+	a.exit = piano.ExitSequence{}
 	if a.locked {
-		a.exiting = true
+		a.locked = false
+		if a.stopTick != nil {
+			a.stopTick()
+			a.stopTick = nil
+		}
 		a.kiosk.Stop()
-		a.cx.Quit()
-		return
+		if a.fullScreened {
+			a.fullScreened = false
+			desktop.ToggleFullScreen(a.cx)
+		}
 	}
 	a.playing.Set(false)
 }

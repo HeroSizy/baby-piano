@@ -75,8 +75,9 @@ func Start(opts Options, onKey func(Key)) error {
 	return nil
 }
 
-// Stop gives the keyboard back.
+// Stop gives the keyboard back, and the screens Enter covered.
 func Stop() {
+	uncover()
 	lock.Lock()
 	defer lock.Unlock()
 	if lock.tap == 0 {
@@ -200,7 +201,7 @@ func utf16String(u []uint16) string {
 // Enter covers every screen: the piano's window becomes a borderless window
 // over the screen saver's level on the main screen, the other screens get
 // black windows, and the Dock, the menu bar, app switching and the
-// shut-down dialog go away until the app quits. Force Quit stays, so a
+// shut-down dialog go away until Stop. Force Quit stays, so a
 // parent can still end a hung piano with Cmd+Option+Esc, which the lock
 // swallows while the piano runs.
 func Enter() {
@@ -219,6 +220,11 @@ func Enter() {
 			w.Send(objc.RegisterName("setFrame:display:"), frame, true)
 		}
 		if win != 0 && main != 0 {
+			covered.win = win
+			covered.style = objc.Send[uint](win, objc.RegisterName("styleMask"))
+			covered.level = objc.Send[int](win, objc.RegisterName("level"))
+			covered.behavior = objc.Send[uint](win, objc.RegisterName("collectionBehavior"))
+			covered.frame = objc.Send[nsRect](win, objc.RegisterName("frame"))
 			cover(win, objc.Send[nsRect](main, objc.RegisterName("frame")))
 			win.Send(objc.RegisterName("makeKeyAndOrderFront:"), 0)
 		}
@@ -236,6 +242,7 @@ func Enter() {
 			black.Send(objc.RegisterName("setBackgroundColor:"), objc.ID(objc.GetClass("NSColor")).Send(objc.RegisterName("blackColor")))
 			cover(black, frame)
 			black.Send(objc.RegisterName("orderFront:"), 0)
+			covered.blacks = append(covered.blacks, black)
 		}
 		app.Send(objc.RegisterName("activateIgnoringOtherApps:"), true)
 		// Hide Dock and menu bar, no app switching, no Apple menu, no
@@ -257,6 +264,38 @@ func Enter() {
 }
 
 type cgPoint struct{ X, Y float64 }
+
+// covered is what Enter changed, for uncover to put back; only the main
+// thread touches it.
+var covered struct {
+	win             objc.ID
+	style, behavior uint
+	level           int
+	frame           nsRect
+	blacks          []objc.ID
+}
+
+// uncover undoes Enter: the piano's window as it was, the black windows
+// gone, and the Dock, the menu bar and app switching back.
+func uncover() {
+	load()
+	onMain(func() {
+		app := objc.ID(objc.GetClass("NSApplication")).Send(objc.RegisterName("sharedApplication"))
+		app.Send(objc.RegisterName("setPresentationOptions:"), uint(0))
+		for _, b := range covered.blacks {
+			b.Send(objc.RegisterName("close"))
+			b.Send(objc.RegisterName("release"))
+		}
+		if w := covered.win; w != 0 {
+			w.Send(objc.RegisterName("setStyleMask:"), covered.style)
+			w.Send(objc.RegisterName("setLevel:"), covered.level)
+			w.Send(objc.RegisterName("setCollectionBehavior:"), covered.behavior)
+			w.Send(objc.RegisterName("setFrame:display:"), covered.frame, true)
+			w.Send(objc.RegisterName("makeKeyAndOrderFront:"), 0)
+		}
+		covered.win, covered.blacks = 0, nil
+	})
+}
 
 // Front brings the piano back in front if the system or another app took
 // it, as a notification or the keyboard setup assistant can.
