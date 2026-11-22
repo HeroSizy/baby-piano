@@ -52,10 +52,13 @@ func (a *app) playScreen(cx *core.Scope) core.Node {
 		var was []string
 		cx.Effect(func() {
 			now := core.KeysDown(cx)
+			// Under the screen's scope, not this effect's: the notes'
+			// fireworks belong to the screen, and the effect running
+			// again as the key comes up would stop them halfway.
 			cx.Untrack(func() {
 				for _, k := range now {
 					if !slices.Contains(was, k) {
-						press(k)
+						cx.Run(func() { press(k) })
 					}
 				}
 			})
