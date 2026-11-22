@@ -10,3 +10,7 @@ build:
   targets: [macos_arm64, macos_x64, windows_x64, windows_arm64, ios, android_arm64]
 
 i18n: { dir: locales, source: en }
+
+# The app makes no network connections and uses no encryption, which App Store
+# Connect's export compliance question asks about on every upload.
+apple: { info: { ITSAppUsesNonExemptEncryption: false } }
