@@ -62,9 +62,12 @@ type app struct {
 	locked  bool
 	exiting bool
 	// burst draws a note's colored circle, when the play screen shows them.
-	burst   func(note int)
-	exit    piano.ExitSequence
-	stop    []func()
+	burst func(note int)
+	// tapAt plays the touch key at a point as a finger landing there does,
+	// while a phone or tablet shows them; the store screenshots tap with it.
+	tapAt func(at core.Point)
+	exit  piano.ExitSequence
+	stop  []func()
 }
 
 // newRoot is the app on lock: the parents' setup, then the piano.
