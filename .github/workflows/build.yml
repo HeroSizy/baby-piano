@@ -10,6 +10,13 @@ on:
 permissions:
   contents: read
 
+# One run per branch: a new push cancels the run still going, so main only
+# builds and releases its latest commit, and two releases never race for a
+# version.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # Key map, rate limit, screens and the ways out (NSGo headless tests).
   test:
@@ -40,10 +47,6 @@ jobs:
     runs-on: macos-latest
     permissions:
       contents: write # a release creates the tag and the GitHub Release
-    # Releases go one at a time, so two pushes never pick the same version.
-    concurrency:
-      group: build-${{ github.ref }}
-      cancel-in-progress: false
     env:
       HAS_CERT: ${{ secrets.MACOS_CERT_P12 != '' }}
       HAS_NOTARY_KEY: ${{ secrets.APPLE_API_KEY_P8 != '' && secrets.APPLE_API_KEY_ID != '' && secrets.APPLE_API_ISSUER != '' }}
