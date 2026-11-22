@@ -40,6 +40,10 @@ jobs:
     runs-on: macos-latest
     permissions:
       contents: write # a release creates the tag and the GitHub Release
+    # Releases go one at a time, so two pushes never pick the same version.
+    concurrency:
+      group: build-${{ github.ref }}
+      cancel-in-progress: false
     env:
       HAS_CERT: ${{ secrets.MACOS_CERT_P12 != '' }}
       HAS_NOTARY_KEY: ${{ secrets.APPLE_API_KEY_P8 != '' && secrets.APPLE_API_KEY_ID != '' && secrets.APPLE_API_ISSUER != '' }}
@@ -48,6 +52,8 @@ jobs:
       HAS_NOTARY: ${{ (secrets.APPLE_API_KEY_P8 != '' && secrets.APPLE_API_KEY_ID != '' && secrets.APPLE_API_ISSUER != '') || (secrets.APPLE_ID != '' && secrets.APPLE_APP_PASSWORD != '') }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # every commit and tag, for the version and build number
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
@@ -57,20 +63,36 @@ jobs:
       - name: Version
         id: ver
         run: |
-          # A release: a pushed v* tag, or main carrying an nsgo.yaml version that has no tag yet.
+          # Every push to main is a release: nsgo.yaml's version, or when
+          # that is already tagged, the next patch after the highest tag of
+          # its major.minor (1.0.3 → 1.0.4 → 1.0.5 …). A pushed v* tag
+          # releases as itself. The iPhone/iPad build number is the number
+          # of commits plus 100, so it goes up by one with each commit.
+          echo "build=$(( $(git rev-list --count HEAD) + 100 ))" >> "$GITHUB_OUTPUT"
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
             echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
             echo "release=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          V=$(awk '/^version:/ {print $2; exit}' nsgo.yaml)
-          if [[ "$GITHUB_REF" == refs/heads/main && -n "$V" && -z "$(git ls-remote --tags origin "refs/tags/v$V")" ]]; then
-            echo "version=$V" >> "$GITHUB_OUTPUT"
-            echo "release=true" >> "$GITHUB_OUTPUT"
-          else
+          if [[ "$GITHUB_REF" != refs/heads/main ]]; then
             echo "version=0.0.0-dev.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
             echo "release=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          V=$(awk '/^version:/ {print $2; exit}' nsgo.yaml)
+          MM=${V%.*}
+          LAST=$(git tag -l "v$MM.*" | sed 's/^v//' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -t. -k3,3n | tail -1)
+          if [[ -n "$LAST" && ( "$LAST" == "$V" || ${LAST##*.} -gt ${V##*.} ) ]]; then
+            V="$MM.$(( ${LAST##*.} + 1 ))"
+          fi
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "release=true" >> "$GITHUB_OUTPUT"
+          # What changed since the last release, for its notes.
+          {
+            echo 'changes<<EOF'
+            if [[ -n "$LAST" ]]; then git log --no-merges --format='- %s' "v$LAST..HEAD"; else git log --no-merges --format='- %s' -20; fi
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
       # ---- Signing (optional): runs only when the Developer ID certificate secrets are set ----
       - name: Import Developer ID certificate
@@ -165,9 +187,9 @@ jobs:
           PROFILE="$RUNNER_TEMP/MashPiano_AppStore.mobileprovision"
           echo "$IOS_PROFILE" | base64 --decode > "$PROFILE"
 
-          # Each upload needs a build number above the last one; the workflow run number always grows.
+          # TestFlight hands each upload to the internal group Family by itself.
           env -u NSGO_NOTARY_KEY go tool nsgo build -version "${{ steps.ver.outputs.version }}" \
-            -build-number "$((GITHUB_RUN_NUMBER + 100))" -target ios -profile "$PROFILE"
+            -build-number "${{ steps.ver.outputs.build }}" -target ios -profile "$PROFILE"
           IPA=$(ls dist/releases/*-ios.ipa | head -1)
           test -n "$IPA"
 
@@ -197,11 +219,14 @@ jobs:
             dist/releases/*.exe
             dist/releases/*.apk
           body: |
+            ## What's new
+            ${{ steps.ver.outputs.changes }}
+
             ## Download
             - **Mac**: `macos-arm64.dmg` (Apple silicon) or `macos-x64.dmg` (Intel). Open it and drag Mash Piano into Applications.
             - **Windows**: `windows-x64-setup.exe` (most PCs) or `windows-arm64-setup.exe` (ARM PCs).
             - **Android phones and tablets**: `android-arm64.apk`.
-            - **iPhone / iPad**: on the App Store (search for Mash Piano).
+            - **iPhone / iPad**: on the App Store (search for Mash Piano); this build (${{ steps.ver.outputs.build }}) is on TestFlight for the testers.
 
             Mac signing: ${{ env.HAS_CERT == 'true' && (env.HAS_NOTARY == 'true' && 'signed with a Developer ID and notarized by Apple, so it opens with a double-click.' || 'signed with a Developer ID, not notarized.') || 'ad-hoc signed. The first launch says the developer cannot be verified: open System Settings › Privacy & Security and choose Open Anyway.' }}
 

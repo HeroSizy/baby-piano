@@ -21,7 +21,7 @@ The App Store screenshots in `docs/store/screenshots` come from `tools/store-scr
 
 ## Releasing and signing
 
-GitHub Actions releases automatically: change `version` in `nsgo.yaml` to the new version (say `1.0.2`) and merge into `main`. The workflow builds every platform, creates the `v1.0.2` tag and publishes a GitHub Release with the Mac, Windows and Android packages. When the version already has a tag it only builds. Pushing a `v*` tag by hand releases too.
+Every push to `main` is a release; there are no pull requests. GitHub Actions builds every platform, picks the next version and publishes a GitHub Release with the Mac, Windows and Android packages and the changes since the last one. The version is `nsgo.yaml`'s, or when that already has a tag, the next patch after the highest tag of its major.minor (1.0.3, 1.0.4, 1.0.5 …); to start 1.1 or 2.0, set `version` to `1.1.0` or `2.0.0`. The iPhone/iPad build goes up to App Store Connect with build number = commit count + 100, so it rises by one per commit, and TestFlight gives it to the internal group Family by itself. Submitting a version for App Store review stays a manual step in App Store Connect. Pushing a `v*` tag by hand releases that version.
 
 Mac signing and notarization use repository secrets:
 
