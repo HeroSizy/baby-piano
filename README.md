@@ -27,7 +27,7 @@ It started with an old mechanical keyboard at home. Our baby loved slapping it, 
 
 1. Open **Mash Piano**, set the volume with the slider and press **Try it** (the keyboard's volume keys are locked once playing starts).
 2. Press **Start playing (full screen, keyboard locked)** and hand the keyboard to the baby.
-3. **To stop** (either works):
+3. **To stop** and go back to the setup page (either works):
    - hold the mouse in the screen's **top-right corner** for **3 seconds** (not available when the mouse is locked);
    - or type **`quitpiano`** on the keyboard (no more than 3 seconds between letters).
 
