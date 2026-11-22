@@ -4,6 +4,7 @@ package sound
 import (
 	"embed"
 	"fmt"
+	"math"
 	"time"
 
 	"github.com/nsgo-dev/nsgo/audio"
@@ -55,14 +56,18 @@ func Load(cx *core.Scope, volume float32, done func(*Piano, error)) {
 	}
 }
 
-// Play sounds note index i of piano.Notes, clamped to the scale, and reports
-// whether it sounded: false while the limiter holds notes back.
-func (p *Piano) Play(i int) bool {
+// Play sounds MIDI pitch pitch from the nearest sample, played up to a
+// semitone faster or slower, and reports whether it sounded: false while
+// the limiter holds notes back.
+func (p *Piano) Play(pitch int) bool {
 	if !p.limiter.Allow(p.now()) {
 		return false
 	}
-	i = min(max(i, 0), len(p.sounds)-1)
-	p.sounds[i].Play(audio.Voice{Volume: p.volume * headroom * piano.Gain(i)})
+	i, semitones := piano.Sample(pitch)
+	p.sounds[i].Play(audio.Voice{
+		Volume: p.volume * headroom * piano.PitchGain(pitch),
+		Rate:   float32(math.Pow(2, float64(semitones)/12)),
+	})
 	return true
 }
 

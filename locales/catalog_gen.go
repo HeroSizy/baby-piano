@@ -76,8 +76,6 @@ const (
 	textVolumeLocked
 	textTryIt
 	textSystemVolumeUnknown
-	textLockMouse
-	textShowVisuals
 	textStart
 	textSecureInput
 	textLockFailed
@@ -87,6 +85,17 @@ const (
 	textTouchLockIOS
 	textTouchLockAndroid
 	textTouchStart
+	textScale
+	textScalePentatonic
+	textScalePentatonicNote
+	textScaleMajor
+	textScaleMajorNote
+	textScaleChromatic
+	textScaleChromaticNote
+	textVisualsTitle
+	textVisualsNote
+	textLockMouseTitle
+	textLockMouseNote
 	numTexts
 )
 
@@ -106,8 +115,6 @@ var keyOfText = [numTexts]string{
 	"volumeLocked",
 	"tryIt",
 	"systemVolumeUnknown",
-	"lockMouse",
-	"showVisuals",
 	"start",
 	"secureInput",
 	"lockFailed",
@@ -117,6 +124,17 @@ var keyOfText = [numTexts]string{
 	"touchLockIOS",
 	"touchLockAndroid",
 	"touchStart",
+	"scale",
+	"scalePentatonic",
+	"scalePentatonicNote",
+	"scaleMajor",
+	"scaleMajorNote",
+	"scaleChromatic",
+	"scaleChromaticNote",
+	"visualsTitle",
+	"visualsNote",
+	"lockMouseTitle",
+	"lockMouseNote",
 }
 
 // textsEn are the messages without arguments in en.
@@ -134,8 +152,6 @@ var textsEn = i18n.NewTexts(""+
 	"The keyboard's volume keys are locked while the baby plays, so set it here first."+
 	"Try it"+
 	"This output's volume cannot be read, as with HDMI and some speakers. Check it is not too loud."+
-	"Also lock the mouse and trackpad (recommended on laptops; then stop by typing quitpiano)"+
-	"Show colorful fireworks for each note (not needed if the baby cannot see the screen)"+
 	"Start playing (full screen, keyboard locked)"+
 	"Another app turned on secure keyboard entry, such as Terminal's Secure Keyboard Entry or a password field, and no app can lock the keyboard through it. Turn it off, or restart the computer, then start again."+
 	"The keyboard could not be locked. Check that Mash Piano is switched on in System Settings › Privacy & Security › Accessibility; after an update, remove its old entry (−) and add it again."+
@@ -144,7 +160,18 @@ var textsEn = i18n.NewTexts(""+
 	"Big colored keys the baby can tap with every finger, all in a scale that always sounds well together."+
 	"To keep the baby in the piano, turn on Guided Access: Settings › Accessibility › Guided Access, then triple-click the side button while the piano plays."+
 	"To keep the baby in the piano, pin it: Settings › Security › App pinning, then pin Mash Piano from the recent apps."+
-	"Start playing",
+	"Start playing"+
+	"Notes"+
+	"Five notes"+
+	"Do re mi sol la. Always sounds lovely."+
+	"Seven notes"+
+	"The white keys, do re mi fa sol la ti."+
+	"All twelve"+
+	"White and black keys, every note."+
+	"Fireworks"+
+	"A colorful burst for each note. Not needed if the baby cannot see the screen."+
+	"Lock the mouse and trackpad too"+
+	"Recommended on laptops. Then stop by typing quitpiano.",
 	[]uint16{
 		10,
 		10,
@@ -159,8 +186,6 @@ var textsEn = i18n.NewTexts(""+
 		81,
 		6,
 		94,
-		88,
-		84,
 		44,
 		207,
 		193,
@@ -170,6 +195,17 @@ var textsEn = i18n.NewTexts(""+
 		156,
 		119,
 		13,
+		5,
+		10,
+		38,
+		11,
+		38,
+		10,
+		33,
+		9,
+		77,
+		31,
+		54,
 	})
 
 // textsZhHans are the messages without arguments in zh-Hans.
@@ -187,8 +223,6 @@ var textsZhHans = i18n.NewTexts(""+
 	"开始后键盘上的音量键会被锁住，请先在这里调好。"+
 	"试听"+
 	"当前输出设备无法读取音量（如 HDMI、部分外接音箱），请手动确认音量不要太大。"+
-	"同时锁住鼠标和触控板（笔记本推荐；打开后只能用键盘输入 quitpiano 退出）"+
-	"按键时放彩色烟花（宝宝看不到屏幕的话不用开）"+
 	"开始弹琴（全屏锁定键盘）"+
 	"有程序开启了“安全键盘输入”（如终端的“安全键盘输入”、正在输入的密码框），这时任何程序都锁不住键盘。请关闭它（或重启电脑）后再开始。"+
 	"无法锁定键盘。请确认已在 系统设置 › 隐私与安全性 › 辅助功能 中打开“Mash Piano”；更新版本后，请先删掉旧条目（−）再重新添加。"+
@@ -197,7 +231,18 @@ var textsZhHans = i18n.NewTexts(""+
 	"大大的彩色琴键，宝宝每根手指都能弹，所有的音都在同一个音阶里，怎么弹都好听。"+
 	"想让宝宝出不去，请打开“引导式访问”：设置 › 辅助功能 › 引导式访问，然后在弹琴时连按三下侧边按钮。"+
 	"想让宝宝出不去，请固定应用：设置 › 安全 › 应用固定，然后在最近任务里固定“Mash Piano”。"+
-	"开始弹琴",
+	"开始弹琴"+
+	"音阶"+
+	"五声音阶"+
+	"do re mi sol la，怎么按都好听。"+
+	"全音阶"+
+	"钢琴白键的 do re mi fa sol la si。"+
+	"全部音"+
+	"黑键白键都有，12 个音全用上。"+
+	"彩色烟花"+
+	"每个音放一朵烟花。宝宝看不到屏幕的话不用开。"+
+	"同时锁住鼠标和触控板"+
+	"笔记本推荐。打开后只能键入 quitpiano 退出。",
 	[]uint16{
 		10,
 		12,
@@ -212,8 +257,6 @@ var textsZhHans = i18n.NewTexts(""+
 		69,
 		6,
 		110,
-		101,
-		66,
 		36,
 		201,
 		184,
@@ -223,6 +266,17 @@ var textsZhHans = i18n.NewTexts(""+
 		148,
 		128,
 		12,
+		6,
+		12,
+		39,
+		9,
+		40,
+		9,
+		42,
+		12,
+		66,
+		30,
+		59,
 	})
 
 // texts returns the messages without arguments in lang, nil for a
@@ -464,20 +518,6 @@ func SystemVolumeUnknown(cx *core.Scope) string { return For(cx).SystemVolumeUnk
 // SystemVolumeUnknown is the package's SystemVolumeUnknown in the language of msgs.
 func (msgs Messages) SystemVolumeUnknown() string { return msgs.text(textSystemVolumeUnknown) }
 
-// LockMouse says "Also lock the mouse and trackpad (recommended on laptops; then stop by typing quitpiano)"
-// in the language the app shows under cx.
-func LockMouse(cx *core.Scope) string { return For(cx).LockMouse() }
-
-// LockMouse is the package's LockMouse in the language of msgs.
-func (msgs Messages) LockMouse() string { return msgs.text(textLockMouse) }
-
-// ShowVisuals says "Show colorful fireworks for each note (not needed if the baby cannot see the screen)"
-// in the language the app shows under cx.
-func ShowVisuals(cx *core.Scope) string { return For(cx).ShowVisuals() }
-
-// ShowVisuals is the package's ShowVisuals in the language of msgs.
-func (msgs Messages) ShowVisuals() string { return msgs.text(textShowVisuals) }
-
 // Start says "Start playing (full screen, keyboard locked)"
 // in the language the app shows under cx.
 func Start(cx *core.Scope) string { return For(cx).Start() }
@@ -540,3 +580,80 @@ func TouchStart(cx *core.Scope) string { return For(cx).TouchStart() }
 
 // TouchStart is the package's TouchStart in the language of msgs.
 func (msgs Messages) TouchStart() string { return msgs.text(textTouchStart) }
+
+// Scale says "Notes"
+// in the language the app shows under cx.
+func Scale(cx *core.Scope) string { return For(cx).Scale() }
+
+// Scale is the package's Scale in the language of msgs.
+func (msgs Messages) Scale() string { return msgs.text(textScale) }
+
+// ScalePentatonic says "Five notes"
+// in the language the app shows under cx.
+func ScalePentatonic(cx *core.Scope) string { return For(cx).ScalePentatonic() }
+
+// ScalePentatonic is the package's ScalePentatonic in the language of msgs.
+func (msgs Messages) ScalePentatonic() string { return msgs.text(textScalePentatonic) }
+
+// ScalePentatonicNote says "Do re mi sol la. Always sounds lovely."
+// in the language the app shows under cx.
+func ScalePentatonicNote(cx *core.Scope) string { return For(cx).ScalePentatonicNote() }
+
+// ScalePentatonicNote is the package's ScalePentatonicNote in the language of msgs.
+func (msgs Messages) ScalePentatonicNote() string { return msgs.text(textScalePentatonicNote) }
+
+// ScaleMajor says "Seven notes"
+// in the language the app shows under cx.
+func ScaleMajor(cx *core.Scope) string { return For(cx).ScaleMajor() }
+
+// ScaleMajor is the package's ScaleMajor in the language of msgs.
+func (msgs Messages) ScaleMajor() string { return msgs.text(textScaleMajor) }
+
+// ScaleMajorNote says "The white keys, do re mi fa sol la ti."
+// in the language the app shows under cx.
+func ScaleMajorNote(cx *core.Scope) string { return For(cx).ScaleMajorNote() }
+
+// ScaleMajorNote is the package's ScaleMajorNote in the language of msgs.
+func (msgs Messages) ScaleMajorNote() string { return msgs.text(textScaleMajorNote) }
+
+// ScaleChromatic says "All twelve"
+// in the language the app shows under cx.
+func ScaleChromatic(cx *core.Scope) string { return For(cx).ScaleChromatic() }
+
+// ScaleChromatic is the package's ScaleChromatic in the language of msgs.
+func (msgs Messages) ScaleChromatic() string { return msgs.text(textScaleChromatic) }
+
+// ScaleChromaticNote says "White and black keys, every note."
+// in the language the app shows under cx.
+func ScaleChromaticNote(cx *core.Scope) string { return For(cx).ScaleChromaticNote() }
+
+// ScaleChromaticNote is the package's ScaleChromaticNote in the language of msgs.
+func (msgs Messages) ScaleChromaticNote() string { return msgs.text(textScaleChromaticNote) }
+
+// VisualsTitle says "Fireworks"
+// in the language the app shows under cx.
+func VisualsTitle(cx *core.Scope) string { return For(cx).VisualsTitle() }
+
+// VisualsTitle is the package's VisualsTitle in the language of msgs.
+func (msgs Messages) VisualsTitle() string { return msgs.text(textVisualsTitle) }
+
+// VisualsNote says "A colorful burst for each note. Not needed if the baby cannot see the screen."
+// in the language the app shows under cx.
+func VisualsNote(cx *core.Scope) string { return For(cx).VisualsNote() }
+
+// VisualsNote is the package's VisualsNote in the language of msgs.
+func (msgs Messages) VisualsNote() string { return msgs.text(textVisualsNote) }
+
+// LockMouseTitle says "Lock the mouse and trackpad too"
+// in the language the app shows under cx.
+func LockMouseTitle(cx *core.Scope) string { return For(cx).LockMouseTitle() }
+
+// LockMouseTitle is the package's LockMouseTitle in the language of msgs.
+func (msgs Messages) LockMouseTitle() string { return msgs.text(textLockMouseTitle) }
+
+// LockMouseNote says "Recommended on laptops. Then stop by typing quitpiano."
+// in the language the app shows under cx.
+func LockMouseNote(cx *core.Scope) string { return For(cx).LockMouseNote() }
+
+// LockMouseNote is the package's LockMouseNote in the language of msgs.
+func (msgs Messages) LockMouseNote() string { return msgs.text(textLockMouseNote) }

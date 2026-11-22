@@ -158,16 +158,16 @@ func TestTouchKeysPlayEveryFinger(t *testing.T) {
 	if !app.Exists("id:corner") {
 		t.Fatal("no piano")
 	}
-	// Four columns of four rows upright: the second key of the third row
-	// and the last key.
+	// Five notes, an octave to a row, low at the bottom from C2 (note 5):
+	// the second key of the middle row is E4, the last of the bottom A2.
 	b := app.Find("id:keys").Bounds()
-	w, h := b.Size.Width/4, b.Size.Height/4
+	w, h := b.Size.Width/5, b.Size.Height/5
 	f1 := app.Touch("id:keys", core.Point{X: w * 1.5, Y: h * 2.5})
-	f2 := app.Touch("id:keys", core.Point{X: w * 3.5, Y: h * 3.5})
+	f2 := app.Touch("id:keys", core.Point{X: w * 4.5, Y: h * 4.5})
 	f1.Lift()
 	f2.Lift()
 	n := plays(app)
-	if n[touchFirst+9] != 1 || n[touchFirst+15] != 1 || total(n) != 2 {
+	if n[16] != 1 || n[9] != 1 || total(n) != 2 {
 		t.Errorf("two fingers played %v", n)
 	}
 }

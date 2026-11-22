@@ -9,8 +9,41 @@ func TestNotesSpanThePiano(t *testing.T) {
 	if len(Notes) != 36 || Notes[0] != "C1" || Notes[5] != "C2" || Notes[35] != "C8" {
 		t.Errorf("Notes = %v", Notes)
 	}
-	if Gain(0) != 1 || Gain(25) != 1 || Gain(35) != 0.6 || Gain(30) >= Gain(29) {
-		t.Errorf("gain: C1 %v, C6 %v, C8 %v", Gain(0), Gain(25), Gain(35))
+	g := func(i int) float32 { return PitchGain(Pentatonic.Pitch(i)) }
+	if g(0) != 1 || g(25) != 1 || g(35) != 0.6 || g(30) >= g(29) {
+		t.Errorf("gain: C1 %v, C6 %v, C8 %v", g(0), g(25), g(35))
+	}
+}
+
+func TestScales(t *testing.T) {
+	for _, s := range Scales {
+		if got := NoteName(s.Pitch(s.From())); got != "C2" {
+			t.Errorf("%s: note %d is %s, want C2", s, s.From(), got)
+		}
+		if got := NoteName(s.Pitch(s.From() + s.PerOctave())); got != "C3" {
+			t.Errorf("%s: an octave up is %s, want C3", s, got)
+		}
+		for i := range Notes {
+			p := s.Pitch(i)
+			if i > 0 && p <= s.Pitch(i-1) {
+				t.Errorf("%s: note %d (%s) is not above the one below", s, i, NoteName(p))
+			}
+			j, semis := Sample(p)
+			if semis < -1 || semis > 1 {
+				t.Errorf("%s: %s is %d semitones from sample %s", s, NoteName(p), semis, Notes[j])
+			}
+			if s == Pentatonic && (j != i || semis != 0) {
+				t.Errorf("pentatonic note %d plays sample %d shifted %d", i, j, semis)
+			}
+		}
+	}
+	for i, want := range map[int]string{0: "G1", 13: "F3", 16: "B3", 35: "G6"} {
+		if got := NoteName(Major.Pitch(i)); got != want {
+			t.Errorf("major note %d = %s, want %s", i, got, want)
+		}
+	}
+	if NoteName(Chromatic.Pitch(0)) != "C2" || NoteName(Chromatic.Pitch(13)) != "C#3" || NoteName(Chromatic.Pitch(35)) != "B4" {
+		t.Errorf("chromatic: %s %s %s", NoteName(Chromatic.Pitch(0)), NoteName(Chromatic.Pitch(11)), NoteName(Chromatic.Pitch(35)))
 	}
 }
 

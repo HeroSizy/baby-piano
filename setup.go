@@ -12,6 +12,7 @@ import (
 
 	"github.com/HeroSizy/baby-piano/kiosk"
 	"github.com/HeroSizy/baby-piano/locales"
+	"github.com/HeroSizy/baby-piano/piano"
 )
 
 var errSecureInput = errors.New("secure keyboard entry is on")
@@ -173,15 +174,11 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 			}),
 		)
 	}
-	card = append(card, divider())
+	card = append(card, divider(), heading(locales.Scale(cx)), scaleChoice(cx, a.settings.scale), divider())
 	if computer {
-		card = append(card,
-			ui.Checkbox{Text: locales.LockMouse(cx), Checked: a.settings.lockMouse.Get, OnChange: func(on bool) { _ = a.settings.lockMouse.Set(on) }, TestID: "lockMouse"},
-		)
+		card = append(card, toggleRow("🖱️", locales.LockMouseTitle(cx), locales.LockMouseNote(cx), "lockMouse", a.settings.lockMouse))
 	}
-	card = append(card,
-		ui.Checkbox{Text: locales.ShowVisuals(cx), Checked: a.settings.visuals.Get, OnChange: func(on bool) { _ = a.settings.visuals.Set(on) }, TestID: "visuals"},
-	)
+	card = append(card, toggleRow("🎆", locales.VisualsTitle(cx), locales.VisualsNote(cx), "visuals", a.settings.visuals))
 
 	// tips are how parents keep the baby in and how they stop.
 	var tips []core.Node
@@ -281,6 +278,81 @@ func logo() core.Node {
 	}
 	return core.View{Style: core.Style{Direction: core.Row, Gap: 5, Padding: core.All(12), CornerRadius: 24, Background: core.RGBA(0xffffff, 0.6)},
 		Children: keys}
+}
+
+// scaleChoice is three tiles, one per scale, each with a row of colored
+// keys as many as the scale has notes to an octave: the chosen one lifts
+// in the accent's tint and edge.
+func scaleChoice(cx *core.Scope, scale *core.Persisted[piano.Scale]) core.Node {
+	names := map[piano.Scale][2]string{
+		piano.Pentatonic: {locales.ScalePentatonic(cx), locales.ScalePentatonicNote(cx)},
+		piano.Major:      {locales.ScaleMajor(cx), locales.ScaleMajorNote(cx)},
+		piano.Chromatic:  {locales.ScaleChromatic(cx), locales.ScaleChromaticNote(cx)},
+	}
+	var tiles []core.Node
+	for _, s := range piano.Scales {
+		chosen := func() bool { return scale.Get() == s }
+		var bars []core.Node
+		for c := range s.PerOctave() {
+			h := float64(c) / float64(s.PerOctave()) * 330
+			l := 0.64
+			if s == piano.Chromatic && sharp(piano.Chromatic.Pitch(c)) {
+				l = 0.51
+			}
+			bars = append(bars, core.View{Style: core.Style{FlexGrow: 1, Height: core.Pt(22), CornerRadius: 3, Background: hsl(h, 0.8, l)}})
+		}
+		tiles = append(tiles, base.Button{
+			Role: core.RoleRadio, Selected: chosen, Label: names[s][0], TestID: "scale-" + string(s),
+			OnPress: func(core.PressEvent) { _ = scale.Set(s) },
+			StyleFunc: func() core.Style {
+				st := core.Style{FlexGrow: 1, FlexBasis: core.Pt(0), MinWidth: core.Pt(0), Gap: 8, Padding: core.All(12), CornerRadius: 18,
+					BorderWidth: 2, BorderColor: ink.Faded(0.08), Background: core.RGB(0xfffaf4),
+					Active: &core.Style{Opacity: core.Alpha(0.8)}}
+				if chosen() {
+					st.BorderColor = coral
+					st.Background = core.RGBA(0xf0645a, 0.08)
+				}
+				return st
+			},
+			Children: []core.Node{
+				core.View{Style: core.Style{Direction: core.Row, Gap: 2}, Children: bars},
+				core.Text{Content: names[s][0], Style: ui.TypeBody.Merge(core.Style{FontSize: 15, LineHeight: 20, FontWeight: ui.Bold, Color: ink})},
+				core.Text{Content: names[s][1], Style: ui.TypeBody.Merge(core.Style{FontSize: 12, LineHeight: 16, Color: muted})},
+			},
+		})
+	}
+	return core.View{Style: core.Style{Direction: core.Row, Gap: 10}, Children: tiles}
+}
+
+// toggleRow is a setting the parents turn on or off: an emoji in a tinted
+// square, a title and what it does, and a switch; the whole row presses.
+func toggleRow(emoji, title, note, id string, on *core.Persisted[bool]) core.Node {
+	return base.Button{
+		Role: core.RoleSwitch, Selected: on.Get, Label: title, TestID: id,
+		OnPress: func(core.PressEvent) { _ = on.Set(!on.Get()) },
+		Style: core.Style{Direction: core.Row, AlignItems: core.AlignCenter, Gap: 14, Padding: core.Symmetric(4, 0),
+			Active: &core.Style{Opacity: core.Alpha(0.8)}},
+		Children: []core.Node{
+			core.View{Style: core.Style{Width: core.Pt(44), Height: core.Pt(44), CornerRadius: 14, Background: core.RGB(0xfff1e4),
+				AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter},
+				Children: []core.Node{core.Text{Content: emoji, Style: ui.TypeBody.Merge(core.Style{FontSize: 22, LineHeight: 26})}}},
+			core.View{Style: core.Style{FlexGrow: 1, FlexShrink: 1, Gap: 2}, Children: []core.Node{
+				core.Text{Content: title, Style: ui.TypeBody.Merge(core.Style{FontSize: 15, LineHeight: 20, FontWeight: ui.Semibold, Color: ink})},
+				core.Text{Content: note, Style: ui.TypeBody.Merge(core.Style{FontSize: 13, LineHeight: 18, Color: muted})},
+			}},
+			// The row takes the press; the switch shows the state.
+			core.View{Style: core.Style{Width: core.Pt(50), Height: core.Pt(30), CornerRadius: 15, Padding: core.All(3)},
+				StyleFunc: func() core.Style {
+					st := core.Style{Width: core.Pt(50), Height: core.Pt(30), CornerRadius: 15, Padding: core.All(3), Background: ink.Faded(0.15), AlignItems: core.AlignStart}
+					if on.Get() {
+						st.Background, st.AlignItems = coral, core.AlignEnd
+					}
+					return st
+				},
+				Children: []core.Node{core.View{Style: core.Style{Width: core.Pt(24), Height: core.Pt(24), CornerRadius: 12, Background: core.RGB(0xffffff),
+					Shadows: []core.BoxShadow{{Offset: core.Point{Y: 1}, Blur: 3, Color: core.RGBA(0x000000, 0.2)}}}}}},
+		},
+	}
 }
 
 // divider is a hairline across the card.

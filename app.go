@@ -39,6 +39,7 @@ type settings struct {
 	volume    *core.Persisted[float64]
 	lockMouse *core.Persisted[bool]
 	visuals   *core.Persisted[bool]
+	scale     *core.Persisted[piano.Scale]
 }
 
 func loadSettings(cx *core.Scope) settings {
@@ -46,6 +47,7 @@ func loadSettings(cx *core.Scope) settings {
 		volume:    core.NewPersisted(cx, "volume", 0.45, core.PersistOptions{}),
 		lockMouse: core.NewPersisted(cx, "lockMouse", false, core.PersistOptions{}),
 		visuals:   core.NewPersisted(cx, "showVisuals", false, core.PersistOptions{}),
+		scale:     core.NewPersisted(cx, "scale", piano.Pentatonic, core.PersistOptions{}),
 	}
 }
 
@@ -115,10 +117,13 @@ func (a *app) root() core.Node {
 	}
 }
 
-// play sounds note i and reports whether it sounded.
+// scale is the parents' scale, read without tracking it.
+func (a *app) scale() piano.Scale { return core.Untracked(a.cx, a.settings.scale.Get) }
+
+// play sounds note i of the parents' scale and reports whether it sounded.
 func (a *app) play(i int) bool {
 	p := a.piano.GetUntracked()
-	return p != nil && p.Play(i)
+	return p != nil && p.Play(a.scale().Pitch(i))
 }
 
 // start takes over the computer where it can and shows the piano. It
