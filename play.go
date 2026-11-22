@@ -139,6 +139,8 @@ func (a *app) corner(cx *core.Scope) core.Node {
 		}
 		progress.Set(0)
 	}
+	hint := core.NewAnimatedValue(cx, 1)
+	cx.StartAnimation(core.Timing(hint, 0, core.TimingConfig{Duration: time.Second, Delay: 5 * time.Second}), nil)
 	ring := core.Interpolate(progress, core.Interpolation{Input: []float64{0, 1}, Output: []float64{0.15, 1}})
 	return core.View{
 		Style: core.Style{Position: core.Absolute, Top: core.Pt(0), Right: core.Pt(0),
@@ -154,8 +156,12 @@ func (a *app) corner(cx *core.Scope) core.Node {
 			core.View{Style: core.Style{Width: core.Pt(40), Height: core.Pt(40), CornerRadius: 20,
 				BorderWidth: 4, BorderColor: core.RGBA(0xffffff, 0.85),
 				Animated: &core.AnimatedStyle{Opacity: ring, Scale: ring}}},
-			core.Text{Content: locales.CornerHint(cx), Style: core.Style{Position: core.Absolute, Top: core.Pt(cornerSize - 6), Right: core.Pt(12),
-				Width: core.Pt(260), TextAlign: core.TextAlignRight, FontSize: 11, Color: core.RGBA(0xffffff, 0.3)}},
+			// The hint sits on a dark pill so it reads over any key color, keeps
+			// clear of the screen edge, and fades once parents have seen it.
+			core.View{Style: core.Style{Position: core.Absolute, Top: core.Pt(cornerSize - 4), Right: core.Pt(16),
+				Padding: core.Symmetric(6, 12), CornerRadius: 999, Background: core.RGBA(0x000000, 0.35),
+				Animated: &core.AnimatedStyle{Opacity: hint}},
+				Children: []core.Node{core.Text{Content: locales.CornerHint(cx), Style: core.Style{FontSize: 13, Color: core.RGBA(0xffffff, 0.9)}}}},
 		},
 	}
 }

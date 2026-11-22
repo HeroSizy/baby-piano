@@ -165,7 +165,7 @@ var textsEn = i18n.NewTexts(""+
 	"The keyboard could not be locked. Check that Mash Piano is switched on in System Settings › Privacy & Security › Accessibility; after an update, remove its old entry (−) and add it again."+
 	"Ctrl+Alt+Del cannot be blocked by any app; Win+L is blocked while the baby plays."+
 	"Parents: hold the top-right corner for 3 seconds to stop"+
-	"Big colored keys the baby can tap with every finger, all in a scale that always sounds well together."+
+	"Every tap, or every key on an attached keyboard, plays a gentle piano note, all in a scale that always sounds well together."+
 	"To keep the baby in the piano, turn on Guided Access: Settings › Accessibility › Guided Access, then triple-click the side button while the piano plays."+
 	"To keep the baby in the piano, pin it: Settings › Security › App pinning, then pin Mash Piano from the recent apps."+
 	"Start playing"+
@@ -203,7 +203,7 @@ var textsEn = i18n.NewTexts(""+
 		193,
 		81,
 		56,
-		101,
+		124,
 		156,
 		119,
 		13,
@@ -244,7 +244,7 @@ var textsZhHans = i18n.NewTexts(""+
 	"无法锁定键盘。请确认已在 系统设置 › 隐私与安全性 › 辅助功能 中打开“Mash Piano”；更新版本后，请先删掉旧条目（−）再重新添加。"+
 	"Ctrl+Alt+Del 任何程序都拦不住；Win+L 在弹琴时会被禁用。"+
 	"家长：在右上角按住 3 秒退出"+
-	"大大的彩色琴键，宝宝每根手指都能弹，所有的音都在同一个音阶里，怎么弹都好听。"+
+	"点一下屏幕，或者按一下接上的键盘，都会弹出一个轻柔的钢琴音，所有的音都在同一个音阶里，怎么弹都好听。"+
 	"想让宝宝出不去，请打开“引导式访问”：设置 › 辅助功能 › 引导式访问，然后在弹琴时连按三下侧边按钮。"+
 	"想让宝宝出不去，请固定应用：设置 › 安全 › 应用固定，然后在最近任务里固定“Mash Piano”。"+
 	"开始弹琴"+
@@ -282,7 +282,7 @@ var textsZhHans = i18n.NewTexts(""+
 		184,
 		73,
 		39,
-		114,
+		150,
 		148,
 		128,
 		12,
@@ -577,7 +577,7 @@ func CornerHint(cx *core.Scope) string { return For(cx).CornerHint() }
 // CornerHint is the package's CornerHint in the language of msgs.
 func (msgs Messages) CornerHint() string { return msgs.text(textCornerHint) }
 
-// TouchIntro says "Big colored keys the baby can tap with every finger, all in a scale that always sounds well together."
+// TouchIntro says "Every tap, or every key on an attached keyboard, plays a gentle piano note, all in a scale that always sounds well together."
 // in the language the app shows under cx.
 func TouchIntro(cx *core.Scope) string { return For(cx).TouchIntro() }
 

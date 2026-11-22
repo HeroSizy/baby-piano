@@ -21,7 +21,7 @@ secureInput: Another app turned on secure keyboard entry, such as Terminal's Sec
 lockFailed: The keyboard could not be locked. Check that Mash Piano is switched on in System Settings › Privacy & Security › Accessibility; after an update, remove its old entry (−) and add it again.
 windowsLimits: Ctrl+Alt+Del cannot be blocked by any app; Win+L is blocked while the baby plays.
 cornerHint: "Parents: hold the top-right corner for 3 seconds to stop"
-touchIntro: Big colored keys the baby can tap with every finger, all in a scale that always sounds well together.
+touchIntro: Every tap, or every key on an attached keyboard, plays a gentle piano note, all in a scale that always sounds well together.
 touchLockIOS: "To keep the baby in the piano, turn on Guided Access: Settings › Accessibility › Guided Access, then triple-click the side button while the piano plays."
 touchLockAndroid: "To keep the baby in the piano, pin it: Settings › Security › App pinning, then pin Mash Piano from the recent apps."
 touchStart: Start playing
