@@ -100,6 +100,18 @@ func (a *app) playScreen(cx *core.Scope) core.Node {
 		Children: []core.Node{
 			core.Show{When: touch.Get, Then: func(cx *core.Scope) core.Node { return a.touchKeys(cx, fx.burstAt) }},
 			fx.node(),
+			// A phone or tablet that turns to its keyboard says so for a
+			// moment, so parents know why the big keys went; it fades, so
+			// nothing stays over the fireworks.
+			core.Show{When: func() bool { return !a.kiosk.Supported() && !touch.Get() }, Then: func(cx *core.Scope) core.Node {
+				fade := core.NewAnimatedValue(cx, 1)
+				cx.StartAnimation(core.Timing(fade, 0, core.TimingConfig{Duration: 800 * time.Millisecond, Delay: 2500 * time.Millisecond}), nil)
+				return core.View{TestID: "keyboardOn",
+					Style: core.Style{Position: core.Absolute, Left: core.Pt(16), Bottom: core.Pt(16), Padding: core.Symmetric(8, 14), CornerRadius: 999,
+						Background: core.RGBA(0xffffff, 0.12), Animated: &core.AnimatedStyle{Opacity: fade}},
+					Children: []core.Node{core.Text{Content: "⌨️  " + locales.KeyboardOn(cx),
+						Style: core.Style{FontSize: 14, Color: core.RGBA(0xffffff, 0.8)}}}}
+			}},
 			a.corner(cx),
 		},
 	}

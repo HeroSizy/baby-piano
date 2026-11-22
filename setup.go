@@ -210,6 +210,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 	children := []core.Node{
 		header,
 		status,
+		keyboardStatus(cx, computer),
 		shown(needsPermission, ui.Button{Text: locales.OpenSettings(cx), Variant: ui.ButtonOutline, Size: ui.SizeLarge, TestID: "settings",
 			Style: core.Style{CornerRadius: 999, AlignSelf: core.AlignCenter}, OnPress: func() {
 				desktop.GuidePermission(cx, core.PermissionAccessibility, desktop.GuideOptions{}, permission.Set)
@@ -351,6 +352,67 @@ func toggleRow(emoji, title, note, id string, on *core.Persisted[bool]) core.Nod
 				},
 				Children: []core.Node{core.View{Style: core.Style{Width: core.Pt(24), Height: core.Pt(24), CornerRadius: 12, Background: core.RGB(0xffffff),
 					Shadows: []core.BoxShadow{{Offset: core.Point{Y: 1}, Blur: 3, Color: core.RGBA(0x000000, 0.2)}}}}}},
+		},
+	}
+}
+
+// keyboardStatus says, on a phone or tablet, whether a keyboard is attached
+// and so what the baby will play: the keyboard, or the big keys on the
+// screen. The system tells, or a key pressed here shows it, should the
+// system not; computers always play their keyboard.
+func keyboardStatus(cx *core.Scope, computer bool) core.Node {
+	if computer {
+		return nil
+	}
+	typed := core.NewSignal(cx, false)
+	cx.Effect(func() {
+		if !cx.Env().HardwareKeyboard() {
+			typed.Set(false)
+		}
+	})
+	cx.Effect(func() {
+		if len(core.KeysDown(cx)) > 0 {
+			cx.Untrack(func() { typed.Set(true) })
+		}
+	})
+	on := func() bool { return cx.Env().HardwareKeyboard() || typed.Get() }
+	return core.View{
+		TestID: "keyboard",
+		StyleFunc: func() core.Style {
+			st := core.Style{Direction: core.Row, Gap: 14, AlignItems: core.AlignCenter, Padding: core.Symmetric(14, 18),
+				CornerRadius: 18, Background: core.RGBA(0xffffff, 0.55), BorderWidth: 2, BorderColor: core.RGBA(0xffffff, 0)}
+			if on() {
+				st.Background, st.BorderColor = core.RGBA(0x2f8f5f, 0.10), core.RGBA(0x2f8f5f, 0.35)
+			}
+			return st
+		},
+		Children: []core.Node{
+			core.Text{ContentFunc: func() string {
+				if on() {
+					return "⌨️"
+				}
+				return "👆"
+			}, Style: ui.TypeBody.Merge(core.Style{FontSize: 24, LineHeight: 28})},
+			core.View{Style: core.Style{FlexGrow: 1, FlexShrink: 1, Gap: 2}, Children: []core.Node{
+				core.Text{ContentFunc: func() string {
+					if on() {
+						return locales.KeyboardOn(cx)
+					}
+					return locales.KeyboardOff(cx)
+				}, StyleFunc: func() core.Style {
+					c := ink
+					if on() {
+						c = core.RGB(0x2f8f5f)
+					}
+					return ui.TypeBody.Merge(core.Style{FontSize: 15, LineHeight: 20, FontWeight: ui.Bold, Color: c})
+				}},
+				core.Text{ContentFunc: func() string {
+					if on() {
+						return locales.KeyboardOnNote(cx)
+					}
+					return locales.KeyboardOffNote(cx)
+				}, Style: ui.TypeBody.Merge(core.Style{FontSize: 13, LineHeight: 18, Color: muted})},
+			}},
 		},
 	}
 }

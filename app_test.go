@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"testing"
 	"time"
 
@@ -270,5 +271,21 @@ func TestLockedMouseHidesThePointer(t *testing.T) {
 		if hidden := app.Find("id:piano").Style.Cursor == core.CursorNone; hidden != locked {
 			t.Errorf("mouse locked %v: pointer hidden %v", locked, hidden)
 		}
+	}
+}
+
+func TestSetupSaysWhetherAKeyboardIsAttached(t *testing.T) {
+	app := start(t, &fakeKiosk{}, nsgotest.Size(400, 800))
+	label := func() string { return strings.Join(app.Texts(), " | ") }
+	if l := label(); !strings.Contains(l, "No keyboard") {
+		t.Errorf("without a keyboard the setup says %q", l)
+	}
+	app.SetEnvironment(core.Environment{Audio: true, HardwareKeyboard: true})
+	if l := label(); !strings.Contains(l, "Keyboard connected") {
+		t.Errorf("with a keyboard the setup says %q", l)
+	}
+	app.Press("id:start")
+	if !app.Exists("id:keyboardOn") {
+		t.Error("the piano does not say it plays the keyboard")
 	}
 }

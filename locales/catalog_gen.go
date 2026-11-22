@@ -96,6 +96,10 @@ const (
 	textVisualsNote
 	textLockMouseTitle
 	textLockMouseNote
+	textKeyboardOn
+	textKeyboardOnNote
+	textKeyboardOff
+	textKeyboardOffNote
 	numTexts
 )
 
@@ -135,6 +139,10 @@ var keyOfText = [numTexts]string{
 	"visualsNote",
 	"lockMouseTitle",
 	"lockMouseNote",
+	"keyboardOn",
+	"keyboardOnNote",
+	"keyboardOff",
+	"keyboardOffNote",
 }
 
 // textsEn are the messages without arguments in en.
@@ -171,7 +179,11 @@ var textsEn = i18n.NewTexts(""+
 	"Fireworks"+
 	"A colorful burst for each note. Not needed if the baby cannot see the screen."+
 	"Lock the mouse and trackpad too"+
-	"Recommended on laptops. Then stop by typing quitpiano.",
+	"Recommended on laptops. Then stop by typing quitpiano."+
+	"Keyboard connected"+
+	"The baby plays the keyboard, every key a note, as on a computer."+
+	"No keyboard"+
+	"The baby taps the big colored keys on the screen. Attach a keyboard to play it instead.",
 	[]uint16{
 		10,
 		10,
@@ -206,6 +218,10 @@ var textsEn = i18n.NewTexts(""+
 		77,
 		31,
 		54,
+		18,
+		64,
+		11,
+		87,
 	})
 
 // textsZhHans are the messages without arguments in zh-Hans.
@@ -242,7 +258,11 @@ var textsZhHans = i18n.NewTexts(""+
 	"彩色烟花"+
 	"每个音放一朵烟花。宝宝看不到屏幕的话不用开。"+
 	"同时锁住鼠标和触控板"+
-	"笔记本推荐。打开后只能键入 quitpiano 退出。",
+	"笔记本推荐。打开后只能键入 quitpiano 退出。"+
+	"已连接键盘"+
+	"宝宝直接弹键盘，每个键一个音，跟电脑上一样。"+
+	"没有连接键盘"+
+	"宝宝点屏幕上的彩色大按键。接上键盘就改成弹键盘。",
 	[]uint16{
 		10,
 		12,
@@ -277,6 +297,10 @@ var textsZhHans = i18n.NewTexts(""+
 		66,
 		30,
 		59,
+		15,
+		66,
+		18,
+		72,
 	})
 
 // texts returns the messages without arguments in lang, nil for a
@@ -657,3 +681,31 @@ func LockMouseNote(cx *core.Scope) string { return For(cx).LockMouseNote() }
 
 // LockMouseNote is the package's LockMouseNote in the language of msgs.
 func (msgs Messages) LockMouseNote() string { return msgs.text(textLockMouseNote) }
+
+// KeyboardOn says "Keyboard connected"
+// in the language the app shows under cx.
+func KeyboardOn(cx *core.Scope) string { return For(cx).KeyboardOn() }
+
+// KeyboardOn is the package's KeyboardOn in the language of msgs.
+func (msgs Messages) KeyboardOn() string { return msgs.text(textKeyboardOn) }
+
+// KeyboardOnNote says "The baby plays the keyboard, every key a note, as on a computer."
+// in the language the app shows under cx.
+func KeyboardOnNote(cx *core.Scope) string { return For(cx).KeyboardOnNote() }
+
+// KeyboardOnNote is the package's KeyboardOnNote in the language of msgs.
+func (msgs Messages) KeyboardOnNote() string { return msgs.text(textKeyboardOnNote) }
+
+// KeyboardOff says "No keyboard"
+// in the language the app shows under cx.
+func KeyboardOff(cx *core.Scope) string { return For(cx).KeyboardOff() }
+
+// KeyboardOff is the package's KeyboardOff in the language of msgs.
+func (msgs Messages) KeyboardOff() string { return msgs.text(textKeyboardOff) }
+
+// KeyboardOffNote says "The baby taps the big colored keys on the screen. Attach a keyboard to play it instead."
+// in the language the app shows under cx.
+func KeyboardOffNote(cx *core.Scope) string { return For(cx).KeyboardOffNote() }
+
+// KeyboardOffNote is the package's KeyboardOffNote in the language of msgs.
+func (msgs Messages) KeyboardOffNote() string { return msgs.text(textKeyboardOffNote) }

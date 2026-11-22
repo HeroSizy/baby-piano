@@ -36,3 +36,7 @@ visualsTitle: Fireworks
 visualsNote: A colorful burst for each note. Not needed if the baby cannot see the screen.
 lockMouseTitle: Lock the mouse and trackpad too
 lockMouseNote: Recommended on laptops. Then stop by typing quitpiano.
+keyboardOn: Keyboard connected
+keyboardOnNote: The baby plays the keyboard, every key a note, as on a computer.
+keyboardOff: No keyboard
+keyboardOffNote: The baby taps the big colored keys on the screen. Attach a keyboard to play it instead.

@@ -34,3 +34,7 @@ visualsTitle: 彩色烟花
 visualsNote: 每个音放一朵烟花。宝宝看不到屏幕的话不用开。
 lockMouseTitle: 同时锁住鼠标和触控板
 lockMouseNote: 笔记本推荐。打开后只能键入 quitpiano 退出。
+keyboardOn: 已连接键盘
+keyboardOnNote: 宝宝直接弹键盘，每个键一个音，跟电脑上一样。
+keyboardOff: 没有连接键盘
+keyboardOffNote: 宝宝点屏幕上的彩色大按键。接上键盘就改成弹键盘。
