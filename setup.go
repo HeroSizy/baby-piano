@@ -207,35 +207,58 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 	if !computer {
 		startText = locales.TouchStart(cx)
 	}
-	children := []core.Node{
-		header,
-		status,
-		keyboardStatus(cx, computer),
-		shown(needsPermission, ui.Button{Text: locales.OpenSettings(cx), Variant: ui.ButtonOutline, Size: ui.SizeLarge, TestID: "settings",
-			Style: core.Style{CornerRadius: 999, AlignSelf: core.AlignCenter}, OnPress: func() {
-				desktop.GuidePermission(cx, core.PermissionAccessibility, desktop.GuideOptions{}, permission.Set)
-			}}),
-		core.View{Style: core.Style{Gap: 16, Padding: core.All(24), CornerRadius: 28, Background: core.RGB(0xffffff),
-			Shadows: []core.BoxShadow{{Offset: core.Point{Y: 12}, Blur: 32, Color: core.RGBA(0x8a4b2a, 0.14)}}},
-			Children: card},
-		core.View{Style: core.Style{Gap: 10}, Children: tips},
-		startButton(startText,
-			func() bool { return a.piano.Get() == nil || needsPermission() },
-			func() { startErr.Set(a.start()) }),
+	permissionButton := shown(needsPermission, ui.Button{Text: locales.OpenSettings(cx), Variant: ui.ButtonOutline, Size: ui.SizeLarge, TestID: "settings",
+		Style: core.Style{CornerRadius: 999, AlignSelf: core.AlignCenter}, OnPress: func() {
+			desktop.GuidePermission(cx, core.PermissionAccessibility, desktop.GuideOptions{}, permission.Set)
+		}})
+	settingsCard := core.View{Style: core.Style{Gap: 16, Padding: core.All(24), CornerRadius: 28, Background: core.RGB(0xffffff),
+		Shadows: []core.BoxShadow{{Offset: core.Point{Y: 12}, Blur: 32, Color: core.RGBA(0x8a4b2a, 0.14)}}},
+		Children: card}
+	tipList := core.View{Style: core.Style{Gap: 10}, Children: tips}
+	kb := keyboardStatus(cx, computer)
+	start := startButton(startText,
+		func() bool { return a.piano.Get() == nil || needsPermission() },
+		func() { startErr.Set(a.start()) })
+
+	// The page's size: wide and not tall, as a tablet or phone held
+	// sideways, it lays out in two columns, the name and the start button
+	// beside the settings, so it all fits without scrolling.
+	page := core.NewSignal(cx, core.Size{})
+	wide := func() bool { s := page.Get(); return s.Width >= 760 && s.Width > s.Height }
+	column := func(*core.Scope) core.Node {
+		return core.View{Style: core.Style{Width: core.Pct(100), MaxWidth: core.Pt(560), Gap: 20},
+			Children: []core.Node{header, status, kb, permissionButton, settingsCard, tipList, start}}
+	}
+	columns := func(*core.Scope) core.Node {
+		return core.View{Style: core.Style{Width: core.Pct(100), MaxWidth: core.Pt(1080), Direction: core.Row, Gap: 36, AlignItems: core.AlignCenter},
+			Children: []core.Node{
+				core.View{Style: core.Style{FlexGrow: 1, FlexShrink: 1, FlexBasis: core.Pt(0), Gap: 20},
+					Children: []core.Node{header, status, kb, permissionButton, start}},
+				core.View{Style: core.Style{FlexGrow: 1.15, FlexShrink: 1, FlexBasis: core.Pt(0), Gap: 16},
+					Children: []core.Node{settingsCard, tipList}},
+			}}
 	}
 
 	return core.View{
 		// The page is the icon's warm paper whatever the system's
 		// appearance: dark gray on black is hard to read at a glance.
-		Style: core.Style{FlexGrow: 1, Background: paperTop, Gradients: []core.Gradient{core.LinearGradient(180, paperTop, paperBottom)}},
+		// It takes the window's height and no more, so the settings scroll
+		// inside it when they are taller.
+		Style: core.Style{FlexGrow: 1, FlexShrink: 1, MinHeight: core.Pt(0), Overflow: core.Hidden,
+			Background: paperTop, Gradients: []core.Gradient{core.LinearGradient(180, paperTop, paperBottom)}},
+		OnLayout: func(b core.Bounds) { page.Set(b.Size) },
 		Children: []core.Node{ui.ScrollView{
 			EdgeColor: ui.Fixed(core.RGBA(0xffffff, 0)),
-			Style:     core.Style{FlexGrow: 1},
-			ContentStyle: core.Style{MinHeight: core.Pct(100), AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter,
+			Style:     core.Style{FlexGrow: 1, FlexShrink: 1, MinHeight: core.Pt(0)},
+			// Centered when it fits, scrolling when it does not: at least
+			// the page's height, never pinned to it.
+			ContentStyle: core.Style{AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter,
 				Padding: core.Symmetric(32, 20), PaddingEnv: core.EnvAll(core.EnvSafeArea)},
 			Children: []core.Node{core.View{
-				Style:    core.Style{Width: core.Pct(100), MaxWidth: core.Pt(560), Gap: 20},
-				Children: children,
+				StyleFunc: func() core.Style {
+					return core.Style{Width: core.Pct(100), MinHeight: core.Pt(max(page.Get().Height-64, 0)), AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter}
+				},
+				Children: []core.Node{core.Show{When: wide, Then: columns, Else: column}},
 			}},
 		}},
 	}
