@@ -143,8 +143,11 @@ func (a *app) corner(cx *core.Scope) core.Node {
 	cx.StartAnimation(core.Timing(hint, 0, core.TimingConfig{Duration: time.Second, Delay: 5 * time.Second}), nil)
 	ring := core.Interpolate(progress, core.Interpolation{Input: []float64{0, 1}, Output: []float64{0.15, 1}})
 	return core.View{
+		// Clear of a camera cutout, as the keys are, so parents see the
+		// ring fill: the corner sits at the keys' top-right, not the glass's.
 		Style: core.Style{Position: core.Absolute, Top: core.Pt(0), Right: core.Pt(0),
-			Width: core.Pt(cornerSize), Height: core.Pt(cornerSize), AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter},
+			MarginEnv: core.EnvEdges{Top: core.EnvSafeArea, Right: core.EnvSafeArea},
+			Width:     core.Pt(cornerSize), Height: core.Pt(cornerSize), AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter},
 		Label: locales.CornerHint(cx), Role: core.RoleButton, NoFocus: true, TestID: "corner",
 		OnPressDown: func(core.PressEvent) {
 			cancel()
