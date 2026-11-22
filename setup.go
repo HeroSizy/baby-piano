@@ -246,7 +246,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 		// inside it when they are taller.
 		Style: core.Style{FlexGrow: 1, FlexShrink: 1, MinHeight: core.Pt(0), Overflow: core.Hidden,
 			Background: paperTop, Gradients: []core.Gradient{core.LinearGradient(180, paperTop, paperBottom)}},
-		OnLayout: func(b core.Bounds) { page.Set(b.Size) },
+		OnLayout: func(b core.Bounds) { animateTurn(cx, page.GetUntracked(), b.Size); page.Set(b.Size) },
 		Children: []core.Node{ui.ScrollView{
 			EdgeColor: ui.Fixed(core.RGBA(0xffffff, 0)),
 			Style:     core.Style{FlexGrow: 1, FlexShrink: 1, MinHeight: core.Pt(0)},

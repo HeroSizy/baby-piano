@@ -289,3 +289,22 @@ func TestSetupSaysWhetherAKeyboardIsAttached(t *testing.T) {
 		t.Error("the piano does not say it plays the keyboard")
 	}
 }
+
+func TestTurningTheScreenAnimatesTheLayout(t *testing.T) {
+	app := start(t, &fakeKiosk{}, nsgotest.Size(820, 1180))
+	app.LayoutAnimation = nil
+	app.Resize(1180, 820) // the setup page turns to landscape
+	if app.LayoutAnimation == nil || app.LayoutAnimation.Update == nil {
+		t.Fatal("turning the setup page did not animate")
+	}
+	app.Press("id:start")
+	app.LayoutAnimation = nil
+	app.Resize(1180, 900) // still landscape: no turn
+	if app.LayoutAnimation != nil {
+		t.Error("a resize that did not turn animated")
+	}
+	app.Resize(820, 1180) // the piano turns to portrait
+	if app.LayoutAnimation == nil {
+		t.Error("turning the piano did not animate")
+	}
+}

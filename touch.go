@@ -105,7 +105,7 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 	return core.View{
 		TestID:   "keys",
 		Label:    piano.NoteName(scale.Pitch(first)) + "–" + piano.NoteName(scale.Pitch(first+count-1)),
-		OnLayout: func(b core.Bounds) { size.Set(b.Size) },
+		OnLayout: func(b core.Bounds) { animateTurn(cx, size.GetUntracked(), b.Size); size.Set(b.Size) },
 		OnTouch: func(e core.TouchEvent) {
 			if e.Phase != core.TouchStart {
 				return
