@@ -159,9 +159,10 @@ func (a *app) corner(cx *core.Scope) core.Node {
 			// The hint sits on a dark pill so it reads over any key color, keeps
 			// clear of the screen edge, and fades once parents have seen it.
 			core.View{Style: core.Style{Position: core.Absolute, Top: core.Pt(cornerSize - 4), Right: core.Pt(16),
+				Width: core.Pt(320), AlignItems: core.AlignCenter, // the corner itself is narrow
 				Padding: core.Symmetric(6, 12), CornerRadius: 999, Background: core.RGBA(0x000000, 0.35),
 				Animated: &core.AnimatedStyle{Opacity: hint}},
-				Children: []core.Node{core.Text{Content: locales.CornerHint(cx), Style: core.Style{FontSize: 13, Color: core.RGBA(0xffffff, 0.9)}}}},
+				Children: []core.Node{core.Text{Content: locales.CornerHint(cx), Style: core.Style{FontSize: 13, TextAlign: core.TextAlignCenter, Color: core.RGBA(0xffffff, 0.9)}}}},
 		},
 	}
 }
