@@ -2,6 +2,7 @@ package main
 
 import (
 	"math/rand/v2"
+	"slices"
 	"time"
 
 	"github.com/nsgo-dev/nsgo/core"
@@ -16,16 +17,50 @@ const (
 )
 
 // playScreen is the piano: on a computer a dark screen the keyboard plays,
-// on a phone or tablet big colored keys.
+// on a phone or tablet big colored keys, until a keyboard is attached.
 func (a *app) playScreen(cx *core.Scope) core.Node {
 	fx := newEffects(cx)
 	if a.settings.visuals.Get() {
 		a.burst = fx.burst
 		cx.Cleanup(func() { a.burst = nil })
 	}
-	var keys core.Node
-	if !a.locked && !a.kiosk.Supported() {
-		keys = a.touchKeys(cx, fx.burstAt)
+	// A phone or tablet with a keyboard plays as a computer does, the
+	// screen all the notes' own: the system says one is attached, or a
+	// key pressed shows it, should the system not. Without one again,
+	// the big keys come back.
+	typed := core.NewSignal(cx, false)
+	cx.Effect(func() {
+		if !cx.Env().HardwareKeyboard() {
+			typed.Set(false)
+		}
+	})
+	touch := core.NewMemo(cx, func() bool {
+		return !a.locked && !a.kiosk.Supported() && !cx.Env().HardwareKeyboard() && !typed.Get()
+	})
+	press := func(name string) {
+		typed.Set(true)
+		text := ""
+		if len([]rune(name)) == 1 {
+			text = name
+		}
+		a.key(name, text)
+	}
+	if !a.kiosk.Supported() {
+		// No view of a phone's or tablet's takes the keyboard focus, so
+		// it hears a keyboard as the keys held: each key that goes down
+		// plays.
+		var was []string
+		cx.Effect(func() {
+			now := core.KeysDown(cx)
+			cx.Untrack(func() {
+				for _, k := range now {
+					if !slices.Contains(was, k) {
+						press(k)
+					}
+				}
+			})
+			was = now
+		})
 	}
 	// Phones and tablets play with every system bar and gesture hint
 	// hidden that the platform lets an app hide; desktops have none.
@@ -46,18 +81,14 @@ func (a *app) playScreen(cx *core.Scope) core.Node {
 		// input, the window hears it here and plays it all the same.
 		OnKeyDown: func(e core.KeyEvent) bool {
 			if !e.Repeat {
-				text := ""
-				if len([]rune(e.Key)) == 1 {
-					text = e.Key
-				}
-				a.key(e.Key, text)
+				press(e.Key)
 			}
 			return true
 		},
 		// A click away from the corner plays a note from the middle of
 		// the keyboard.
 		OnPressDown: func(e core.PressEvent) {
-			if keys != nil || a.locked && a.settings.lockMouse.Get() {
+			if touch.GetUntracked() || a.locked && a.settings.lockMouse.Get() {
 				return // the keys play touches; a locked mouse plays nothing
 			}
 			i := 10 + rand.IntN(16) // C3 … C6
@@ -67,7 +98,7 @@ func (a *app) playScreen(cx *core.Scope) core.Node {
 		},
 		Style: core.Style{FlexGrow: 1, FlexShrink: 1, Background: core.RGB(0x000000), Overflow: core.Hidden, Cursor: cursor},
 		Children: []core.Node{
-			keys,
+			core.Show{When: touch.Get, Then: func(cx *core.Scope) core.Node { return a.touchKeys(cx, fx.burstAt) }},
 			fx.node(),
 			a.corner(cx),
 		},

@@ -1,7 +1,7 @@
 // Command baby-piano is 宝宝钢琴, a piano for babies: on a computer it takes
 // the whole keyboard so every key plays a gentle note and nothing quits or
 // switches apps; on a phone or tablet it is big colored keys for every
-// finger.
+// finger, or, with a keyboard attached, the keyboard plays.
 package main
 
 import (

@@ -1,6 +1,6 @@
 # 🎹 Mash Piano
 
-A piano for babies: however they mash the keys, all that comes out is gentle piano music. On a computer **nothing quits, switches apps or triggers a system shortcut**; on phones and tablets it is rows of big colored keys.
+A piano for babies: however they mash the keys, all that comes out is gentle piano music. On a computer **nothing quits, switches apps or triggers a system shortcut**; on phones and tablets it is rows of big colored keys, and with a keyboard attached the keyboard plays.
 
 For **Mac, Windows, iPhone, iPad and Android**. Get the installers from [Releases](../../releases/latest).
 

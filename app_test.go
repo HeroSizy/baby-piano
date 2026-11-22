@@ -172,6 +172,35 @@ func TestTouchKeysPlayEveryFinger(t *testing.T) {
 	}
 }
 
+func TestAKeyboardTradesTheKeysForTheScreen(t *testing.T) {
+	app := start(t, &fakeKiosk{}, nsgotest.Size(400, 800))
+	app.Press("id:start")
+	if !app.Exists("id:keys") {
+		t.Fatal("no keys without a keyboard")
+	}
+	// The system reports a keyboard attached, and then gone.
+	app.SetEnvironment(core.Environment{Audio: true, HardwareKeyboard: true})
+	if app.Exists("id:keys") {
+		t.Error("the keys stayed with a keyboard attached")
+	}
+	app.Key("a")
+	if total(plays(app)) != 1 {
+		t.Errorf("the keyboard played %v", plays(app))
+	}
+	app.SetEnvironment(core.Environment{Audio: true})
+	if !app.Exists("id:keys") {
+		t.Error("no keys once the keyboard went")
+	}
+	// A keyboard the system does not report: its first key shows it.
+	app.Key("s")
+	if app.Exists("id:keys") {
+		t.Error("the keys stayed after a key was pressed")
+	}
+	if total(plays(app)) != 2 {
+		t.Errorf("the keyboard played %v", plays(app))
+	}
+}
+
 func TestHoldingTheCornerStops(t *testing.T) {
 	// Manual frames, so a step does not wait for the ring to fill.
 	app := start(t, &fakeKiosk{}, nsgotest.Size(400, 800), nsgotest.ManualFrames())
