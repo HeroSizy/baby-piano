@@ -225,19 +225,31 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 	// beside the settings, so it all fits without scrolling.
 	page := core.NewSignal(cx, core.Size{})
 	wide := func() bool { s := page.Get(); return s.Width >= 760 && s.Width > s.Height }
-	column := func(*core.Scope) core.Node {
-		return core.View{Style: core.Style{Width: core.Pct(100), MaxWidth: core.Pt(560), Gap: 20},
-			Children: []core.Node{header, status, kb, permissionButton, settingsCard, tipList, start}}
+	// One set of views in both shapes, only the containers turn, so when the
+	// screen turns everything glides to its new place instead of the two
+	// layouts fading through each other. The start button closes the left
+	// column sideways and the page upright.
+	startWide := core.Show{When: wide, Then: func(*core.Scope) core.Node { return start }}
+	startTall := core.Show{When: func() bool { return !wide() }, Then: func(*core.Scope) core.Node { return start }}
+	side := func(grow float32, gap core.Points) func() core.Style {
+		return func() core.Style {
+			if wide() {
+				return core.Style{FlexGrow: grow, FlexShrink: 1, FlexBasis: core.Pt(0), Gap: gap}
+			}
+			return core.Style{Gap: 20}
+		}
 	}
-	columns := func(*core.Scope) core.Node {
-		return core.View{Style: core.Style{Width: core.Pct(100), MaxWidth: core.Pt(1080), Direction: core.Row, Gap: 36, AlignItems: core.AlignCenter},
-			Children: []core.Node{
-				core.View{Style: core.Style{FlexGrow: 1, FlexShrink: 1, FlexBasis: core.Pt(0), Gap: 20},
-					Children: []core.Node{header, status, kb, permissionButton, start}},
-				core.View{Style: core.Style{FlexGrow: 1.15, FlexShrink: 1, FlexBasis: core.Pt(0), Gap: 16},
-					Children: []core.Node{settingsCard, tipList}},
-			}}
-	}
+	layout := core.View{
+		StyleFunc: func() core.Style {
+			if wide() {
+				return core.Style{Width: core.Pct(100), MaxWidth: core.Pt(1080), Direction: core.Row, Gap: 36, AlignItems: core.AlignCenter}
+			}
+			return core.Style{Width: core.Pct(100), MaxWidth: core.Pt(560), Gap: 20}
+		},
+		Children: []core.Node{
+			core.View{StyleFunc: side(1, 20), Children: []core.Node{header, status, kb, permissionButton, startWide}},
+			core.View{StyleFunc: side(1.15, 16), Children: []core.Node{settingsCard, tipList, startTall}},
+		}}
 
 	return core.View{
 		// The page is the icon's warm paper whatever the system's
@@ -258,7 +270,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 				StyleFunc: func() core.Style {
 					return core.Style{Width: core.Pct(100), MinHeight: core.Pt(max(page.Get().Height-64, 0)), AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter}
 				},
-				Children: []core.Node{core.Show{When: wide, Then: columns, Else: column}},
+				Children: []core.Node{layout},
 			}},
 		}},
 	}
