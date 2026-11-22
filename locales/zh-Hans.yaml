@@ -8,7 +8,8 @@ permissionGranted: 已获得权限，可以锁住整块键盘。
 openSettings: 打开“辅助功能”设置
 soundLoading: 正在载入钢琴……
 soundFailed: 声音无法启动：{error}。请检查声音输出设备后重新打开程序。
-volume: 音量（开始后键盘上的音量键会被锁住，请先在这里调好）
+volume: 音量
+volumeLocked: 开始后键盘上的音量键会被锁住，请先在这里调好。
 tryIt: 试听
 systemVolumeOver: 电脑音量现在是 {percent, number}%，开始弹琴时会自动降到 {cap, number}%，保护宝宝耳朵。
 systemVolumeOk: 电脑音量：{percent, number}%（弹琴时不会超过 {cap, number}%）。

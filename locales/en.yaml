@@ -10,7 +10,8 @@ permissionGranted: The piano may take the whole keyboard.
 openSettings: Open Accessibility settings
 soundLoading: Loading the piano…
 soundFailed: "Sound could not start: {error}. Check the sound output, then open the piano again."
-volume: Volume. The keyboard's volume keys are locked while the baby plays, so set it here first.
+volume: Volume
+volumeLocked: The keyboard's volume keys are locked while the baby plays, so set it here first.
 tryIt: Try it
 systemVolumeOver: "The computer's volume is {percent, number}%. It drops to {cap, number}% when the baby starts, to protect their ears."
 systemVolumeOk: "The computer's volume is {percent, number}%, and stays at {cap, number}% or below while the baby plays."

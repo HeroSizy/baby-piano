@@ -73,6 +73,7 @@ const (
 	textOpenSettings
 	textSoundLoading
 	textVolume
+	textVolumeLocked
 	textTryIt
 	textSystemVolumeUnknown
 	textLockMouse
@@ -102,6 +103,7 @@ var keyOfText = [numTexts]string{
 	"openSettings",
 	"soundLoading",
 	"volume",
+	"volumeLocked",
 	"tryIt",
 	"systemVolumeUnknown",
 	"lockMouse",
@@ -128,7 +130,8 @@ var textsEn = i18n.NewTexts(""+
 	"The piano may take the whole keyboard."+
 	"Open Accessibility settings"+
 	"Loading the piano…"+
-	"Volume. The keyboard's volume keys are locked while the baby plays, so set it here first."+
+	"Volume"+
+	"The keyboard's volume keys are locked while the baby plays, so set it here first."+
 	"Try it"+
 	"This output's volume cannot be read, as with HDMI and some speakers. Check it is not too loud."+
 	"Also lock the mouse and trackpad (recommended on laptops; then stop by typing quitpiano)"+
@@ -152,7 +155,8 @@ var textsEn = i18n.NewTexts(""+
 		38,
 		27,
 		20,
-		89,
+		6,
+		81,
 		6,
 		94,
 		88,
@@ -179,7 +183,8 @@ var textsZhHans = i18n.NewTexts(""+
 	"已获得权限，可以锁住整块键盘。"+
 	"打开“辅助功能”设置"+
 	"正在载入钢琴……"+
-	"音量（开始后键盘上的音量键会被锁住，请先在这里调好）"+
+	"音量"+
+	"开始后键盘上的音量键会被锁住，请先在这里调好。"+
 	"试听"+
 	"当前输出设备无法读取音量（如 HDMI、部分外接音箱），请手动确认音量不要太大。"+
 	"同时锁住鼠标和触控板（笔记本推荐；打开后只能用键盘输入 quitpiano 退出）"+
@@ -203,7 +208,8 @@ var textsZhHans = i18n.NewTexts(""+
 		45,
 		30,
 		24,
-		78,
+		6,
+		69,
 		6,
 		110,
 		101,
@@ -382,12 +388,19 @@ func (msgs Messages) SoundFailed(error_ string) string {
 	}
 }
 
-// Volume says "Volume. The keyboard's volume keys are locked while the baby plays, so set it here first."
+// Volume says "Volume"
 // in the language the app shows under cx.
 func Volume(cx *core.Scope) string { return For(cx).Volume() }
 
 // Volume is the package's Volume in the language of msgs.
 func (msgs Messages) Volume() string { return msgs.text(textVolume) }
+
+// VolumeLocked says "The keyboard's volume keys are locked while the baby plays, so set it here first."
+// in the language the app shows under cx.
+func VolumeLocked(cx *core.Scope) string { return For(cx).VolumeLocked() }
+
+// VolumeLocked is the package's VolumeLocked in the language of msgs.
+func (msgs Messages) VolumeLocked() string { return msgs.text(textVolumeLocked) }
 
 // TryIt says "Try it"
 // in the language the app shows under cx.
