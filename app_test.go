@@ -119,8 +119,24 @@ func TestComputerLocksAndKeysPlay(t *testing.T) {
 	for _, r := range "quitpiano" {
 		press(piano.MacKeyName(0), string(r))
 	}
-	if !k.stopped || app.Quits != 1 {
+	if !k.stopped || app.Quits != 0 {
 		t.Errorf("quitpiano: keyboard given back %v, quits %d", k.stopped, app.Quits)
+	}
+	if !app.Exists("id:start") || app.Exists("id:corner") {
+		t.Error("quitpiano did not go back to the setup")
+	}
+
+	// Started again, the lock takes the keyboard again and the word still ends it.
+	k.started, k.stopped = false, false
+	app.Press("id:start")
+	if !k.started || !app.Exists("id:corner") {
+		t.Fatal("the piano did not start a second time")
+	}
+	for _, r := range "quitpiano" {
+		press(piano.MacKeyName(0), string(r))
+	}
+	if !k.stopped || !app.Exists("id:start") {
+		t.Error("the second quitpiano did not go back to the setup")
 	}
 }
 
