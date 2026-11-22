@@ -118,6 +118,12 @@ func Start(opts Options, onKey func(Key)) error {
 		for _, w := range lock.covers {
 			destroyWindow.Call(uintptr(w))
 		}
+		if lock.main != 0 {
+			// The piano's window stays open for the setup: no longer on top of everything.
+			const hwndNoTopmost = ^uintptr(1) // -2
+			const noSize, noMove, noActivate = 0x1, 0x2, 0x10
+			setWindowPos.Call(uintptr(lock.main), hwndNoTopmost, 0, 0, 0, 0, noSize|noMove|noActivate)
+		}
 		lock.keyboard, lock.mouse, lock.covers, lock.main, lock.onKey = 0, 0, nil, 0, nil
 		lock.Unlock()
 		restoreSystem()

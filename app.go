@@ -59,12 +59,14 @@ type app struct {
 	soundErr *core.Signal[error]
 	playing  *core.Signal[bool]
 	// locked is whether kiosk took the keyboard: a computer's way to play.
-	locked  bool
-	exiting bool
+	locked bool
+	// session counts the times playing started, so a lock's tick stops
+	// once that session ends, even when the next one starts at once.
+	session int
 	// burst draws a note's colored circle, when the play screen shows them.
-	burst   func(note int)
-	exit    piano.ExitSequence
-	stop    []func()
+	burst func(note int)
+	exit  piano.ExitSequence
+	stop  []func()
 }
 
 // newRoot is the app on lock: the parents' setup, then the piano.
@@ -98,7 +100,7 @@ func (a *app) root() core.Node {
 		// While the baby plays, only the parents' exit quits: should a
 		// Cmd+Q ever get past the lock, it does nothing.
 		desktop.OnQuitRequest(cx, func(q *core.QuitRequest) {
-			if a.playing.GetUntracked() && !a.exiting && !q.Forced() {
+			if a.playing.GetUntracked() && !q.Forced() {
 				q.Cancel()
 			}
 		})
@@ -135,7 +137,8 @@ func (a *app) start() error {
 		}
 		a.kiosk.Enter()
 		a.stop = append(a.stop, cx.KeepAwake("A baby is playing the piano", core.KeepAwakeOptions{Display: true}))
-		a.tick()
+		a.session++
+		a.tick(a.session)
 	} else if !desktop.IsAvailable(cx) {
 		a.stop = append(a.stop, cx.KeepAwake("A baby is playing the piano", core.KeepAwakeOptions{Display: true}))
 	}
@@ -143,11 +146,11 @@ func (a *app) start() error {
 	return nil
 }
 
-// tick keeps the computer locked every half second while playing: the lock
+// tick keeps the computer locked every half second while session plays: the lock
 // on, the volume capped, a moment's silence after the output changed, and
 // the piano in front.
-func (a *app) tick() {
-	if a.exiting {
+func (a *app) tick(session int) {
+	if !a.locked || session != a.session {
 		return
 	}
 	if a.kiosk.Tick() {
@@ -156,7 +159,7 @@ func (a *app) tick() {
 		}
 	}
 	a.kiosk.Front()
-	a.cx.AfterFunc(500*time.Millisecond, a.tick)
+	a.cx.AfterFunc(500*time.Millisecond, func() { a.tick(session) })
 }
 
 // key plays the key named name, which typed text, unless it completes the
@@ -172,21 +175,20 @@ func (a *app) key(name, text string) {
 	}
 }
 
-// leave ends playing: a computer gives the keyboard back and quits, as the
-// parents asked for it; a phone or tablet goes back to the setup.
+// leave ends playing and goes back to the setup: a computer first gives the
+// keyboard back, uncovers the screens and leaves full screen.
 func (a *app) leave() {
-	if a.exiting {
-		return
-	}
 	for _, stop := range a.stop {
 		stop()
 	}
 	a.stop = nil
 	if a.locked {
-		a.exiting = true
+		a.locked = false
 		a.kiosk.Stop()
-		a.cx.Quit()
-		return
+		desktop.SetApplicationMenu(a.cx, nil) // the default menu, Cmd+Q again
+		if a.cx.Env().OS() == core.OSWindows && desktop.FullScreen(a.cx) {
+			desktop.ToggleFullScreen(a.cx)
+		}
 	}
 	a.playing.Set(false)
 }
