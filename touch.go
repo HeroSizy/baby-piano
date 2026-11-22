@@ -58,6 +58,10 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 		}
 		burst(touchFirst+k, at)
 	}
+	// The keys fill the screen from its top left, so a point in them is
+	// where it is on the page.
+	a.tapAt = func(p core.Point) { press(keyAt(p), p) }
+	cx.Cleanup(func() { a.tapAt = nil })
 
 	var keys []core.Node
 	for k := range touchCount {

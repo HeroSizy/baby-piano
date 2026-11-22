@@ -17,6 +17,8 @@ go tool nsgo build -target ios                   # iPhone / iPad (needs Xcode)
 
 The samples are regenerated from Salamander Grand Piano's FLAC files with `tools/make-samples.sh <salamander directory>` (needs ffmpeg).
 
+The App Store screenshots in `docs/store/screenshots` come from `tools/store-screenshots.sh <simulator udid> <frames directory>` on an iPhone 17 Pro Max (6.9", 1320×2868) and an iPad Pro 13-inch (2064×2752) simulator in dark mode and English. It runs `TestStoreScreenshots`, which shows the setup page, the keys, and the keys being played with fireworks, and captures the screen meanwhile; pick one frame of each scene and save it without an alpha channel (`ffmpeg -i frame.png -pix_fmt rgb24 out.png`), as App Store Connect wants.
+
 ## Releasing and signing
 
 GitHub Actions releases automatically: change `version` in `nsgo.yaml` to the new version (say `1.0.2`) and merge into `main`. The workflow builds every platform, creates the `v1.0.2` tag and publishes a GitHub Release with the Mac, Windows and Android packages. When the version already has a tag it only builds. Pushing a `v*` tag by hand releases too.
