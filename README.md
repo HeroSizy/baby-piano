@@ -16,7 +16,7 @@ It started with an old mechanical keyboard at home. Our baby loved slapping it, 
 
 ## What it does
 
-- **Mashing sounds good**: every note is in the C major pentatonic scale (C D E G A), 36 notes from C1 to C8, so any combination is in harmony.
+- **Mashing sounds good**: by default every note is in the C major pentatonic scale (C D E G A), 36 notes from C1 to C8, so any combination is in harmony. Parents can switch to the major scale (the white keys, do re mi) or all twelve notes (black keys too) on the setup page.
 - **The whole keyboard plays**: letters, digits, symbols, F1–F12, arrows, the number pad, Ctrl/Alt/Cmd/Shift… every key has its own note. Each row up is an octave higher, and a row rises from left to right. A key always plays the same note.
 - **A real piano sound**: Salamander Grand Piano samples (a Yamaha C5 grand).
 - **Kind to small ears**: high notes are quieter; a slap on a dozen keys plays only a few; the computer's volume is capped at 50% while playing, and is pulled back down if a Bluetooth speaker or headphones connect midway.

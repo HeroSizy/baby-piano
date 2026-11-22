@@ -39,6 +39,7 @@ type settings struct {
 	volume    *core.Persisted[float64]
 	lockMouse *core.Persisted[bool]
 	visuals   *core.Persisted[bool]
+	scale     *core.Persisted[string]
 }
 
 func loadSettings(cx *core.Scope) settings {
@@ -46,6 +47,7 @@ func loadSettings(cx *core.Scope) settings {
 		volume:    core.NewPersisted(cx, "volume", 0.45, core.PersistOptions{}),
 		lockMouse: core.NewPersisted(cx, "lockMouse", false, core.PersistOptions{}),
 		visuals:   core.NewPersisted(cx, "showVisuals", false, core.PersistOptions{}),
+		scale:     core.NewPersisted(cx, "scale", string(piano.Pentatonic), core.PersistOptions{}),
 	}
 }
 
@@ -115,11 +117,14 @@ func (a *app) root() core.Node {
 	}
 }
 
-// play sounds note i and reports whether it sounded.
-func (a *app) play(i int) bool {
+// play sounds pitch, semitones above C1, and reports whether it sounded.
+func (a *app) play(pitch int) bool {
 	p := a.piano.GetUntracked()
-	return p != nil && p.Play(i)
+	return p != nil && p.Play(pitch)
 }
+
+// scale is the notes the parents chose.
+func (a *app) scale() piano.Scale { return piano.ParseScale(a.settings.scale.Get()) }
 
 // start takes over the computer where it can and shows the piano. It
 // returns why it could not lock the keyboard, if it tried and failed.
@@ -172,7 +177,7 @@ func (a *app) key(name, text string) {
 		a.leave()
 		return
 	}
-	i := piano.NoteForKey(name)
+	i := piano.NoteForKey(a.scale(), name)
 	if a.play(i) && a.burst != nil {
 		a.burst(i)
 	}

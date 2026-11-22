@@ -16,20 +16,16 @@ var keyRows = [][]string{
 	{"escape", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12", "print", "scrolllock", "pause"},
 }
 
-// rowStep is how much higher a row starts than the one below it: the
-// pentatonic scale's five notes, an octave.
-const rowStep = 5
-
-// keyNotes places each key of keyRows on the scale. A row starts an octave
-// above the one below it and climbs one note a key to the right; past the
-// top note it turns back down, so neighbouring keys always differ and every
-// key of the keyboard plays.
-var keyNotes = func() map[string]int {
+// keyNotes places each key of keyRows on scale s, by index in its
+// Pitches. A row starts an octave above the one below it and climbs one
+// note a key to the right; past the top note it turns back down, so
+// neighbouring keys always differ and every key of the keyboard plays.
+func keyNotes(s Scale) map[string]int {
 	notes := map[string]int{}
-	top := len(Notes) - 1
+	top := len(s.Pitches()) - 1
 	for r, row := range keyRows {
 		for c, name := range row {
-			i := (r*rowStep + c) % (2 * top)
+			i := (r*s.PerOctave() + c) % (2 * top)
 			if i > top {
 				i = 2*top - i
 			}
@@ -37,16 +33,27 @@ var keyNotes = func() map[string]int {
 		}
 	}
 	return notes
+}
+
+// keyMaps are keyNotes of each scale.
+var keyMaps = func() map[Scale]map[string]int {
+	maps := map[Scale]map[string]int{}
+	for _, s := range Scales {
+		maps[s] = keyNotes(s)
+	}
+	return maps
 }()
 
-// NoteForKey returns the index in Notes the key named name plays. The same key
-// always plays the same note; a key off the rows, such as a media key, plays
-// a fixed note spread by its name.
-func NoteForKey(name string) int {
-	if i, ok := keyNotes[name]; ok {
-		return i
+// NoteForKey returns the pitch the key named name plays in scale s. The same
+// key always plays the same note; a key off the rows, such as a media key,
+// plays a fixed note spread by its name.
+func NoteForKey(s Scale, name string) int {
+	s = ParseScale(string(s))
+	pitches := s.Pitches()
+	if i, ok := keyMaps[s][name]; ok {
+		return pitches[i]
 	}
 	h := fnv.New32a()
 	h.Write([]byte(name))
-	return int(h.Sum32() % uint32(len(Notes)))
+	return pitches[h.Sum32()%uint32(len(pitches))]
 }

@@ -8,12 +8,19 @@ import (
 	"github.com/HeroSizy/baby-piano/piano"
 )
 
-// touchFirst and touchCount are the notes a phone or tablet's keys play: the
-// 16 from C3 to C6, the piano's middle, comfortable for a baby's ears.
-const (
-	touchFirst = 10
-	touchCount = 16
-)
+// touchCount is how many keys a phone or tablet shows.
+const touchCount = 16
+
+// touchNotes are the notes the keys play in scale s: the piano's middle,
+// comfortable for a baby's ears, from C3 (to C6 in the pentatonic scale),
+// or from C4 for all twelve notes, which climb more slowly.
+func touchNotes(s piano.Scale) []int {
+	from := 24 // C3
+	if s == piano.Chromatic {
+		from = 36 // C4
+	}
+	return s.Between(from, piano.Top)[:touchCount]
+}
 
 // touchKeys are big colored keys, low at the top left: four rows of four
 // held upright, two rows of eight held sideways. Every finger plays its own
@@ -27,6 +34,7 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 		}
 		return 4
 	}
+	notes := touchNotes(a.scale())
 	glows := make([]*core.AnimatedValue, touchCount)
 	bounces := make([]*core.AnimatedValue, touchCount)
 	for i := range glows {
@@ -46,7 +54,7 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 		return row*c + col
 	}
 	press := func(k int, at core.Point) {
-		if k < 0 || !a.play(touchFirst+k) {
+		if k < 0 || !a.play(notes[k]) {
 			return
 		}
 		glows[k].Set(1)
@@ -56,7 +64,7 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 			bounces[k].Set(0.86)
 			cx.StartAnimation(core.Spring(bounces[k], 1, core.SpringConfig{Stiffness: 320, Damping: 8}), nil)
 		}
-		burst(touchFirst+k, at)
+		burst(notes[k], at)
 	}
 	// The keys fill the screen from its top left, so a point in them is
 	// where it is on the page.
@@ -84,7 +92,7 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 	}
 	return core.View{
 		TestID:   "keys",
-		Label:    piano.Notes[touchFirst] + "–" + piano.Notes[touchFirst+touchCount-1],
+		Label:    piano.Name(notes[0]) + "–" + piano.Name(notes[touchCount-1]),
 		OnLayout: func(b core.Bounds) { size.Set(b.Size) },
 		OnTouch: func(e core.TouchEvent) {
 			if e.Phase != core.TouchStart {

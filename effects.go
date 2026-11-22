@@ -90,8 +90,8 @@ func (e *effects) burst(i int) {
 	e.burstAt(i, core.Point{X: core.Points(x), Y: core.Points(y)})
 }
 
-// pitch is note i's place on the scale, 0 lowest to 1 highest.
-func pitch(i int) float64 { return float64(i) / float64(len(piano.Notes)-1) }
+// pitch is note p's place on the piano, 0 lowest to 1 highest.
+func pitch(p int) float64 { return float64(p) / piano.Top }
 
 // hue is the color of a note at pitch t: red low, through the rainbow, to
 // violet high.

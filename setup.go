@@ -12,6 +12,7 @@ import (
 
 	"github.com/HeroSizy/baby-piano/kiosk"
 	"github.com/HeroSizy/baby-piano/locales"
+	"github.com/HeroSizy/baby-piano/piano"
 )
 
 var errSecureInput = errors.New("secure keyboard entry is on")
@@ -137,7 +138,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 			}},
 			ui.Button{Text: "🔊 " + locales.TryIt(cx), Variant: ui.ButtonOutline, TestID: "try",
 				Style: core.Style{CornerRadius: 999}, OnPress: func() {
-					for i, n := range []int{15, 17, 19, 22} { // C4 E4 A4 E5
+					for i, n := range []int{36, 40, 45, 52} { // C4 E4 A4 E5, in every scale
 						cx.AfterFunc(time.Duration(i)*250*time.Millisecond, func() { a.play(n) })
 					}
 				}},
@@ -173,7 +174,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 			}),
 		)
 	}
-	card = append(card, divider())
+	card = append(card, divider(), heading(locales.Scale(cx)), scaleChoice(cx, a.settings.scale), divider())
 	if computer {
 		card = append(card,
 			ui.Checkbox{Text: locales.LockMouse(cx), Checked: a.settings.lockMouse.Get, OnChange: func(on bool) { _ = a.settings.lockMouse.Set(on) }, TestID: "lockMouse"},
@@ -310,4 +311,23 @@ func startButton(label string, disabled func() bool, press func()) core.Node {
 			Disabled: &core.Style{Opacity: core.Alpha(0.45)}},
 		Children: []core.Node{core.Text{Content: label, Style: ui.TypeBody.Merge(core.Style{FontSize: 20, LineHeight: 26, FontWeight: ui.Bold, Color: core.RGB(0xffffff)})}},
 	}
+}
+
+// scaleChoice is the parents' choice of the notes the piano plays.
+func scaleChoice(cx *core.Scope, setting *core.Persisted[string]) core.Node {
+	labels := map[piano.Scale]string{
+		piano.Pentatonic: locales.ScalePentatonic(cx),
+		piano.Major:      locales.ScaleMajor(cx),
+		piano.Chromatic:  locales.ScaleChromatic(cx),
+	}
+	var radios []core.Node
+	for _, s := range piano.Scales {
+		radios = append(radios, ui.Radio{
+			Text:     labels[s],
+			Checked:  func() bool { return piano.ParseScale(setting.Get()) == s },
+			OnChange: func(bool) { _ = setting.Set(string(s)) },
+			TestID:   "scale-" + string(s),
+		})
+	}
+	return ui.RadioGroup{Label: locales.Scale(cx), Children: radios, TestID: "scale"}
 }

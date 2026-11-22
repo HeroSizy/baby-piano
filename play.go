@@ -91,7 +91,8 @@ func (a *app) playScreen(cx *core.Scope) core.Node {
 			if touch.GetUntracked() || a.locked && a.settings.lockMouse.Get() {
 				return // the keys play touches; a locked mouse plays nothing
 			}
-			i := 10 + rand.IntN(16) // C3 … C6
+			notes := touchNotes(a.scale())
+			i := notes[rand.IntN(len(notes))]
 			if a.play(i) {
 				fx.burstAt(i, e.PagePosition)
 			}

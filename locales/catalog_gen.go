@@ -77,6 +77,10 @@ const (
 	textTryIt
 	textSystemVolumeUnknown
 	textLockMouse
+	textScale
+	textScalePentatonic
+	textScaleMajor
+	textScaleChromatic
 	textShowVisuals
 	textStart
 	textSecureInput
@@ -107,6 +111,10 @@ var keyOfText = [numTexts]string{
 	"tryIt",
 	"systemVolumeUnknown",
 	"lockMouse",
+	"scale",
+	"scalePentatonic",
+	"scaleMajor",
+	"scaleChromatic",
 	"showVisuals",
 	"start",
 	"secureInput",
@@ -135,6 +143,10 @@ var textsEn = i18n.NewTexts(""+
 	"Try it"+
 	"This output's volume cannot be read, as with HDMI and some speakers. Check it is not too loud."+
 	"Also lock the mouse and trackpad (recommended on laptops; then stop by typing quitpiano)"+
+	"Notes"+
+	"Pentatonic: always sounds sweet, however the baby presses (recommended)"+
+	"Major scale: do re mi fa sol la ti, the white keys"+
+	"All notes: every white and black key"+
 	"Show colorful fireworks for each note (not needed if the baby cannot see the screen)"+
 	"Start playing (full screen, keyboard locked)"+
 	"Another app turned on secure keyboard entry, such as Terminal's Secure Keyboard Entry or a password field, and no app can lock the keyboard through it. Turn it off, or restart the computer, then start again."+
@@ -160,6 +172,10 @@ var textsEn = i18n.NewTexts(""+
 		6,
 		94,
 		88,
+		5,
+		71,
+		50,
+		36,
 		84,
 		44,
 		207,
@@ -188,6 +204,10 @@ var textsZhHans = i18n.NewTexts(""+
 	"试听"+
 	"当前输出设备无法读取音量（如 HDMI、部分外接音箱），请手动确认音量不要太大。"+
 	"同时锁住鼠标和触控板（笔记本推荐；打开后只能用键盘输入 quitpiano 退出）"+
+	"音阶"+
+	"五声音阶：怎么按都好听（推荐）"+
+	"大调音阶：do re mi fa sol la si，钢琴的白键"+
+	"全部音：黑键白键都有"+
 	"按键时放彩色烟花（宝宝看不到屏幕的话不用开）"+
 	"开始弹琴（全屏锁定键盘）"+
 	"有程序开启了“安全键盘输入”（如终端的“安全键盘输入”、正在输入的密码框），这时任何程序都锁不住键盘。请关闭它（或重启电脑）后再开始。"+
@@ -213,6 +233,10 @@ var textsZhHans = i18n.NewTexts(""+
 		6,
 		110,
 		101,
+		6,
+		45,
+		54,
+		30,
 		66,
 		36,
 		201,
@@ -470,6 +494,34 @@ func LockMouse(cx *core.Scope) string { return For(cx).LockMouse() }
 
 // LockMouse is the package's LockMouse in the language of msgs.
 func (msgs Messages) LockMouse() string { return msgs.text(textLockMouse) }
+
+// Scale says "Notes"
+// in the language the app shows under cx.
+func Scale(cx *core.Scope) string { return For(cx).Scale() }
+
+// Scale is the package's Scale in the language of msgs.
+func (msgs Messages) Scale() string { return msgs.text(textScale) }
+
+// ScalePentatonic says "Pentatonic: always sounds sweet, however the baby presses (recommended)"
+// in the language the app shows under cx.
+func ScalePentatonic(cx *core.Scope) string { return For(cx).ScalePentatonic() }
+
+// ScalePentatonic is the package's ScalePentatonic in the language of msgs.
+func (msgs Messages) ScalePentatonic() string { return msgs.text(textScalePentatonic) }
+
+// ScaleMajor says "Major scale: do re mi fa sol la ti, the white keys"
+// in the language the app shows under cx.
+func ScaleMajor(cx *core.Scope) string { return For(cx).ScaleMajor() }
+
+// ScaleMajor is the package's ScaleMajor in the language of msgs.
+func (msgs Messages) ScaleMajor() string { return msgs.text(textScaleMajor) }
+
+// ScaleChromatic says "All notes: every white and black key"
+// in the language the app shows under cx.
+func ScaleChromatic(cx *core.Scope) string { return For(cx).ScaleChromatic() }
+
+// ScaleChromatic is the package's ScaleChromatic in the language of msgs.
+func (msgs Messages) ScaleChromatic() string { return msgs.text(textScaleChromatic) }
 
 // ShowVisuals says "Show colorful fireworks for each note (not needed if the baby cannot see the screen)"
 // in the language the app shows under cx.

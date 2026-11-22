@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"testing"
 	"time"
 
@@ -64,6 +65,12 @@ func plays(app *nsgotest.App) []int {
 	return n
 }
 
+// sample is the index in piano.Notes of the sample pitch p plays.
+func sample(p int) int {
+	i, _ := piano.Sample(p)
+	return i
+}
+
 func total(n []int) (sum int) {
 	for _, v := range n {
 		sum += v
@@ -101,7 +108,7 @@ func TestComputerLocksAndKeysPlay(t *testing.T) {
 		app.Settle()
 	}
 	press("a", "a")
-	if n := plays(app); n[piano.NoteForKey("a")] != 1 || total(n) != 1 {
+	if n := plays(app); n[sample(piano.NoteForKey(piano.Pentatonic, "a"))] != 1 || total(n) != 1 {
 		t.Errorf("a key played %v", n)
 	}
 
@@ -152,6 +159,25 @@ func TestQuitIsRefusedWhilePlaying(t *testing.T) {
 	}
 }
 
+func TestTheScaleChoosesTheNotes(t *testing.T) {
+	k := &fakeKiosk{supported: true}
+	app := start(t, k, onMac)
+	if !app.Find("id:scale-pentatonic").Props.Checked {
+		t.Error("the pentatonic scale is not the default")
+	}
+	app.Press("id:scale-chromatic")
+	app.GrantPermission(core.PermissionAccessibility)
+	app.Advance(time.Second)
+	app.Press("id:start")
+	// Q plays C#4 among all twelve notes: C4's sample, a semitone up.
+	k.onKey(kiosk.Key{Name: "q", Text: "q"})
+	app.Settle()
+	c4 := app.Sounds[sample(36)].Plays
+	if len(c4) != 1 || math.Abs(float64(c4[0].Rate)-1.059463) > 1e-4 || total(plays(app)) != 1 {
+		t.Errorf("q played %v, C4's sample %v", plays(app), c4)
+	}
+}
+
 func TestTouchKeysPlayEveryFinger(t *testing.T) {
 	app := start(t, &fakeKiosk{}, nsgotest.Size(400, 800))
 	app.Press("id:start")
@@ -166,8 +192,8 @@ func TestTouchKeysPlayEveryFinger(t *testing.T) {
 	f2 := app.Touch("id:keys", core.Point{X: w * 3.5, Y: h * 3.5})
 	f1.Lift()
 	f2.Lift()
-	n := plays(app)
-	if n[touchFirst+9] != 1 || n[touchFirst+15] != 1 || total(n) != 2 {
+	n, notes := plays(app), touchNotes(piano.Pentatonic)
+	if n[sample(notes[9])] != 1 || n[sample(notes[15])] != 1 || total(n) != 2 {
 		t.Errorf("two fingers played %v", n)
 	}
 }

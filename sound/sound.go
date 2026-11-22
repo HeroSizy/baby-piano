@@ -55,14 +55,14 @@ func Load(cx *core.Scope, volume float32, done func(*Piano, error)) {
 	}
 }
 
-// Play sounds note index i of piano.Notes, clamped to the scale, and reports
-// whether it sounded: false while the limiter holds notes back.
-func (p *Piano) Play(i int) bool {
+// Play sounds pitch, semitones above C1, from its sample (piano.Sample),
+// and reports whether it sounded: false while the limiter holds notes back.
+func (p *Piano) Play(pitch int) bool {
 	if !p.limiter.Allow(p.now()) {
 		return false
 	}
-	i = min(max(i, 0), len(p.sounds)-1)
-	p.sounds[i].Play(audio.Voice{Volume: p.volume * headroom * piano.Gain(i)})
+	i, rate := piano.Sample(pitch)
+	p.sounds[i].Play(audio.Voice{Volume: p.volume * headroom * piano.Gain(pitch), Rate: rate})
 	return true
 }
 
