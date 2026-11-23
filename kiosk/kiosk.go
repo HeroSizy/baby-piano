@@ -38,3 +38,4 @@ func (System) Enter()                                    { Enter() }
 func (System) Front()                                    { Front() }
 func (System) Tick() bool                                { return Tick() }
 func (System) SystemVolume() (float32, bool)             { return SystemVolume() }
+func (System) Keyboard() bool                            { return Keyboard() }

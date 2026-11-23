@@ -215,7 +215,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 		Shadows: []core.BoxShadow{{Offset: core.Point{Y: 12}, Blur: 32, Color: core.RGBA(0x8a4b2a, 0.14)}}},
 		Children: card}
 	tipList := core.View{Style: core.Style{Gap: 10}, Children: tips}
-	kb := keyboardStatus(cx, computer)
+	kb := keyboardStatus(cx, computer, a.keyboard.Get)
 	start := startButton(startText,
 		func() bool { return a.piano.Get() == nil || needsPermission() },
 		func() { startErr.Set(a.start()) })
@@ -395,13 +395,13 @@ func toggleRow(emoji, title, note, id string, on *core.Persisted[bool]) core.Nod
 // and so what the baby will play: the keyboard, or the big keys on the
 // screen. The system tells, or a key pressed here shows it, should the
 // system not; computers always play their keyboard.
-func keyboardStatus(cx *core.Scope, computer bool) core.Node {
+func keyboardStatus(cx *core.Scope, computer bool, attached func() bool) core.Node {
 	if computer {
 		return nil
 	}
 	typed := core.NewSignal(cx, false)
 	cx.Effect(func() {
-		if !cx.Env().HardwareKeyboard() {
+		if !attached() {
 			typed.Set(false)
 		}
 	})
@@ -410,7 +410,7 @@ func keyboardStatus(cx *core.Scope, computer bool) core.Node {
 			cx.Untrack(func() { typed.Set(true) })
 		}
 	})
-	on := func() bool { return cx.Env().HardwareKeyboard() || typed.Get() }
+	on := func() bool { return attached() || typed.Get() }
 	return core.View{
 		TestID: "keyboard",
 		StyleFunc: func() core.Style {

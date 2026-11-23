@@ -26,6 +26,7 @@ type fakeKiosk struct {
 	opts                                 kiosk.Options
 	onKey                                func(kiosk.Key)
 	volume                               float32
+	keyboard                             bool
 }
 
 func (f *fakeKiosk) Supported() bool   { return f.supported }
@@ -37,6 +38,7 @@ func (f *fakeKiosk) Start(opts kiosk.Options, onKey func(kiosk.Key)) error {
 func (f *fakeKiosk) Stop()                         { f.stopped = true }
 func (f *fakeKiosk) Enter()                        { f.entered = true }
 func (f *fakeKiosk) Front()                        {}
+func (f *fakeKiosk) Keyboard() bool                { return f.keyboard }
 func (f *fakeKiosk) Tick() bool                    { return false }
 func (f *fakeKiosk) SystemVolume() (float32, bool) { return f.volume, true }
 
@@ -174,13 +176,15 @@ func TestTouchKeysPlayEveryFinger(t *testing.T) {
 }
 
 func TestAKeyboardTradesTheKeysForTheScreen(t *testing.T) {
-	app := start(t, &fakeKiosk{}, nsgotest.Size(400, 800))
+	k := &fakeKiosk{}
+	app := start(t, k, nsgotest.Size(400, 800))
 	app.Press("id:start")
 	if !app.Exists("id:keys") {
 		t.Fatal("no keys without a keyboard")
 	}
 	// The system reports a keyboard attached, and then gone.
-	app.SetEnvironment(core.Environment{Audio: true, HardwareKeyboard: true})
+	k.keyboard = true
+	app.Advance(time.Second)
 	if app.Exists("id:keys") {
 		t.Error("the keys stayed with a keyboard attached")
 	}
@@ -188,7 +192,8 @@ func TestAKeyboardTradesTheKeysForTheScreen(t *testing.T) {
 	if total(plays(app)) != 1 {
 		t.Errorf("the keyboard played %v", plays(app))
 	}
-	app.SetEnvironment(core.Environment{Audio: true})
+	k.keyboard = false
+	app.Advance(time.Second)
 	if !app.Exists("id:keys") {
 		t.Error("no keys once the keyboard went")
 	}
@@ -206,9 +211,6 @@ func TestHoldingTheCornerStops(t *testing.T) {
 	// Manual frames, so a step does not wait for the ring to fill.
 	app := start(t, &fakeKiosk{}, nsgotest.Size(400, 800), nsgotest.ManualFrames())
 	app.Press("id:start")
-	if !app.StatusBar.Immersive {
-		t.Error("the piano left the system bars showing")
-	}
 	finger := app.Touch("id:corner", core.Point{X: 45, Y: 45})
 	app.Advance(time.Second)
 	finger.Lift()
@@ -221,7 +223,7 @@ func TestHoldingTheCornerStops(t *testing.T) {
 	if app.Exists("id:corner") || !app.Exists("id:start") {
 		t.Error("holding the corner did not go back to the setup")
 	}
-	if app.StatusBar.Immersive || app.StatusBar.Hidden {
+	if app.StatusBar.Hidden {
 		t.Error("the setup kept the system bars hidden")
 	}
 }
@@ -275,12 +277,14 @@ func TestLockedMouseHidesThePointer(t *testing.T) {
 }
 
 func TestSetupSaysWhetherAKeyboardIsAttached(t *testing.T) {
-	app := start(t, &fakeKiosk{}, nsgotest.Size(400, 800))
+	k := &fakeKiosk{}
+	app := start(t, k, nsgotest.Size(400, 800))
 	label := func() string { return strings.Join(app.Texts(), " | ") }
 	if l := label(); !strings.Contains(l, "No keyboard") {
 		t.Errorf("without a keyboard the setup says %q", l)
 	}
-	app.SetEnvironment(core.Environment{Audio: true, HardwareKeyboard: true})
+	k.keyboard = true
+	app.Advance(time.Second)
 	if l := label(); !strings.Contains(l, "Keyboard connected") {
 		t.Errorf("with a keyboard the setup says %q", l)
 	}

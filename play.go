@@ -30,12 +30,12 @@ func (a *app) playScreen(cx *core.Scope) core.Node {
 	// the big keys come back.
 	typed := core.NewSignal(cx, false)
 	cx.Effect(func() {
-		if !cx.Env().HardwareKeyboard() {
+		if !a.keyboard.Get() {
 			typed.Set(false)
 		}
 	})
 	touch := core.NewMemo(cx, func() bool {
-		return !a.locked && !a.kiosk.Supported() && !cx.Env().HardwareKeyboard() && !typed.Get()
+		return !a.locked && !a.kiosk.Supported() && !a.keyboard.Get() && !typed.Get()
 	})
 	press := func(name string) {
 		typed.Set(true)

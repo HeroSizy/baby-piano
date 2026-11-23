@@ -32,6 +32,9 @@ type locker interface {
 	Front()
 	Tick() (outputChanged bool)
 	SystemVolume() (float32, bool)
+	// Keyboard reports whether a phone or tablet has a physical keyboard
+	// attached, where the system says.
+	Keyboard() bool
 }
 
 // settings are the parents' choices, kept between launches.
@@ -60,6 +63,9 @@ type app struct {
 	piano    *core.Signal[*sound.Piano]
 	soundErr *core.Signal[error]
 	playing  *core.Signal[bool]
+	// keyboard is whether the system says a phone or tablet has a
+	// keyboard attached.
+	keyboard *core.Signal[bool]
 	// locked is whether kiosk took the keyboard: a computer's way to play.
 	locked bool
 	// session counts the times playing started, so a lock's tick stops
@@ -87,11 +93,22 @@ func newApp(cx *core.Scope, lock locker) *app {
 		piano:    core.NewSignal[*sound.Piano](cx, nil),
 		soundErr: core.NewSignal[error](cx, nil),
 		playing:  core.NewSignal(cx, false),
+		keyboard: core.NewSignal(cx, lock.Keyboard()),
 	}
+}
+
+// watchKeyboard looks every second whether a keyboard came or went, on a
+// phone or tablet: attaching one is rare, and a second's delay unnoticed.
+func (a *app) watchKeyboard() {
+	a.keyboard.Set(a.kiosk.Keyboard())
+	a.cx.AfterFunc(time.Second, a.watchKeyboard)
 }
 
 func (a *app) root() core.Node {
 	cx := a.cx
+	if !a.kiosk.Supported() {
+		cx.AfterFunc(time.Second, a.watchKeyboard)
+	}
 	sound.Load(cx, float32(a.settings.volume.Get()), func(p *sound.Piano, err error) {
 		a.piano.Set(p)
 		a.soundErr.Set(err)
