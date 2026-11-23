@@ -1,0 +1,29 @@
+Hello App Review team,
+
+Thank you for reviewing Mash Piano. Here is the information you asked for.
+
+1. Screen recording
+A screen recording made with the built-in Screen Recording on a physical iPhone running the latest iOS is attached to this submission. It starts at app launch and shows the full flow: the setup page, setting the volume, "Try it", starting to play, playing the keys with the colorful fireworks, and returning to the setup page by holding the top-right corner for 3 seconds.
+The app has no accounts, no login, no user-generated content and no paid content.
+
+2. Purpose and target audience
+Mash Piano is a simple piano toy for babies and toddlers, played together with a parent. Whatever keys the child presses, the app only plays gentle piano notes that sound good together (every note is in the C major pentatonic scale). It turns a phone, tablet or a spare hardware keyboard into a safe musical toy: there is nothing to buy, nothing to read and nothing to navigate away to. Volume is kept low and high notes are quieter to be kind to small ears. The parent sets it up; the child just plays and listens.
+
+3. How to use the main features (no login or sample files needed)
+- Open the app. The setup page appears.
+- Set the volume with the slider and tap "Try it" to hear a note.
+- Optionally turn on "Show colorful fireworks for each note".
+- Tap "Start playing". The screen fills with rows of big colored keys. Tap them, with several fingers at once if you like; each key plays a piano note. With a hardware keyboard attached, every key on the keyboard plays a note too.
+- To return to the setup page (parent exit): press and hold the top-right corner of the screen for 3 seconds. With a hardware keyboard you can also type "quitpiano".
+- Tip for parents (also in the app's description): iOS Guided Access can be used to keep the child inside the app.
+
+4. External services
+None. The app works fully offline and makes no network connections. It uses no third-party services, SDKs, analytics, advertising, authentication, payments or AI. The piano sound is built from the Salamander Grand Piano V3 samples by Alexander Holm, licensed under CC BY 3.0 (https://archive.org/details/SalamanderGrandPianoV3), bundled inside the app and credited.
+
+5. Regional differences
+None. The app works the same in every region. The interface follows the device language; features and content are identical everywhere.
+
+6. Regulated industry or protected third-party material
+Not applicable. The app is not in a regulated industry. The only third-party material is the CC BY 3.0 piano samples described above.
+
+Thank you!
