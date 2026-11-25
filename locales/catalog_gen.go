@@ -100,6 +100,8 @@ const (
 	textKeyboardOnNote
 	textKeyboardOff
 	textKeyboardOffNote
+	textDesktopApp
+	textDesktopAppLink
 	numTexts
 )
 
@@ -143,6 +145,8 @@ var keyOfText = [numTexts]string{
 	"keyboardOnNote",
 	"keyboardOff",
 	"keyboardOffNote",
+	"desktopApp",
+	"desktopAppLink",
 }
 
 // textsEn are the messages without arguments in en.
@@ -183,7 +187,9 @@ var textsEn = i18n.NewTexts(""+
 	"Keyboard connected"+
 	"The baby plays the keyboard, every key a note, as on a computer."+
 	"No keyboard"+
-	"The baby taps the big colored keys on the screen. Attach a keyboard to play it instead.",
+	"The baby taps the big colored keys on the screen. Attach a keyboard to play it instead."+
+	"Mash Piano is also free for Mac and Windows, where the baby plays a real computer keyboard and the whole keyboard is locked."+
+	"Download for Mac and Windows",
 	[]uint16{
 		10,
 		10,
@@ -222,6 +228,8 @@ var textsEn = i18n.NewTexts(""+
 		64,
 		11,
 		87,
+		124,
+		28,
 	})
 
 // textsZhHans are the messages without arguments in zh-Hans.
@@ -262,7 +270,9 @@ var textsZhHans = i18n.NewTexts(""+
 	"已连接键盘"+
 	"宝宝直接弹键盘，每个键一个音，跟电脑上一样。"+
 	"没有连接键盘"+
-	"宝宝点屏幕上的彩色大按键。接上键盘就改成弹键盘。",
+	"宝宝点屏幕上的彩色大按键。接上键盘就改成弹键盘。"+
+	"Mash Piano 也有免费的 Mac 和 Windows 版：宝宝直接拍电脑键盘，整个键盘都会被锁住。"+
+	"下载 Mac 和 Windows 版",
 	[]uint16{
 		10,
 		12,
@@ -301,6 +311,8 @@ var textsZhHans = i18n.NewTexts(""+
 		66,
 		18,
 		72,
+		109,
+		26,
 	})
 
 // texts returns the messages without arguments in lang, nil for a
@@ -709,3 +721,17 @@ func KeyboardOffNote(cx *core.Scope) string { return For(cx).KeyboardOffNote() }
 
 // KeyboardOffNote is the package's KeyboardOffNote in the language of msgs.
 func (msgs Messages) KeyboardOffNote() string { return msgs.text(textKeyboardOffNote) }
+
+// DesktopApp says "Mash Piano is also free for Mac and Windows, where the baby plays a real computer keyboard and the whole keyboard is locked."
+// in the language the app shows under cx.
+func DesktopApp(cx *core.Scope) string { return For(cx).DesktopApp() }
+
+// DesktopApp is the package's DesktopApp in the language of msgs.
+func (msgs Messages) DesktopApp() string { return msgs.text(textDesktopApp) }
+
+// DesktopAppLink says "Download for Mac and Windows"
+// in the language the app shows under cx.
+func DesktopAppLink(cx *core.Scope) string { return For(cx).DesktopAppLink() }
+
+// DesktopAppLink is the package's DesktopAppLink in the language of msgs.
+func (msgs Messages) DesktopAppLink() string { return msgs.text(textDesktopAppLink) }

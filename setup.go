@@ -200,6 +200,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 		tips = append(tips,
 			tip("🔒", func() string { return lock }),
 			tip("👋", func() string { return locales.CornerHint(cx) }),
+			desktopTip(cx),
 		)
 	}
 
@@ -464,6 +465,26 @@ func tip(emoji string, fn func() string) core.Node {
 		Children: []core.Node{
 			core.Text{Content: emoji, Style: ui.TypeBody.Merge(core.Style{FontSize: 18, LineHeight: 22})},
 			core.Text{ContentFunc: fn, Style: ui.TypeBody.Merge(core.Style{FontSize: 15, LineHeight: 22, Color: ink, FlexShrink: 1, FlexGrow: 1})},
+		}}
+}
+
+// desktopURL is the piano's homepage, where parents download the Mac and
+// Windows apps.
+const desktopURL = "https://mashpiano.herosizy.dev"
+
+// desktopTip tells parents on a phone or tablet that the piano is also a
+// computer app, with a link to download it; it sits with the tips on the
+// setup page, away from the baby's keys.
+func desktopTip(cx *core.Scope) core.Node {
+	return core.View{Style: core.Style{Direction: core.Row, Gap: 12, AlignItems: core.AlignStart, Padding: core.Symmetric(14, 18),
+		CornerRadius: 18, Background: core.RGBA(0xffffff, 0.55)},
+		Children: []core.Node{
+			core.Text{Content: "💻", Style: ui.TypeBody.Merge(core.Style{FontSize: 18, LineHeight: 22})},
+			core.View{Style: core.Style{FlexGrow: 1, FlexShrink: 1, Gap: 6}, Children: []core.Node{
+				core.Text{Content: locales.DesktopApp(cx), Style: ui.TypeBody.Merge(core.Style{FontSize: 15, LineHeight: 22, Color: ink})},
+				ui.Link{Text: locales.DesktopAppLink(cx) + " ›", Href: desktopURL, TestID: "desktop",
+					Style: core.Style{FontSize: 15, LineHeight: 22, FontWeight: ui.Semibold}},
+			}},
 		}}
 }
 

@@ -38,3 +38,5 @@ keyboardOn: 已连接键盘
 keyboardOnNote: 宝宝直接弹键盘，每个键一个音，跟电脑上一样。
 keyboardOff: 没有连接键盘
 keyboardOffNote: 宝宝点屏幕上的彩色大按键。接上键盘就改成弹键盘。
+desktopApp: Mash Piano 也有免费的 Mac 和 Windows 版：宝宝直接拍电脑键盘，整个键盘都会被锁住。
+desktopAppLink: 下载 Mac 和 Windows 版

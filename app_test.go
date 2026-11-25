@@ -312,3 +312,17 @@ func TestTurningTheScreenAnimatesTheLayout(t *testing.T) {
 		t.Error("turning the piano did not animate")
 	}
 }
+
+// TestPhonesLinkTheDesktopApp shows parents on a phone or tablet where to
+// download the computer app; computers, which are that app, do not.
+func TestPhonesLinkTheDesktopApp(t *testing.T) {
+	app := start(t, &fakeKiosk{}, nsgotest.Size(400, 800))
+	app.Press("id:desktop")
+	if len(app.OpenedURLs) != 1 || app.OpenedURLs[0] != desktopURL {
+		t.Errorf("the link opened %q, want %q", app.OpenedURLs, desktopURL)
+	}
+	mac := start(t, &fakeKiosk{supported: true, volume: 0.5}, onMac, nsgotest.Size(600, 800))
+	if mac.Exists("id:desktop") {
+		t.Error("the computer app links to itself")
+	}
+}
