@@ -21,10 +21,13 @@ const (
 
 // effects draw each note as a firework where it plays: a bright core that
 // pops, rings that spread like a shockwave and sparks that fly out and
-// fall, with a faint glow of the note's color over the whole screen. Every
-// motion runs on the platform from a fixed pool of views.
+// fall, with a faint glow of the note's color over the whole screen. With
+// the fireworks off, a note is a soft bloom of its color instead, so a
+// press still shows. Every motion runs on the platform from a fixed pool
+// of views, in colors for the light or dark screen.
 type effects struct {
 	cx     *core.Scope
+	fancy  bool // fireworks, rather than the soft bloom
 	size   *core.Signal[core.Size]
 	bursts []*burst
 	glows  []*glow
@@ -53,8 +56,8 @@ type glow struct {
 	o    *core.AnimatedValue
 }
 
-func newEffects(cx *core.Scope) *effects {
-	e := &effects{cx: cx, size: core.NewSignal(cx, core.Size{})}
+func newEffects(cx *core.Scope, fancy bool) *effects {
+	e := &effects{cx: cx, fancy: fancy, size: core.NewSignal(cx, core.Size{})}
 	val := func(v float64) *core.AnimatedValue { return core.NewAnimatedValue(cx, v) }
 	white := core.RGB(0xffffff)
 	for range burstSlots {
@@ -97,9 +100,29 @@ func pitch(i int) float64 { return float64(i) / float64(len(piano.Notes)-1) }
 // violet high.
 func hue(t float64) float64 { return t * 0.85 * 360 }
 
-// burstAt plays note i's firework centred at p. Low notes are bigger and
-// slower, high notes smaller and quicker; under reduced motion only the
-// core and the glow fade in and out, nothing flies.
+// fireTones are a firework's colors at hue h: on the dark screen bright
+// and pale, glowing; on the light one deeper, so they stand out from the
+// paper.
+type fireTones struct {
+	core, ring, glow   core.Color
+	bloom              core.Color // the soft bloom's, with the fireworks off
+	sparkS, sparkL     float64
+	glowPeak, softPeak float64 // the screen's tint at its strongest, with and without fireworks
+}
+
+func fireTonesAt(h float64, dark bool) fireTones {
+	if dark {
+		return fireTones{core: hsl(h, 1, 0.8), ring: hsl(h, 0.95, 0.62), glow: hsl(h, 0.9, 0.55), bloom: hsl(h, 0.9, 0.68),
+			sparkS: 1, sparkL: 0.68, glowPeak: 0.07, softPeak: 0.09}
+	}
+	return fireTones{core: hsl(h, 1, 0.62), ring: hsl(h, 0.9, 0.5), glow: hsl(h, 0.9, 0.6), bloom: hsl(h, 0.95, 0.6),
+		sparkS: 0.95, sparkL: 0.55, glowPeak: 0.10, softPeak: 0.10}
+}
+
+// burstAt plays note i at p: its firework, or with the fireworks off its
+// soft bloom. Low notes are bigger and slower, high notes smaller and
+// quicker; under reduced motion only the core and the glow fade in and
+// out, nothing flies.
 func (e *effects) burstAt(i int, p core.Point) {
 	t := pitch(i)
 	h := hue(t)
@@ -107,19 +130,51 @@ func (e *effects) burstAt(i int, p core.Point) {
 	slow := 1.3 - 0.55*t // duration by pitch
 	ms := func(d float64) time.Duration { return time.Duration(d*slow) * time.Millisecond }
 	still := core.Untracked(e.cx, e.cx.Env().ReduceMotion)
+	tn := fireTonesAt(h, core.Untracked(e.cx, e.cx.Dark))
 
-	e.flash(h, still)
+	peak := tn.glowPeak
+	if !e.fancy {
+		peak = tn.softPeak
+	}
+	e.flash(tn.glow, peak, still)
 
 	b := e.bursts[e.nextB]
 	e.nextB = (e.nextB + 1) % len(e.bursts)
 	d := (90 + rand.Float64()*40) * big
 	b.at.Set(p)
 	b.diam.Set(d)
-	b.coreTint.Set(hsl(h, 1, 0.8))
-	b.ringTint.Set(hsl(h, 0.95, 0.62))
+	b.coreTint.Set(tn.core)
+	b.ringTint.Set(tn.ring)
 
 	fadeOut := func(v *core.AnimatedValue, after, over float64) *core.Animation {
 		return core.Timing(v, 0, core.TimingConfig{Delay: ms(after), Duration: ms(over), Easing: core.BezierEasing(core.EaseOut)})
+	}
+	if !e.fancy {
+		// The soft bloom: the core alone, larger and fainter, swelling
+		// slowly as it fades; still, it only fades in and out.
+		b.diam.Set(d * 1.7)
+		b.coreTint.Set(tn.bloom)
+		for _, r := range b.rings {
+			r.o.Set(0)
+		}
+		for _, s := range b.sparks {
+			s.o.Set(0)
+		}
+		b.coreO.Set(0)
+		if still {
+			b.coreS.Set(1)
+		} else {
+			b.coreS.Set(0.55)
+		}
+		steps := []*core.Animation{core.Sequence(
+			core.Timing(b.coreO, 0.6, core.TimingConfig{Duration: 120 * time.Millisecond}),
+			fadeOut(b.coreO, 80, 900),
+		)}
+		if !still {
+			steps = append(steps, core.Timing(b.coreS, 1.15, core.TimingConfig{Duration: ms(1000), Easing: core.BezierEasing(core.EaseOut)}))
+		}
+		e.cx.StartAnimation(core.Parallel(steps...), nil)
+		return
 	}
 	if still {
 		b.coreS.Set(1)
@@ -156,7 +211,7 @@ func (e *effects) burstAt(i int, p core.Point) {
 	for k, s := range b.sparks {
 		angle := start + 2*math.Pi*float64(k)/sparkCount + (rand.Float64()-0.5)*0.5
 		dist := d * (0.9 + 0.7*rand.Float64())
-		s.tint.Set(hsl(h+float64(k%3-1)*28, 1, 0.68))
+		s.tint.Set(hsl(h+float64(k%3-1)*28, tn.sparkS, tn.sparkL))
 		s.tx.Set(0)
 		s.ty.Set(0)
 		s.o.Set(1)
@@ -174,19 +229,20 @@ func (e *effects) burstAt(i int, p core.Point) {
 	e.cx.StartAnimation(core.Parallel(steps...), nil)
 }
 
-// flash tints the whole screen faintly with hue h. Each note takes its own
-// layer, so a chord's glows add up instead of replacing one another.
-func (e *effects) flash(h float64, still bool) {
+// flash tints the whole screen faintly with color c, up to opacity peak.
+// Each note takes its own layer, so a chord's glows add up instead of
+// replacing one another.
+func (e *effects) flash(c core.Color, peak float64, still bool) {
 	g := e.glows[e.nextG]
 	e.nextG = (e.nextG + 1) % len(e.glows)
-	g.tint.Set(hsl(h, 0.9, 0.55))
+	g.tint.Set(c)
 	g.o.Set(0)
 	rise := 80 * time.Millisecond
 	if still {
 		rise = 200 * time.Millisecond
 	}
 	e.cx.StartAnimation(core.Sequence(
-		core.Timing(g.o, 0.07, core.TimingConfig{Duration: rise}),
+		core.Timing(g.o, peak, core.TimingConfig{Duration: rise}),
 		core.Timing(g.o, 0, core.TimingConfig{Duration: 700 * time.Millisecond, Easing: core.BezierEasing(core.EaseOut)}),
 	), nil)
 }

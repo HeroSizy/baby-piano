@@ -76,11 +76,13 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 	cx.Cleanup(func() { a.tapAt = nil })
 
 	// key is key k's look: a rounded color that glows white and bounces
-	// when it sounds.
-	key := func(k int, color core.Color, glow core.Color, style core.Style) core.Node {
+	// when it sounds, its color as the screen is light or dark.
+	key := func(k int, look keyLook, style core.Style) core.Node {
 		return core.View{Style: style, Children: []core.Node{core.View{
-			Style: core.Style{FlexGrow: 1, CornerRadius: 18, Background: color, ShadowColor: glow, ShadowRadius: 26,
-				Animated: &core.AnimatedStyle{Scale: bounces[k], ShadowOpacity: glows[k]}},
+			StyleFunc: func() core.Style {
+				return core.Style{FlexGrow: 1, CornerRadius: 18, Background: look.color(cx.Dark()), ShadowColor: look.glow(), ShadowRadius: 26,
+					Animated: &core.AnimatedStyle{Scale: bounces[k], ShadowOpacity: glows[k]}}
+			},
 			Children: []core.Node{core.View{
 				Style: core.Style{FlexGrow: 1, CornerRadius: 18, Background: core.RGB(0xffffff),
 					Animated: &core.AnimatedStyle{Opacity: core.Interpolate(glows[k], core.Interpolation{Input: []float64{0, 1}, Output: []float64{0, 0.55}})}},
@@ -98,7 +100,7 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 		}
 		for col := range cols {
 			hue := float64(col) / float64(cols) * 330
-			keys = append(keys, key(row*cols+col, hsl(hue, 0.78, light), hsl(hue, 1, 0.65),
+			keys = append(keys, key(row*cols+col, keyLook{hue: hue, light: light},
 				core.Style{Width: core.Pct(99.9 / float32(cols)), Height: core.Pct(99.9 / float32(rows)), Padding: core.All(5)}))
 		}
 	}
@@ -123,6 +125,31 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 		Children: keys,
 	}
 }
+
+// keyLook is a key's color: its hue, and how light its row is, or a piano's
+// black key.
+type keyLook struct {
+	hue, light float64
+	black      bool
+}
+
+// color is the key's color on the dark screen, as bright as the night
+// lets it glow, or on the light one, a pastel a step lighter that sits on
+// the paper; a black key stays dark on either, a little softer on paper.
+func (l keyLook) color(dark bool) core.Color {
+	switch {
+	case l.black && dark:
+		return hsl(l.hue, 0.45, 0.22)
+	case l.black:
+		return hsl(l.hue, 0.35, 0.3)
+	case dark:
+		return hsl(l.hue, 0.78, l.light)
+	}
+	return hsl(l.hue, 0.82, l.light+0.08)
+}
+
+// glow is the color the key glows when it sounds.
+func (l keyLook) glow() core.Color { return hsl(l.hue, 1, 0.65) }
 
 // sharp reports whether MIDI pitch p is a black key's.
 func sharp(p int) bool {
@@ -164,17 +191,17 @@ func pianoKeyAt(fx, fy float64) int {
 
 // pianoOctave is a row of all twelve notes laid out as a piano's octave,
 // the key at octave*12+semitone drawn by key.
-func pianoOctave(octave int, light float64, key func(k int, color, glow core.Color, style core.Style) core.Node) core.Node {
+func pianoOctave(octave int, light float64, key func(k int, look keyLook, style core.Style) core.Node) core.Node {
 	var children []core.Node
 	for w, step := range whiteSteps {
 		hue := float64(w) / 7 * 330
-		children = append(children, key(octave*12+step, hsl(hue, 0.78, light), hsl(hue, 1, 0.65),
+		children = append(children, key(octave*12+step, keyLook{hue: hue, light: light},
 			core.Style{FlexGrow: 1, FlexBasis: core.Pt(0), Padding: core.All(4)}))
 	}
 	for b, step := range blackSteps {
 		hue := (float64(blackAfter[b]) + 0.5) / 7 * 330
 		left := (float64(blackAfter[b]+1) - blackWidth/2) / 7 * 100
-		children = append(children, key(octave*12+step, hsl(hue, 0.45, 0.22), hsl(hue, 1, 0.65),
+		children = append(children, key(octave*12+step, keyLook{hue: hue, black: true},
 			core.Style{Position: core.Absolute, Top: core.Pt(0), Left: core.Pct(float32(left)),
 				Width: core.Pct(float32(blackWidth / 7 * 100)), Height: core.Pct(blackHeight * 100), Padding: core.All(4)}))
 	}

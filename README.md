@@ -30,7 +30,7 @@ It started with an old mechanical keyboard at home. Our baby loved slapping it, 
 - **The whole keyboard plays**: letters, digits, symbols, F1–F12, arrows, the number pad, Ctrl/Alt/Cmd/Shift… every key has its own note. Each row up is an octave higher, and a row rises from left to right. A key always plays the same note.
 - **A real piano sound**: Salamander Grand Piano samples (a Yamaha C5 grand).
 - **Kind to small ears**: high notes are quieter; a slap on a dozen keys plays only a few; the computer's volume is capped at 50% while playing, and is pulled back down if a Bluetooth speaker or headphones connect midway.
-- **A black screen by default**: the baby only listens. If you like, turn on **Fireworks** and every note bursts into a firework in the color of its pitch.
+- **A calm screen by default**: the baby mostly listens, and each note is only a soft glow of its color. If you like, turn on **Fireworks** and every note bursts into a firework in the color of its pitch. The play screen follows the system's light or dark appearance.
 - The screen stays on and the computer stays awake while playing.
 - The app follows the system language, and its setup page follows light or dark mode.
 

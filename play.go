@@ -16,13 +16,21 @@ const (
 	cornerSize = 90
 )
 
-// playScreen is the piano: on a computer a dark screen the keyboard plays,
-// on a phone or tablet big colored keys, until a keyboard is attached.
+// playScreen is the piano: on a computer a quiet screen the keyboard
+// plays, on a phone or tablet big colored keys, until a keyboard is
+// attached. It is the setup's warm paper in light appearance and its plum
+// night in dark, following the system's as it changes. Every note shows:
+// as a firework, or with the fireworks off as a soft bloom of its color,
+// and on the keys as the key lighting up.
 func (a *app) playScreen(cx *core.Scope) core.Node {
-	fx := newEffects(cx)
-	if a.settings.visuals.Get() {
-		a.burst = fx.burst
-		cx.Cleanup(func() { a.burst = nil })
+	visuals := a.settings.visuals.Get()
+	fx := newEffects(cx, visuals)
+	a.burst = fx.burst
+	cx.Cleanup(func() { a.burst = nil })
+	// The keys light up themselves; fireworks go over them only when asked.
+	keyBurst := func(int, core.Point) {}
+	if visuals {
+		keyBurst = fx.burstAt
 	}
 	// A phone or tablet with a keyboard plays as a computer does, the
 	// screen all the notes' own: the system says one is attached, or a
@@ -99,9 +107,13 @@ func (a *app) playScreen(cx *core.Scope) core.Node {
 				fx.burstAt(i, e.PagePosition)
 			}
 		},
-		Style: core.Style{FlexGrow: 1, FlexShrink: 1, Background: core.RGB(0x000000), Overflow: core.Hidden, Cursor: cursor},
+		StyleFunc: func() core.Style {
+			t := tonesOf(cx)
+			return core.Style{FlexGrow: 1, FlexShrink: 1, Overflow: core.Hidden, Cursor: cursor,
+				Background: t.paperTop, Gradients: []core.Gradient{core.LinearGradient(180, t.paperTop, t.paperBottom)}}
+		},
 		Children: []core.Node{
-			core.Show{When: touch.Get, Then: func(cx *core.Scope) core.Node { return a.touchKeys(cx, fx.burstAt) }},
+			core.Show{When: touch.Get, Then: func(cx *core.Scope) core.Node { return a.touchKeys(cx, keyBurst) }},
 			fx.node(),
 			// A phone or tablet that turns to its keyboard says so for a
 			// moment, so parents know why the big keys went; it fades, so
@@ -109,13 +121,16 @@ func (a *app) playScreen(cx *core.Scope) core.Node {
 			core.Show{When: func() bool { return !a.kiosk.Supported() && !touch.Get() }, Then: func(cx *core.Scope) core.Node {
 				fade := core.NewAnimatedValue(cx, 1)
 				cx.StartAnimation(core.Timing(fade, 0, core.TimingConfig{Duration: 800 * time.Millisecond, Delay: 2500 * time.Millisecond}), nil)
+				ink := func() core.Color { return tonesOf(cx).ink.Faded(0.8) }
 				return core.View{TestID: "keyboardOn",
-					Style: core.Style{Position: core.Absolute, Left: core.Pt(16), Bottom: core.Pt(16), Padding: core.Symmetric(8, 14), CornerRadius: 999,
-						Direction: core.Row, AlignItems: core.AlignCenter, Gap: 8,
-						Background: core.RGBA(0xffffff, 0.12), Animated: &core.AnimatedStyle{Opacity: fade}},
+					StyleFunc: func() core.Style {
+						return core.Style{Position: core.Absolute, Left: core.Pt(16), Bottom: core.Pt(16), Padding: core.Symmetric(8, 14), CornerRadius: 999,
+							Direction: core.Row, AlignItems: core.AlignCenter, Gap: 8,
+							Background: tonesOf(cx).ink.Faded(0.1), Animated: &core.AnimatedStyle{Opacity: fade}}
+					},
 					Children: []core.Node{
-						core.Icon{SVG: iconKeyboard, Style: core.Style{Width: core.Pt(18), Height: core.Pt(18), Color: core.RGBA(0xffffff, 0.8)}},
-						core.Text{Content: locales.KeyboardOn(cx), Style: core.Style{FontSize: 14, Color: core.RGBA(0xffffff, 0.8)}}}}
+						core.Icon{SVG: iconKeyboard, StyleFunc: func() core.Style { return core.Style{Width: core.Pt(18), Height: core.Pt(18), Color: ink()} }},
+						core.Text{Content: locales.KeyboardOn(cx), StyleFunc: func() core.Style { return core.Style{FontSize: 14, Color: ink()} }}}}
 			}},
 			a.corner(cx),
 		},
@@ -158,9 +173,12 @@ func (a *app) corner(cx *core.Scope) core.Node {
 		},
 		OnPressUp: func(core.PressEvent) { cancel() },
 		Children: []core.Node{
-			core.View{Style: core.Style{Width: core.Pt(40), Height: core.Pt(40), CornerRadius: 20,
-				BorderWidth: 4, BorderColor: core.RGBA(0xffffff, 0.85),
-				Animated: &core.AnimatedStyle{Opacity: ring, Scale: ring}}},
+			// The ring in the screen's ink: white on the night, plum on the paper.
+			core.View{StyleFunc: func() core.Style {
+				return core.Style{Width: core.Pt(40), Height: core.Pt(40), CornerRadius: 20,
+					BorderWidth: 4, BorderColor: tonesOf(cx).ink.Faded(0.85),
+					Animated: &core.AnimatedStyle{Opacity: ring, Scale: ring}}
+			}},
 			// The hint sits on a dark pill so it reads over any key color, keeps
 			// clear of the screen edge, and fades once parents have seen it.
 			core.View{Style: core.Style{Position: core.Absolute, Top: core.Pt(cornerSize - 4), Right: core.Pt(16),
