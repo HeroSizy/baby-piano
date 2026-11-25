@@ -101,7 +101,7 @@ body {
   touch-action: manipulation; /* no double-tap zoom */
   transition: background-color .25s ease, color .25s ease;
 }
-h1, h2, h3 { font-family: "Fredoka", "Nunito", system-ui, sans-serif; font-weight: 600; line-height: 1.08; margin: 0; }
+h1, h2, h3 { font-family: "Fredoka", "Nunito", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; font-weight: 600; line-height: 1.08; margin: 0; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 8px; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 max(24px, env(safe-area-inset-left)) 0 max(24px, env(safe-area-inset-right)); }
@@ -117,7 +117,12 @@ a { color: inherit; }
   display: grid; place-items: center; color: var(--ink);
   background: var(--surface); box-shadow: 0 0 0 1.5px var(--line);
 }
-.theme:hover { box-shadow: 0 0 0 2px var(--ink-2); }
+.lang {
+  height: 40px; min-width: 40px; padding: 0 12px; border-radius: 999px; display: grid; place-items: center;
+  text-decoration: none; font-weight: 800; font-size: 14px; color: var(--ink);
+  background: var(--surface); box-shadow: 0 0 0 1.5px var(--line);
+}
+.lang:hover, .theme:hover { box-shadow: 0 0 0 2px var(--ink-2); }
 .theme svg { width: 20px; height: 20px; }
 .theme .moon { display: none; }
 :root[data-theme="dark"] .theme .sun { display: none; }
@@ -316,6 +321,8 @@ footer .links { display: flex; gap: 20px; }
   .brand { font-size: 19px; }
   .bar a.get { padding: 8px 14px; font-size: 14px; }
   .theme { width: 36px; height: 36px; }
+  .lang { height: 36px; padding: 0 10px; font-size: 13px; }
+  .bar-right { gap: 8px; }
 
   .hero { padding: 8px 0 24px; }
   .hero h1 { font-size: clamp(40px, 12.5vw, 64px); letter-spacing: -1px; }
@@ -368,3 +375,8 @@ footer .links { display: flex; gap: 20px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Chinese: system CJK fonts, no negative tracking, a little more leading */
+:lang(zh) body { font-family: "Nunito", -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+:lang(zh) h1, :lang(zh) h2, :lang(zh) h3 { letter-spacing: 0; line-height: 1.2; font-weight: 700; }
+:lang(zh) .kicker { letter-spacing: 2px; }
