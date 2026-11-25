@@ -98,6 +98,7 @@ body {
   color: var(--ink);
   font: 18px/1.6 "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
   overflow-x: hidden;
+  touch-action: manipulation; /* no double-tap zoom */
   transition: background-color .25s ease, color .25s ease;
 }
 h1, h2, h3 { font-family: "Fredoka", "Nunito", system-ui, sans-serif; font-weight: 600; line-height: 1.08; margin: 0; }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Mash Piano: let them mash</title>
 <meta name="description" content="A free piano toy for babies. However they mash the keys, all that comes out is gentle piano music. For Mac, Windows, iPhone, iPad and Android. No ads, no accounts, no data collected.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -229,6 +229,11 @@ try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") 
     if (typeof WeixinJSBridge === "object") noScale(); else document.addEventListener("WeixinJSBridgeReady", noScale);
     document.getElementById("inapp").classList.add("show");
   }
+
+  // Safari ignores user-scalable=no for pinches: stop them here, so
+  // little hands mashing the piano can't zoom the page.
+  ["gesturestart", "gesturechange"].forEach(function (t) { document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false }); });
+  document.addEventListener("touchmove", function (e) { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
 
   // ---- the piano: C3 to C6 in do re mi sol la, like the app ----
   var NAMES = ["C3","D3","E3","G3","A3","C4","D4","E4","G4","A4","C5","D5","E5","G5","A5","C6"];
