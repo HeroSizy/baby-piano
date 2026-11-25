@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mash Piano: a piano for tiny hands</title>
+<meta name="description" content="A free piano toy for babies. However they mash the keys, all that comes out is gentle piano music. For iPhone, iPad, Mac, Windows and Android. No ads, no accounts, no data collected.">
+<meta name="theme-color" content="#FFE9D2">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/img/icon-180.png">
+<meta name="apple-itunes-app" content="app-id=6837722350">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mashpiano.herosizy.dev/">
+<meta property="og:title" content="Mash Piano: a piano for tiny hands">
+<meta property="og:description" content="However they mash the keys, all that comes out is gentle piano music. Free for iPhone, iPad, Mac, Windows and Android.">
+<meta property="og:image" content="https://mashpiano.herosizy.dev/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFF7EC;
+  --bg-2: #FFEBD6;
+  --card: #FFFFFF;
+  --ink: #3A3355;
+  --ink-2: #6B6480;
+  --line: #F1DFCB;
+  --red: #FF8A7E;
+  --orange: #FDB352;
+  --yellow: #FFDF6B;
+  --green: #7FD99A;
+  --blue: #6EC3FF;
+  --purple: #A98BF0;
+  --accent: #3A3355;
+  --radius: 22px;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 17px/1.6 "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+h1, h2, h3 { font-family: "Fredoka", "Nunito", system-ui, sans-serif; font-weight: 600; line-height: 1.15; margin: 0; }
+a { color: inherit; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+/* Hero */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(40% 50% at 8% 10%, #FFC3B4 0%, transparent 70%),
+    radial-gradient(35% 45% at 95% 15%, #BFE3FF 0%, transparent 70%),
+    radial-gradient(40% 40% at 70% 100%, #FFE7A6 0%, transparent 70%),
+    linear-gradient(180deg, #FFF4DC, var(--bg-2));
+  padding: 28px 0 0;
+}
+nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 600 20px "Fredoka", sans-serif; }
+.brand img { width: 36px; height: 36px; border-radius: 9px; box-shadow: 0 2px 8px rgba(58,51,85,.12); }
+nav .links { display: flex; gap: 20px; font-weight: 600; font-size: 15px; }
+nav .links a { text-decoration: none; color: var(--ink-2); }
+nav .links a:hover { color: var(--ink); }
+
+.hero-body { text-align: center; padding: 56px 0 8px; }
+.hero h1 { font-size: clamp(40px, 7vw, 68px); letter-spacing: -0.5px; }
+.hero h1 .k { display: inline-block; }
+.hero .lede { max-width: 620px; margin: 18px auto 0; font-size: clamp(17px, 2.2vw, 20px); color: var(--ink-2); }
+.cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 30px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 13px 22px; border-radius: 999px;
+  font-weight: 700; font-size: 16px; text-decoration: none;
+  border: 2px solid transparent; transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn svg { width: 20px; height: 20px; flex: none; }
+.btn.dark { background: var(--ink); color: #fff; box-shadow: 0 6px 18px rgba(58,51,85,.22); }
+.btn.light { background: #fff; color: var(--ink); border-color: var(--line); }
+.btn .sub { display: block; font-size: 11px; font-weight: 600; opacity: .75; line-height: 1; margin-bottom: 2px; }
+.btn .two { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; }
+.note { margin-top: 14px; font-size: 14px; color: var(--ink-2); }
+.hero-art { display: block; width: 100%; margin: 28px auto 0; height: auto; border-radius: 28px 28px 0 0; -webkit-mask-image: linear-gradient(180deg, #000 75%, transparent); mask-image: linear-gradient(180deg, #000 75%, transparent); }
+
+/* Pills */
+.pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 0 auto; padding: 36px 0 8px; max-width: 900px; }
+.pill { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: 14px; }
+.pill i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+section { padding: 64px 0; }
+.eyebrow { font-weight: 700; font-size: 13px; letter-spacing: 1.2px; text-transform: uppercase; color: #E0745F; }
+h2 { font-size: clamp(30px, 4.4vw, 42px); margin-top: 8px; }
+.intro { max-width: 640px; color: var(--ink-2); margin: 14px 0 0; }
+.center { text-align: center; }
+.center .intro { margin-left: auto; margin-right: auto; }
+
+/* Story */
+.story { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
+.story p { color: var(--ink-2); }
+.keys { display: flex; gap: 8px; height: 220px; padding: 18px; background: #FFF3E6; border-radius: 28px; box-shadow: inset 0 0 0 10px #FFFAF3; }
+.keys span { flex: 1; border-radius: 14px; animation: bob 3.2s ease-in-out infinite; }
+.keys span:nth-child(1) { background: linear-gradient(#FFB3AA, var(--red)); }
+.keys span:nth-child(2) { background: linear-gradient(#FFD08F, var(--orange)); animation-delay: .25s; }
+.keys span:nth-child(3) { background: linear-gradient(#FFEC9F, var(--yellow)); animation-delay: .5s; }
+.keys span:nth-child(4) { background: linear-gradient(#B4EEC5, var(--green)); animation-delay: .75s; }
+.keys span:nth-child(5) { background: linear-gradient(#A9DCFF, var(--blue)); animation-delay: 1s; }
+.keys span:nth-child(6) { background: linear-gradient(#CDBBF7, var(--purple)); animation-delay: 1.25s; }
+@keyframes bob { 0%, 100% { transform: translateY(0); filter: none; } 8% { transform: translateY(6px); filter: brightness(1.08); } 16% { transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .keys span { animation: none; } }
+
+/* Features */
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 36px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+.card h3 { font-size: 20px; margin: 12px 0 6px; }
+.card p { margin: 0; color: var(--ink-2); font-size: 16px; }
+.dot { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; }
+
+/* Screens */
+.shots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
+.shots img { width: 100%; height: auto; border-radius: 20px; box-shadow: 0 10px 30px rgba(58,51,85,.12); background: #FFE9D2; }
+
+/* Download */
+.download { background: linear-gradient(180deg, var(--bg), var(--bg-2)); }
+.dl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 36px; }
+.dl .card { display: flex; flex-direction: column; gap: 14px; }
+.dl .card.rec { border: 2px solid var(--ink); }
+.dl .head { display: flex; align-items: center; gap: 12px; }
+.dl .head svg { width: 30px; height: 30px; flex: none; }
+.dl .head h3 { margin: 0; }
+.dl .tag { margin-left: auto; font-size: 12px; font-weight: 700; background: var(--ink); color: #fff; padding: 3px 10px; border-radius: 999px; display: none; }
+.dl .card.rec .tag { display: inline-block; }
+.dl .btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; }
+.dl .btns .btn { padding: 10px 18px; font-size: 15px; }
+.fine { font-size: 14px; color: var(--ink-2); margin: 0; }
+.ver { text-align: center; margin-top: 22px; font-size: 14px; color: var(--ink-2); }
+
+/* How to stop */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 36px; counter-reset: s; }
+.steps .card { position: relative; padding-top: 56px; }
+.steps .card::before { counter-increment: s; content: counter(s); position: absolute; top: 18px; left: 24px; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: #fff; font: 600 16px/30px "Fredoka", sans-serif; text-align: center; }
+kbd { font: 700 14px ui-monospace, SFMono-Regular, Menlo, monospace; background: #FFF3E6; border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 7px; padding: 1px 7px; }
+
+footer { padding: 40px 0 56px; color: var(--ink-2); font-size: 14px; border-top: 1px solid var(--line); }
+footer .row { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
+footer nav { gap: 18px; justify-content: flex-start; }
+
+@media (max-width: 860px) {
+  .story { grid-template-columns: 1fr; }
+  .grid, .steps { grid-template-columns: 1fr 1fr; }
+  .shots { grid-template-columns: repeat(2, 1fr); }
+  .dl { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .wrap { padding: 0 16px; }
+  nav .links { display: none; }
+  .hero-body { padding-top: 36px; }
+  .grid, .steps { grid-template-columns: 1fr; }
+  .keys { height: 160px; }
+  section { padding: 48px 0; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="/"><img src="/img/icon-180.png" alt="" width="36" height="36">Mash Piano</a>
+      <div class="links">
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="#parents">For parents</a>
+      </div>
+    </nav>
+    <div class="hero-body">
+      <h1>A piano for tiny hands</h1>
+      <p class="lede">However they mash the keys, all that comes out is gentle piano music. Made for babies and toddlers, free on iPhone, iPad, Mac, Windows and Android.</p>
+      <div class="cta">
+        <a class="btn dark" href="https://apps.apple.com/app/mash-piano/id6837722350">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.7c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.47.83-.72 0-1.82-.81-2.99-.79-1.54.02-2.96.9-3.75 2.27-1.6 2.78-.41 6.89 1.15 9.14.76 1.1 1.67 2.34 2.86 2.29 1.15-.05 1.58-.74 2.97-.74 1.38 0 1.77.74 2.98.72 1.24-.02 2.02-1.12 2.77-2.23.87-1.28 1.23-2.52 1.25-2.58-.03-.01-2.39-.92-2.41-3.65zM14.1 5.95c.63-.77 1.06-1.84.94-2.9-.91.04-2.02.61-2.67 1.37-.58.68-1.1 1.77-.96 2.81 1.02.08 2.06-.52 2.69-1.28z"/></svg>
+          <span class="two"><span class="sub">Download on the</span>App Store</span>
+        </a>
+        <a class="btn light" id="hero-desktop" href="#download">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
+          <span id="hero-desktop-label">For Mac and Windows</span>
+        </a>
+      </div>
+      <p class="note">Free. No ads, no accounts, no internet needed.</p>
+    </div>
+    <picture>
+      <source media="(max-width: 700px)" srcset="/img/header-1000.webp">
+      <img class="hero-art" src="/img/header-2000.webp" width="2000" height="900" alt="A colorful toy piano with soft bursts of light over its keys">
+    </picture>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="pills">
+    <span class="pill"><i style="background:var(--red)"></i>Soft volume</span>
+    <span class="pill"><i style="background:var(--orange)"></i>Gentle high notes</span>
+    <span class="pill"><i style="background:var(--yellow)"></i>No ads</span>
+    <span class="pill"><i style="background:var(--green)"></i>No accounts</span>
+    <span class="pill"><i style="background:var(--blue)"></i>No data collected</span>
+    <span class="pill"><i style="background:var(--purple)"></i>Works offline</span>
+  </div>
+</div>
+
+<section>
+  <div class="wrap story">
+    <div>
+      <div class="eyebrow">Why it exists</div>
+      <h2>It started with an old keyboard</h2>
+      <p>Our baby loved slapping a spare mechanical keyboard, so it became a toy. But on a real computer every slap did something: apps quit, windows switched, shortcuts fired, and nothing sounded nice.</p>
+      <p>Mash Piano turns that keyboard, or a phone or tablet, into an instrument. Every key plays a piano note that fits with the others, and nothing else on the device reacts.</p>
+    </div>
+    <div class="keys" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+</section>
+
+<section id="features" style="padding-top:0">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow">What it does</div>
+      <h2>Every tap sounds lovely</h2>
+      <p class="intro">Babies at this age mostly listen, so Mash Piano is built around sound first, and keeps everything else out of the way.</p>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="dot" style="background:#FFE1DC">🎵</div><h3>Always in harmony</h3><p>Every note comes from one gentle scale (five, seven or all twelve notes, you choose), so any mash of keys sounds pleasant together.</p></div>
+      <div class="card"><div class="dot" style="background:#FFEBCC">🎹</div><h3>A real grand piano</h3><p>Recorded from a Yamaha C5 grand (Salamander Grand Piano), not a synthesized beep.</p></div>
+      <div class="card"><div class="dot" style="background:#FFF4C7">👂</div><h3>Kind to small ears</h3><p>High notes are softer, a slap on a dozen keys plays only a few, and the volume stays capped while playing.</p></div>
+      <div class="card"><div class="dot" style="background:#DDF6E4">⌨️</div><h3>The whole keyboard plays</h3><p>On a computer every key has its own note. Nothing quits, switches apps or triggers a system shortcut.</p></div>
+      <div class="card"><div class="dot" style="background:#DDF0FF">🖐️</div><h3>Big keys for every finger</h3><p>On phones and tablets the screen becomes rows of big colored keys, played with as many fingers as fit.</p></div>
+      <div class="card"><div class="dot" style="background:#ECE4FD">🎆</div><h3>Fireworks, if you like</h3><p>The screen can stay calm and dark, or every note can burst into a firework in the color of its pitch.</p></div>
+    </div>
+    <div class="shots">
+      <img src="/img/shot-1.webp" width="640" height="1391" loading="lazy" alt="Every tap sounds lovely: rows of big colored keys on an iPhone">
+      <img src="/img/shot-2.webp" width="640" height="1391" loading="lazy" alt="A burst of color for every note: fireworks over the keys">
+      <img src="/img/shot-3.webp" width="640" height="1391" loading="lazy" alt="Set up in seconds: pick a volume and notes, then hand it over">
+      <img src="/img/shot-4.webp" width="640" height="1391" loading="lazy" alt="Made for little ears: soft volume, no ads, no data collected">
+    </div>
+  </div>
+</section>
+
+<section id="download" class="download">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow">Download</div>
+      <h2>Free on every device you have</h2>
+      <p class="intro">Same app everywhere. On a computer it locks the keyboard so a spare one becomes a safe toy.</p>
+    </div>
+    <div class="dl">
+      <div class="card" id="dl-ios">
+        <div class="head">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.7c-.02-2.3 1.88-3.4 1.96-3.46-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.47.83-.72 0-1.82-.81-2.99-.79-1.54.02-2.96.9-3.75 2.27-1.6 2.78-.41 6.89 1.15 9.14.76 1.1 1.67 2.34 2.86 2.29 1.15-.05 1.58-.74 2.97-.74 1.38 0 1.77.74 2.98.72 1.24-.02 2.02-1.12 2.77-2.23.87-1.28 1.23-2.52 1.25-2.58-.03-.01-2.39-.92-2.41-3.65zM14.1 5.95c.63-.77 1.06-1.84.94-2.9-.91.04-2.02.61-2.67 1.37-.58.68-1.1 1.77-.96 2.81 1.02.08 2.06-.52 2.69-1.28z"/></svg>
+          <h3>iPhone and iPad</h3><span class="tag">For this device</span>
+        </div>
+        <p class="fine">Turn on Guided Access (Settings › Accessibility › Guided Access), then triple-click the side button while the piano plays, to keep little hands in the app.</p>
+        <div class="btns"><a class="btn dark" href="https://apps.apple.com/app/mash-piano/id6837722350">Get it on the App Store</a></div>
+      </div>
+      <div class="card" id="dl-mac">
+        <div class="head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>
+          <h3>Mac</h3><span class="tag">For this device</span>
+        </div>
+        <p class="fine">Signed and notarized by Apple. Open the disk image and drag Mash Piano into Applications. The first time, allow it under Privacy &amp; Security › Accessibility so it can lock the keyboard.</p>
+        <div class="btns">
+          <a class="btn dark" href="/download/mac-arm64">Apple silicon (M1 and later)</a>
+          <a class="btn light" href="/download/mac-x64">Intel</a>
+        </div>
+      </div>
+      <div class="card" id="dl-win">
+        <div class="head">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5l7.5-1v7H3zM11.5 4.4L21 3v8.5h-9.5zM3 12.5h7.5v7L3 18.5zM11.5 12.5H21V21l-9.5-1.4z"/></svg>
+          <h3>Windows</h3><span class="tag">For this device</span>
+        </div>
+        <p class="fine">Run the installer; no administrator rights needed. While playing, the Win key, Alt+Tab and Alt+F4 are blocked.</p>
+        <div class="btns">
+          <a class="btn dark" href="/download/windows-x64">Download for Windows</a>
+          <a class="btn light" href="/download/windows-arm64">ARM PCs</a>
+        </div>
+      </div>
+      <div class="card" id="dl-android">
+        <div class="head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>
+          <h3>Android</h3><span class="tag">For this device</span>
+        </div>
+        <p class="fine">Download and open the APK to install it. To keep the baby in the app, pin it: Settings › Security › App pinning.</p>
+        <div class="btns"><a class="btn dark" href="/download/android">Download the APK</a></div>
+      </div>
+    </div>
+    <p class="ver" id="ver">Always the latest release. <a href="https://github.com/HeroSizy/baby-piano/releases/latest">All files and release notes</a></p>
+  </div>
+</section>
+
+<section id="parents">
+  <div class="wrap">
+    <div class="center">
+      <div class="eyebrow">For parents</div>
+      <h2>Set up in seconds, out in three</h2>
+      <p class="intro">The baby can't get out. You can, either way below.</p>
+    </div>
+    <div class="steps">
+      <div class="card"><h3>Set it up</h3><p>Pick a volume and press Try it. On a laptop, you can also lock the mouse and trackpad.</p></div>
+      <div class="card"><h3>Hand it over</h3><p>Press Start playing. It goes full screen, and the keyboard, or the screen, only plays notes.</p></div>
+      <div class="card"><h3>Stop playing</h3><p>Hold the top-right corner for 3 seconds, or on a keyboard type <kbd>quitpiano</kbd>.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap row">
+    <span>Mash Piano. Piano samples: <a href="https://archive.org/details/SalamanderGrandPianoV3">Salamander Grand Piano V3</a> by Alexander Holm, CC BY 3.0.</span>
+    <nav>
+      <a href="/privacy">Privacy</a>
+      <a href="https://github.com/HeroSizy/baby-piano">Source</a>
+      <a href="https://github.com/HeroSizy/baby-piano/issues">Support</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Point the second hero button and the "For this device" tag at what
+  // the visitor is using. Every link already works without this.
+  var ua = navigator.userAgent, p = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+  var touchMac = /Mac/.test(p) && navigator.maxTouchPoints > 1; // iPadOS asks for the desktop site
+  var os = /iPhone|iPad|iPod/.test(ua) || touchMac ? "ios"
+    : /Android/.test(ua) ? "android"
+    : /Mac/.test(p) || /Mac OS X/.test(ua) ? "mac"
+    : /Win/.test(p) || /Windows/.test(ua) ? "win" : "";
+  if (os) {
+    var card = document.getElementById("dl-" + os);
+    if (card) { card.classList.add("rec"); card.parentNode.insertBefore(card, card.parentNode.firstChild); }
+  }
+  var hero = document.getElementById("hero-desktop"), label = document.getElementById("hero-desktop-label");
+  if (os === "mac") { hero.href = "/download/mac-arm64"; label.textContent = "Download for Mac"; }
+  else if (os === "win") { hero.href = "/download/windows-x64"; label.textContent = "Download for Windows"; }
+  else if (os === "android") { hero.href = "/download/android"; label.textContent = "Download for Android"; }
+
+  fetch("/api/latest").then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (!d || !d.version) return;
+    var date = new Date(d.published).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+    var el = document.getElementById("ver");
+    el.firstChild.textContent = "Version " + d.version + ", released " + date + ". ";
+  }).catch(function () {});
+})();
+</script>
+</body>
+</html>

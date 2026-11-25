@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // mashpiano.herosizy.dev: the static page in public/, and a few lines of
+  // Worker (src/worker.js) that send /download/<platform> to that file of
+  // the latest GitHub Release, so the page never needs a redeploy for a
+  // new version.
+  "name": "mashpiano-site",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/download/*", "/api/*"]
+  },
+  "routes": [{ "pattern": "mashpiano.herosizy.dev", "custom_domain": true }],
+  "workers_dev": false,
+  "observability": { "enabled": true }
+}
