@@ -57,9 +57,9 @@ func session() objc.ID {
 	return objc.ID(objc.GetClass("AVAudioSession")).Send(sel("sharedInstance"))
 }
 
-// keepSession holds iOS's audio session for as long as the app runs, as a
-// music app's: the Playback category, so the piano plays with the
-// Ring/Silent switch on and moves with the system's output to headphones,
+// keepSession holds iOS's audio session for as long as the app runs: the
+// Playback category mixing with other apps' audio, so the piano plays with
+// the Ring/Silent switch on, leaves a parent's music playing, and moves with the system's output to headphones,
 // a Bluetooth speaker or AirPlay as they connect.
 //
 // Sounds alone hold the session ambient only while they play, and NSGo
@@ -75,7 +75,7 @@ func keepSession() {
 	if !frameworks() {
 		return
 	}
-	if _, err := audio.HoldSession(core.AudioSessionPlayback); err != nil {
+	if _, err := audio.HoldSession(core.AudioSessionMixWithOthers); err != nil {
 		log.Print("mash piano: cannot hold the audio session: ", err)
 		return
 	}
