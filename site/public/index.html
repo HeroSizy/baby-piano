@@ -252,6 +252,17 @@ try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") 
   // little hands mashing the piano can't zoom the page.
   ["gesturestart", "gesturechange"].forEach(function (t) { document.addEventListener(t, function (e) { e.preventDefault(); }, { passive: false }); });
   document.addEventListener("touchmove", function (e) { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+  // iOS Safari also zooms on a quick double tap, whatever the viewport
+  // says: cancel touches on the piano outright (its pointer events still
+  // play), and a second tap within 350 ms anywhere else.
+  document.getElementById("piano").addEventListener("touchstart", function (e) { e.preventDefault(); }, { passive: false });
+  var lastTap = 0;
+  document.addEventListener("touchend", function (e) {
+    var now = Date.now();
+    if (now - lastTap < 350 && !(e.target.closest && e.target.closest("a, button"))) e.preventDefault();
+    lastTap = now;
+  }, { passive: false });
+  document.addEventListener("dblclick", function (e) { e.preventDefault(); }, { passive: false });
 
   // ---- the piano: C3 to C6 in do re mi sol la, like the app ----
   var NAMES = ["C3","D3","E3","G3","A3","C4","D4","E4","G4","A4","C5","D5","E5","G5","A5","C6"];
