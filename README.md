@@ -14,9 +14,10 @@ For **Mac, Windows, iPhone, iPad and Android**. Free, no ads, no accounts, and i
 The download links always fetch the newest installer from [Releases](../../releases/latest). The homepage is [mashpiano.herosizy.dev](https://mashpiano.herosizy.dev) (also [in Chinese](https://mashpiano.herosizy.dev/zh)).
 
 <p align="center">
-  <img src="docs/screenshots/setup.png" alt="The setup page: set the volume, try it, start playing" height="360">
-  <img src="docs/screenshots/play.png" alt="Each note sets off a colored firework while playing" height="360">
-  <img src="docs/screenshots/touch.png" alt="The colored keys on phones and tablets" height="360">
+  <img src="docs/screenshots/every-tap.jpg" alt="Every tap sounds lovely: rows of big colored keys" width="200">
+  <img src="docs/screenshots/fireworks.jpg" alt="A burst of color for every note" width="200">
+  <img src="docs/screenshots/setup.jpg" alt="The setup page: volume, notes and fireworks" width="200">
+  <img src="docs/screenshots/little-ears.jpg" alt="Made for little ears: soft volume, no ads, no data collected" width="200">
 </p>
 
 ## Why it exists
@@ -25,13 +26,13 @@ It started with an old mechanical keyboard at home. Our baby loved slapping it, 
 
 ## What it does
 
-- **Mashing sounds good**: every note is in the C major pentatonic scale (C D E G A), 36 notes from C1 to C8, so any combination is in harmony.
+- **Mashing sounds good**: by default every note is in the C major pentatonic scale (do re mi sol la), so any combination is in harmony. Parents can switch to seven notes (the white keys) or all twelve. The notes span C1 to C8.
 - **The whole keyboard plays**: letters, digits, symbols, F1–F12, arrows, the number pad, Ctrl/Alt/Cmd/Shift… every key has its own note. Each row up is an octave higher, and a row rises from left to right. A key always plays the same note.
 - **A real piano sound**: Salamander Grand Piano samples (a Yamaha C5 grand).
 - **Kind to small ears**: high notes are quieter; a slap on a dozen keys plays only a few; the computer's volume is capped at 50% while playing, and is pulled back down if a Bluetooth speaker or headphones connect midway.
-- **A black screen by default**: the baby only listens. If you like, turn on "Show colorful fireworks for each note" and every note bursts into a firework in the color of its pitch.
+- **A black screen by default**: the baby only listens. If you like, turn on **Fireworks** and every note bursts into a firework in the color of its pitch.
 - The screen stays on and the computer stays awake while playing.
-- The app speaks your language: its text follows the system language.
+- The app follows the system language, and its setup page follows light or dark mode.
 
 ## Computers (Mac, Windows)
 
@@ -41,7 +42,7 @@ It started with an old mechanical keyboard at home. Our baby loved slapping it, 
    - hold the mouse in the screen's **top-right corner** for **3 seconds** (not available when the mouse is locked);
    - or type **`quitpiano`** on the keyboard (no more than 3 seconds between letters).
 
-On a laptop, turn on **"Also lock the mouse and trackpad"**: the pointer stays put, clicks do nothing, and the only way out is typing `quitpiano`.
+On a laptop, turn on **Lock the mouse and trackpad too**: the pointer stays put, clicks do nothing, and the only way out is typing `quitpiano`.
 
 ### Mac
 
