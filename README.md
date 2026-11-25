@@ -2,7 +2,16 @@
 
 A piano for babies: however they mash the keys, all that comes out is gentle piano music. On a computer **nothing quits, switches apps or triggers a system shortcut**; on phones and tablets it is rows of big colored keys, and with a keyboard attached the keyboard plays.
 
-For **Mac, Windows, iPhone, iPad and Android**: [mashpiano.herosizy.dev](https://mashpiano.herosizy.dev), or the installers from [Releases](../../releases/latest).
+For **Mac, Windows, iPhone, iPad and Android**. Free, no ads, no accounts, and it never connects to the network.
+
+| Platform | Get it |
+| --- | --- |
+| iPhone, iPad (and Apple silicon Macs, Vision Pro) | [App Store](https://apps.apple.com/us/app/mash-piano/id6837722350) |
+| Mac | [Apple silicon](https://mashpiano.herosizy.dev/download/mac-arm64) · [Intel](https://mashpiano.herosizy.dev/download/mac-x64) |
+| Windows | [x64 (most PCs)](https://mashpiano.herosizy.dev/download/windows-x64) · [ARM](https://mashpiano.herosizy.dev/download/windows-arm64) |
+| Android | [APK](https://mashpiano.herosizy.dev/download/android) |
+
+The download links always fetch the newest installer from [Releases](../../releases/latest). The homepage is [mashpiano.herosizy.dev](https://mashpiano.herosizy.dev) (also [in Chinese](https://mashpiano.herosizy.dev/zh)).
 
 <p align="center">
   <img src="docs/screenshots/setup.png" alt="The setup page: set the volume, try it, start playing" height="360">
@@ -22,6 +31,7 @@ It started with an old mechanical keyboard at home. Our baby loved slapping it, 
 - **Kind to small ears**: high notes are quieter; a slap on a dozen keys plays only a few; the computer's volume is capped at 50% while playing, and is pulled back down if a Bluetooth speaker or headphones connect midway.
 - **A black screen by default**: the baby only listens. If you like, turn on "Show colorful fireworks for each note" and every note bursts into a firework in the color of its pitch.
 - The screen stays on and the computer stays awake while playing.
+- The app speaks your language: its text follows the system language.
 
 ## Computers (Mac, Windows)
 
@@ -49,13 +59,19 @@ On a laptop, turn on **"Also lock the mouse and trackpad"**: the pointer stays p
 
 ## Phones and tablets (iPhone, iPad, Android)
 
-Big colored keys the baby can play with every finger, several at once. Parents hold the top-right corner for 3 seconds to return to the setup page.
+Big colored keys the baby can play with every finger, several at once. Attach a keyboard and the keyboard plays too. Parents hold the top-right corner for 3 seconds (or type `quitpiano` on an attached keyboard) to return to the setup page. The setup page also has a **Download for Mac and Windows** link, for when there is a spare computer keyboard at home.
 
-- **iPhone / iPad**: to keep the baby in the app, turn on Guided Access: Settings › Accessibility › Guided Access, then triple-click the side button while the piano plays.
+- **iPhone / iPad**: get it from the [App Store](https://apps.apple.com/us/app/mash-piano/id6837722350). To keep the baby in the app, turn on Guided Access: Settings › Accessibility › Guided Access, then triple-click the side button while the piano plays.
 - **Android**: download and install the `.apk`. To keep the baby in the app, turn on app pinning: Settings › Security › App pinning, then pin Mash Piano from the recent apps.
 
 ## Credits
 
 Piano samples: [Salamander Grand Piano V3](https://archive.org/details/SalamanderGrandPianoV3) by Alexander Holm, [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). The files in `sound/notes` were trimmed, faded and levelled.
 
-To build it yourself or contribute, see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
+## Privacy
+
+Mash Piano collects nothing and never goes online. See [PRIVACY.md](PRIVACY.md).
+
+## Development
+
+The app is written in Go with [NSGo](https://github.com/nsgo-dev/nsgo), one codebase for every platform. Every push to `main` publishes a release and sends the iPhone/iPad build to TestFlight. The homepage lives in [`site/`](site), a Cloudflare Worker that Cloudflare deploys by itself. To build it yourself or contribute, see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
