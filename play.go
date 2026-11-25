@@ -111,9 +111,11 @@ func (a *app) playScreen(cx *core.Scope) core.Node {
 				cx.StartAnimation(core.Timing(fade, 0, core.TimingConfig{Duration: 800 * time.Millisecond, Delay: 2500 * time.Millisecond}), nil)
 				return core.View{TestID: "keyboardOn",
 					Style: core.Style{Position: core.Absolute, Left: core.Pt(16), Bottom: core.Pt(16), Padding: core.Symmetric(8, 14), CornerRadius: 999,
+						Direction: core.Row, AlignItems: core.AlignCenter, Gap: 8,
 						Background: core.RGBA(0xffffff, 0.12), Animated: &core.AnimatedStyle{Opacity: fade}},
-					Children: []core.Node{core.Text{Content: "⌨️  " + locales.KeyboardOn(cx),
-						Style: core.Style{FontSize: 14, Color: core.RGBA(0xffffff, 0.8)}}}}
+					Children: []core.Node{
+						core.Icon{SVG: iconKeyboard, Style: core.Style{Width: core.Pt(18), Height: core.Pt(18), Color: core.RGBA(0xffffff, 0.8)}},
+						core.Text{Content: locales.KeyboardOn(cx), Style: core.Style{FontSize: 14, Color: core.RGBA(0xffffff, 0.8)}}}}
 			}},
 			a.corner(cx),
 		},

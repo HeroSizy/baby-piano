@@ -136,7 +136,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 					Min: 0.05, Max: 0.9, Label: locales.Volume(cx), TestID: "volume",
 				},
 			}},
-			ui.Button{Text: "🔊 " + locales.TryIt(cx), Variant: ui.ButtonOutline, TestID: "try",
+			ui.Button{Text: locales.TryIt(cx), Icon: func() *core.SVG { return iconSpeaker }, Variant: ui.ButtonOutline, TestID: "try",
 				Style: core.Style{CornerRadius: 999}, OnPress: func() {
 					for i, n := range []int{15, 17, 19, 22} { // C4 E4 A4 E5
 						cx.AfterFunc(time.Duration(i)*250*time.Millisecond, func() { a.play(n) })
@@ -178,21 +178,21 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 	}
 	card = append(card, divider(cx), heading(locales.Scale(cx)), scaleChoice(cx, a.settings.scale), divider(cx))
 	if computer {
-		card = append(card, toggleRow(cx, "🖱️", locales.LockMouseTitle(cx), locales.LockMouseNote(cx), "lockMouse", a.settings.lockMouse))
+		card = append(card, toggleRow(cx, iconMouse, accentBlue, locales.LockMouseTitle(cx), locales.LockMouseNote(cx), "lockMouse", a.settings.lockMouse))
 	}
-	card = append(card, toggleRow(cx, "🎆", locales.VisualsTitle(cx), locales.VisualsNote(cx), "visuals", a.settings.visuals))
+	card = append(card, toggleRow(cx, iconFirework, accentCoral, locales.VisualsTitle(cx), locales.VisualsNote(cx), "visuals", a.settings.visuals))
 
 	// tips are how parents keep the baby in and how they stop.
 	var tips []core.Node
 	if computer {
-		tips = append(tips, tip(cx, "👋", func() string {
+		tips = append(tips, tip(cx, iconWave, accentOrange, func() string {
 			if a.settings.lockMouse.Get() {
 				return locales.ExitHowTyped(cx)
 			}
 			return locales.ExitHow(cx)
 		}))
 		if cx.Env().OS() == core.OSWindows {
-			tips = append(tips, tip(cx, "⌨️", func() string { return locales.WindowsLimits(cx) }))
+			tips = append(tips, tip(cx, iconKeyboard, accentBlue, func() string { return locales.WindowsLimits(cx) }))
 		}
 	} else {
 		lock := locales.TouchLockAndroid(cx)
@@ -200,8 +200,8 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 			lock = locales.TouchLockIOS(cx)
 		}
 		tips = append(tips,
-			tip(cx, "🔒", func() string { return lock }),
-			tip(cx, "👋", func() string { return locales.CornerHint(cx) }),
+			tip(cx, iconLock, accentGreen, func() string { return lock }),
+			tip(cx, iconWave, accentOrange, func() string { return locales.CornerHint(cx) }),
 			desktopTip(cx),
 		)
 	}
@@ -299,7 +299,6 @@ type tones struct {
 	panel                 core.Color // the soft boxes on the page: tips, the keyboard, the logo
 	tile, tileEdge        core.Color // a scale not chosen
 	chosen                core.Color // the chosen scale's tint
-	chip                  core.Color // the square behind a setting's emoji
 	line, track, knob     core.Color // dividers; a switch's track when off and its knob
 	green                 core.Color // a keyboard attached
 }
@@ -311,7 +310,6 @@ var (
 		ink: core.RGB(0x3b3355), muted: core.RGB(0x6e6585),
 		panel: core.RGBA(0xffffff, 0.55),
 		tile:  core.RGB(0xfffaf4), tileEdge: core.RGBA(0x3b3355, 0.08), chosen: core.RGBA(0xf0645a, 0.08),
-		chip: core.RGB(0xfff1e4),
 		line: core.RGBA(0x3b3355, 0.08), track: core.RGBA(0x3b3355, 0.15), knob: core.RGB(0xffffff),
 		green: core.RGB(0x2f8f5f),
 	}
@@ -321,7 +319,6 @@ var (
 		ink: core.RGB(0xfbf1e4), muted: core.RGB(0xc0b6d2),
 		panel: core.RGBA(0xffffff, 0.07),
 		tile:  core.RGB(0x3e3453), tileEdge: core.RGBA(0xffffff, 0.08), chosen: core.RGBA(0xf0645a, 0.18),
-		chip: core.RGB(0x4a3e60),
 		line: core.RGBA(0xffffff, 0.10), track: core.RGBA(0xffffff, 0.22), knob: core.RGB(0xffffff),
 		green: core.RGB(0x74d6a2),
 	}
@@ -433,20 +430,16 @@ func scaleChoice(cx *core.Scope, scale *core.Persisted[piano.Scale]) core.Node {
 	return core.View{Style: core.Style{Direction: core.Row, Gap: 10}, Children: tiles}
 }
 
-// toggleRow is a setting the parents turn on or off: an emoji in a tinted
+// toggleRow is a setting the parents turn on or off: an icon in a tinted
 // square, a title and what it does, and a switch; the whole row presses.
-func toggleRow(cx *core.Scope, emoji, title, note, id string, on *core.Persisted[bool]) core.Node {
+func toggleRow(cx *core.Scope, svg *core.SVG, tint accent, title, note, id string, on *core.Persisted[bool]) core.Node {
 	return base.Button{
 		Role: core.RoleSwitch, Selected: on.Get, Label: title, TestID: id,
 		OnPress: func(core.PressEvent) { _ = on.Set(!on.Get()) },
 		Style: core.Style{Direction: core.Row, AlignItems: core.AlignCenter, Gap: 14, Padding: core.Symmetric(4, 0),
 			Active: &core.Style{Opacity: core.Alpha(0.8)}},
 		Children: []core.Node{
-			core.View{StyleFunc: func() core.Style {
-				return core.Style{Width: core.Pt(44), Height: core.Pt(44), CornerRadius: 14, Background: tonesOf(cx).chip,
-					AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter}
-			},
-				Children: []core.Node{core.Text{Content: emoji, Style: ui.TypeBody.Merge(core.Style{FontSize: 22, LineHeight: 26})}}},
+			badge(cx, svg, tint, 44, 24, 14),
 			core.View{Style: core.Style{FlexGrow: 1, FlexShrink: 1, Gap: 2}, Children: []core.Node{
 				core.Text{Content: title, StyleFunc: inked(cx, core.Style{FontSize: 15, LineHeight: 20, FontWeight: ui.Semibold})},
 				core.Text{Content: note, StyleFunc: hushed(cx, core.Style{FontSize: 13, LineHeight: 18})},
@@ -498,12 +491,18 @@ func keyboardStatus(cx *core.Scope, computer bool, attached func() bool) core.No
 			return st
 		},
 		Children: []core.Node{
-			core.Text{ContentFunc: func() string {
+			core.Icon{SVGFunc: func() *core.SVG {
 				if on() {
-					return "⌨️"
+					return iconKeyboard
 				}
-				return "👆"
-			}, Style: ui.TypeBody.Merge(core.Style{FontSize: 24, LineHeight: 28})},
+				return iconTap
+			}, StyleFunc: func() core.Style {
+				c := tonesOf(cx).muted
+				if on() {
+					c = tonesOf(cx).green
+				}
+				return core.Style{Width: core.Pt(28), Height: core.Pt(28), FlexShrink: 0, Color: c}
+			}},
 			core.View{Style: core.Style{FlexGrow: 1, FlexShrink: 1, Gap: 2}, Children: []core.Node{
 				core.Text{ContentFunc: func() string {
 					if on() {
@@ -533,20 +532,20 @@ func divider(cx *core.Scope) core.Node {
 	return core.View{StyleFunc: func() core.Style { return core.Style{Height: core.Pt(1), Background: tonesOf(cx).line} }}
 }
 
-// tip is a line of advice for parents beside an emoji.
-func tip(cx *core.Scope, emoji string, fn func() string) core.Node {
+// tip is a line of advice for parents beside an icon.
+func tip(cx *core.Scope, svg *core.SVG, tint accent, fn func() string) core.Node {
 	return core.View{StyleFunc: panelStyle(cx),
 		Children: []core.Node{
-			core.Text{Content: emoji, Style: ui.TypeBody.Merge(core.Style{FontSize: 18, LineHeight: 22})},
+			badge(cx, svg, tint, 32, 20, 10),
 			core.Text{ContentFunc: fn, StyleFunc: inked(cx, core.Style{FontSize: 15, LineHeight: 22, FlexShrink: 1, FlexGrow: 1})},
 		}}
 }
 
-// panelStyle is a tip's box: a soft panel on the page, the emoji beside
+// panelStyle is a tip's box: a soft panel on the page, the icon beside
 // the words.
 func panelStyle(cx *core.Scope) func() core.Style {
 	return func() core.Style {
-		return core.Style{Direction: core.Row, Gap: 12, AlignItems: core.AlignStart, Padding: core.Symmetric(14, 18),
+		return core.Style{Direction: core.Row, Gap: 14, AlignItems: core.AlignCenter, Padding: core.Symmetric(14, 18),
 			CornerRadius: 18, Background: tonesOf(cx).panel}
 	}
 }
@@ -561,7 +560,7 @@ const desktopURL = "https://mashpiano.herosizy.dev"
 func desktopTip(cx *core.Scope) core.Node {
 	return core.View{StyleFunc: panelStyle(cx),
 		Children: []core.Node{
-			core.Text{Content: "💻", Style: ui.TypeBody.Merge(core.Style{FontSize: 18, LineHeight: 22})},
+			badge(cx, iconLaptop, accentPurple, 32, 20, 10),
 			core.View{Style: core.Style{FlexGrow: 1, FlexShrink: 1, Gap: 6}, Children: []core.Node{
 				core.Text{Content: locales.DesktopApp(cx), StyleFunc: inked(cx, core.Style{FontSize: 15, LineHeight: 22})},
 				ui.Link{Text: locales.DesktopAppLink(cx) + " ›", Href: desktopURL, TestID: "desktop",

@@ -171,7 +171,7 @@ a { color: inherit; }
 
 .stage { position: relative; margin-top: 44px; }
 .try { display: flex; align-items: flex-start; gap: 10px; font-weight: 800; font-size: 15px; color: var(--ink-2); margin-bottom: 14px; }
-.try .hand { display: inline-block; animation: wave 2.4s ease-in-out infinite; transform-origin: 70% 80%; }
+.try .hand { display: inline-block; flex: none; width: 22px; height: 22px; margin-top: -1px; color: var(--kicker); animation: wave 2.4s ease-in-out infinite; transform-origin: 70% 80%; }
 @keyframes wave { 0%, 60%, 100% { transform: rotate(0); } 10%, 30% { transform: rotate(14deg); } 20%, 40% { transform: rotate(-8deg); } }
 
 .piano {

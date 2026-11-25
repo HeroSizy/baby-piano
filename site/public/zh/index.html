@@ -75,7 +75,7 @@ try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") 
     </div>
 
     <div class="stage">
-      <div class="try"><span class="hand" aria-hidden="true">👋</span> <span id="try-text">来试试：点一点或者划过琴键，也可以直接乱按电脑键盘。</span></div>
+      <div class="try"><svg class="hand" aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="rotate(-14 13 14) translate(1.5 1) scale(.9)"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></g><path d="M2.6 8.4a5 5 0 0 1 1.6-4.2M1.6 4.6l.9-1.6" stroke-width="1.6"/></svg> <span id="try-text">来试试：点一点或者划过琴键，也可以直接乱按电脑键盘。</span></div>
       <div class="piano" id="piano" role="group" aria-label="可以弹的钢琴：点一点或者划过琴键"></div>
       <canvas class="fx" id="fx" aria-hidden="true"></canvas>
       <div class="status" id="status">请打开声音。真实的三角钢琴音色，录自一台 Yamaha C5。</div>
