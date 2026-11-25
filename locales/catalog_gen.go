@@ -4,18 +4,713 @@ package locales
 
 import (
 	"github.com/nsgo-dev/nsgo/core"
+	desktoplocales "github.com/nsgo-dev/nsgo/desktop/locales"
 	"github.com/nsgo-dev/nsgo/i18n"
 )
 
 // Source is the language the messages are written in.
 const Source = "en"
 
-// Catalog holds the messages' languages: en, the source, zh-Hans, and those other packages supply.
-var Catalog = i18n.NewCatalog("en", "zh-Hans")
+// Catalog holds the messages' languages: en, the source, ar, da, de, es, fi, fr, he, hi, id, it, ja, ko, nb, nl, pl, pt-BR, ru, sv, th, tr, uk, vi, zh-Hans, zh-Hant, and those other packages supply.
+var Catalog = i18n.NewCatalog("en", "ar", "da", "de", "es", "fi", "fr", "he", "hi", "id", "it", "ja", "ko", "nb", "nl", "pl", "pt-BR", "ru", "sv", "th", "tr", "uk", "vi", "zh-Hans", "zh-Hant")
 
 // The catalog's languages are the app's: those it shows.
 func init() {
 	i18n.SetApp(Catalog)
+}
+
+// The messages this package supplies to others.
+func init() {
+	desktoplocales.Supply("ar", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "تحرير",
+			"window":          "نافذة",
+			"hideOthers":      "إخفاء الآخرين",
+			"showAll":         "إظهار الكل",
+			"services":        "الخدمات",
+			"undo":            "تراجع",
+			"redo":            "إعادة",
+			"cut":             "قص",
+			"copy":            "نسخ",
+			"paste":           "لصق",
+			"selectAll":       "تحديد الكل",
+			"minimize":        "تصغير",
+			"zoom":            "تكبير/تصغير",
+			"bringAllToFront": "إحضار الكل إلى المقدمة",
+			"enterFullScreen": "الدخول إلى ملء الشاشة",
+			"exitFullScreen":  "الخروج من ملء الشاشة",
+			"close":           "إغلاق",
+		},
+		AboutApp: func(app string) string {
+			return "حول " + app
+		},
+		HideApp: func(app string) string {
+			return "إخفاء " + app
+		},
+		QuitApp: func(app string) string {
+			return "إنهاء " + app
+		},
+	})
+	desktoplocales.Supply("da", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Rediger",
+			"window":          "Vindue",
+			"hideOthers":      "Skjul andre",
+			"showAll":         "Vis alle",
+			"services":        "Tjenester",
+			"undo":            "Fortryd",
+			"redo":            "Gentag",
+			"cut":             "Klip",
+			"copy":            "Kopiér",
+			"paste":           "Indsæt",
+			"selectAll":       "Vælg alt",
+			"minimize":        "Minimer",
+			"zoom":            "Zoom",
+			"bringAllToFront": "Anbring alle forrest",
+			"enterFullScreen": "Start fuld skærm",
+			"exitFullScreen":  "Afslut fuld skærm",
+			"close":           "Luk",
+		},
+		AboutApp: func(app string) string {
+			return "Om " + app
+		},
+		HideApp: func(app string) string {
+			return "Skjul " + app
+		},
+		QuitApp: func(app string) string {
+			return "Slut " + app
+		},
+	})
+	desktoplocales.Supply("de", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Bearbeiten",
+			"window":          "Fenster",
+			"hideOthers":      "Andere ausblenden",
+			"showAll":         "Alle einblenden",
+			"services":        "Dienste",
+			"undo":            "Widerrufen",
+			"redo":            "Wiederholen",
+			"cut":             "Ausschneiden",
+			"copy":            "Kopieren",
+			"paste":           "Einsetzen",
+			"selectAll":       "Alles auswählen",
+			"minimize":        "Im Dock ablegen",
+			"zoom":            "Zoomen",
+			"bringAllToFront": "Alle nach vorne bringen",
+			"enterFullScreen": "Vollbildmodus aktivieren",
+			"exitFullScreen":  "Vollbildmodus beenden",
+			"close":           "Schließen",
+		},
+		AboutApp: func(app string) string {
+			return "Über " + app
+		},
+		HideApp: func(app string) string {
+			return app + " ausblenden"
+		},
+		QuitApp: func(app string) string {
+			return app + " beenden"
+		},
+	})
+	desktoplocales.Supply("es", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Edición",
+			"window":          "Ventana",
+			"hideOthers":      "Ocultar otros",
+			"showAll":         "Mostrar todo",
+			"services":        "Servicios",
+			"undo":            "Deshacer",
+			"redo":            "Rehacer",
+			"cut":             "Cortar",
+			"copy":            "Copiar",
+			"paste":           "Pegar",
+			"selectAll":       "Seleccionar todo",
+			"minimize":        "Minimizar",
+			"zoom":            "Zoom",
+			"bringAllToFront": "Traer todo al frente",
+			"enterFullScreen": "Entrar en pantalla completa",
+			"exitFullScreen":  "Salir de pantalla completa",
+			"close":           "Cerrar",
+		},
+		AboutApp: func(app string) string {
+			return "Acerca de " + app
+		},
+		HideApp: func(app string) string {
+			return "Ocultar " + app
+		},
+		QuitApp: func(app string) string {
+			return "Salir de " + app
+		},
+	})
+	desktoplocales.Supply("fi", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Muokkaa",
+			"window":          "Ikkuna",
+			"hideOthers":      "Kätke muut",
+			"showAll":         "Näytä kaikki",
+			"services":        "Palvelut",
+			"undo":            "Kumoa",
+			"redo":            "Tee uudelleen",
+			"cut":             "Leikkaa",
+			"copy":            "Kopioi",
+			"paste":           "Sijoita",
+			"selectAll":       "Valitse kaikki",
+			"minimize":        "Pienennä",
+			"zoom":            "Zoomaa",
+			"bringAllToFront": "Tuo kaikki eteen",
+			"enterFullScreen": "Siirry koko näytön tilaan",
+			"exitFullScreen":  "Poistu koko näytön tilasta",
+			"close":           "Sulje",
+		},
+		AboutApp: func(app string) string {
+			return "Tietoja: " + app
+		},
+		HideApp: func(app string) string {
+			return "Kätke " + app
+		},
+		QuitApp: func(app string) string {
+			return "Lopeta " + app
+		},
+	})
+	desktoplocales.Supply("fr", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Édition",
+			"window":          "Fenêtre",
+			"hideOthers":      "Masquer les autres",
+			"showAll":         "Tout afficher",
+			"services":        "Services",
+			"undo":            "Annuler",
+			"redo":            "Rétablir",
+			"cut":             "Couper",
+			"copy":            "Copier",
+			"paste":           "Coller",
+			"selectAll":       "Tout sélectionner",
+			"minimize":        "Placer dans le Dock",
+			"zoom":            "Réduire/agrandir",
+			"bringAllToFront": "Tout ramener au premier plan",
+			"enterFullScreen": "Passer en mode plein écran",
+			"exitFullScreen":  "Quitter le mode plein écran",
+			"close":           "Fermer",
+		},
+		AboutApp: func(app string) string {
+			return "À propos de " + app
+		},
+		HideApp: func(app string) string {
+			return "Masquer " + app
+		},
+		QuitApp: func(app string) string {
+			return "Quitter " + app
+		},
+	})
+	desktoplocales.Supply("he", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "עריכה",
+			"window":          "חלון",
+			"hideOthers":      "הסתר אחרים",
+			"showAll":         "הצג הכל",
+			"services":        "שירותים",
+			"undo":            "בטל",
+			"redo":            "בצע שוב",
+			"cut":             "גזור",
+			"copy":            "העתק",
+			"paste":           "הדבק",
+			"selectAll":       "בחר הכל",
+			"minimize":        "מזער",
+			"zoom":            "הגדל/הקטן",
+			"bringAllToFront": "הבא הכל לחזית",
+			"enterFullScreen": "עבור למסך מלא",
+			"exitFullScreen":  "צא ממסך מלא",
+			"close":           "סגור",
+		},
+		AboutApp: func(app string) string {
+			return "אודות " + app
+		},
+		HideApp: func(app string) string {
+			return "הסתר את " + app
+		},
+		QuitApp: func(app string) string {
+			return "צא מ-" + app
+		},
+	})
+	desktoplocales.Supply("hi", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "संपादित करें",
+			"window":          "विंडो",
+			"hideOthers":      "अन्य छिपाएँ",
+			"showAll":         "सभी दिखाएँ",
+			"services":        "सेवाएँ",
+			"undo":            "पूर्ववत करें",
+			"redo":            "फिर से करें",
+			"cut":             "काटें",
+			"copy":            "कॉपी करें",
+			"paste":           "पेस्ट करें",
+			"selectAll":       "सभी चुनें",
+			"minimize":        "छोटा करें",
+			"zoom":            "ज़ूम करें",
+			"bringAllToFront": "सभी को सामने लाएँ",
+			"enterFullScreen": "पूर्ण स्क्रीन में जाएँ",
+			"exitFullScreen":  "पूर्ण स्क्रीन से बाहर निकलें",
+			"close":           "बंद करें",
+		},
+		AboutApp: func(app string) string {
+			return app + " के बारे में"
+		},
+		HideApp: func(app string) string {
+			return app + " छिपाएँ"
+		},
+		QuitApp: func(app string) string {
+			return app + " से बाहर निकलें"
+		},
+	})
+	desktoplocales.Supply("id", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Edit",
+			"window":          "Jendela",
+			"hideOthers":      "Sembunyikan Lainnya",
+			"showAll":         "Tampilkan Semua",
+			"services":        "Layanan",
+			"undo":            "Kembalikan",
+			"redo":            "Ulang",
+			"cut":             "Potong",
+			"copy":            "Salin",
+			"paste":           "Tempel",
+			"selectAll":       "Pilih Semua",
+			"minimize":        "Minimalkan",
+			"zoom":            "Zoom",
+			"bringAllToFront": "Bawa Semua ke Depan",
+			"enterFullScreen": "Masuk Layar Penuh",
+			"exitFullScreen":  "Keluar dari Layar Penuh",
+			"close":           "Tutup",
+		},
+		AboutApp: func(app string) string {
+			return "Tentang " + app
+		},
+		HideApp: func(app string) string {
+			return "Sembunyikan " + app
+		},
+		QuitApp: func(app string) string {
+			return "Keluar dari " + app
+		},
+	})
+	desktoplocales.Supply("it", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Composizione",
+			"window":          "Finestra",
+			"hideOthers":      "Nascondi altre",
+			"showAll":         "Mostra tutte",
+			"services":        "Servizi",
+			"undo":            "Annulla",
+			"redo":            "Ripeti",
+			"cut":             "Taglia",
+			"copy":            "Copia",
+			"paste":           "Incolla",
+			"selectAll":       "Seleziona tutto",
+			"minimize":        "Contrai",
+			"zoom":            "Ridimensiona",
+			"bringAllToFront": "Porta tutto in primo piano",
+			"enterFullScreen": "Attiva modalità a tutto schermo",
+			"exitFullScreen":  "Esci da tutto schermo",
+			"close":           "Chiudi",
+		},
+		AboutApp: func(app string) string {
+			return "Informazioni su " + app
+		},
+		HideApp: func(app string) string {
+			return "Nascondi " + app
+		},
+		QuitApp: func(app string) string {
+			return "Esci da " + app
+		},
+	})
+	desktoplocales.Supply("ja", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "編集",
+			"window":          "ウインドウ",
+			"hideOthers":      "ほかを非表示",
+			"showAll":         "すべてを表示",
+			"services":        "サービス",
+			"undo":            "取り消す",
+			"redo":            "やり直す",
+			"cut":             "カット",
+			"copy":            "コピー",
+			"paste":           "ペースト",
+			"selectAll":       "すべてを選択",
+			"minimize":        "しまう",
+			"zoom":            "拡大／縮小",
+			"bringAllToFront": "すべてを手前に移動",
+			"enterFullScreen": "フルスクリーンにする",
+			"exitFullScreen":  "フルスクリーンを解除",
+			"close":           "閉じる",
+		},
+		AboutApp: func(app string) string {
+			return app + " について"
+		},
+		HideApp: func(app string) string {
+			return app + " を非表示"
+		},
+		QuitApp: func(app string) string {
+			return app + " を終了"
+		},
+	})
+	desktoplocales.Supply("ko", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "편집",
+			"window":          "윈도우",
+			"hideOthers":      "기타 가리기",
+			"showAll":         "모두 보기",
+			"services":        "서비스",
+			"undo":            "실행 취소",
+			"redo":            "실행 복귀",
+			"cut":             "오려두기",
+			"copy":            "복사하기",
+			"paste":           "붙여넣기",
+			"selectAll":       "전체 선택",
+			"minimize":        "최소화",
+			"zoom":            "확대/축소",
+			"bringAllToFront": "모두 앞으로 가져오기",
+			"enterFullScreen": "전체 화면 시작",
+			"exitFullScreen":  "전체 화면 종료",
+			"close":           "닫기",
+		},
+		AboutApp: func(app string) string {
+			return app + "에 관하여"
+		},
+		HideApp: func(app string) string {
+			return app + " 가리기"
+		},
+		QuitApp: func(app string) string {
+			return app + " 종료"
+		},
+	})
+	desktoplocales.Supply("nb", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Rediger",
+			"window":          "Vindu",
+			"hideOthers":      "Skjul andre",
+			"showAll":         "Vis alle",
+			"services":        "Tjenester",
+			"undo":            "Angre",
+			"redo":            "Gjør om",
+			"cut":             "Klipp ut",
+			"copy":            "Kopier",
+			"paste":           "Lim inn",
+			"selectAll":       "Marker alt",
+			"minimize":        "Minimer",
+			"zoom":            "Zoom",
+			"bringAllToFront": "Legg alle øverst",
+			"enterFullScreen": "Vis i fullskjerm",
+			"exitFullScreen":  "Avslutt fullskjerm",
+			"close":           "Lukk",
+		},
+		AboutApp: func(app string) string {
+			return "Om " + app
+		},
+		HideApp: func(app string) string {
+			return "Skjul " + app
+		},
+		QuitApp: func(app string) string {
+			return "Avslutt " + app
+		},
+	})
+	desktoplocales.Supply("nl", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Wijzig",
+			"window":          "Venster",
+			"hideOthers":      "Verberg andere",
+			"showAll":         "Toon alles",
+			"services":        "Voorzieningen",
+			"undo":            "Herstel",
+			"redo":            "Opnieuw",
+			"cut":             "Knip",
+			"copy":            "Kopieer",
+			"paste":           "Plak",
+			"selectAll":       "Selecteer alles",
+			"minimize":        "Minimaliseer",
+			"zoom":            "Zoom",
+			"bringAllToFront": "Alles op voorgrond",
+			"enterFullScreen": "Activeer schermvullende weergave",
+			"exitFullScreen":  "Verlaat schermvullende weergave",
+			"close":           "Sluit",
+		},
+		AboutApp: func(app string) string {
+			return "Over " + app
+		},
+		HideApp: func(app string) string {
+			return "Verberg " + app
+		},
+		QuitApp: func(app string) string {
+			return "Stop " + app
+		},
+	})
+	desktoplocales.Supply("pl", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Edycja",
+			"window":          "Okno",
+			"hideOthers":      "Ukryj pozostałe",
+			"showAll":         "Pokaż wszystkie",
+			"services":        "Usługi",
+			"undo":            "Cofnij",
+			"redo":            "Powtórz",
+			"cut":             "Wytnij",
+			"copy":            "Kopiuj",
+			"paste":           "Wklej",
+			"selectAll":       "Zaznacz wszystko",
+			"minimize":        "Minimalizuj",
+			"zoom":            "Zmień rozmiar",
+			"bringAllToFront": "Wszystko na wierzch",
+			"enterFullScreen": "Włącz tryb pełnoekranowy",
+			"exitFullScreen":  "Zakończ tryb pełnoekranowy",
+			"close":           "Zamknij",
+		},
+		AboutApp: func(app string) string {
+			return app + " – informacje"
+		},
+		HideApp: func(app string) string {
+			return "Ukryj " + app
+		},
+		QuitApp: func(app string) string {
+			return "Zakończ " + app
+		},
+	})
+	desktoplocales.Supply("pt-BR", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Editar",
+			"window":          "Janela",
+			"hideOthers":      "Ocultar Outros",
+			"showAll":         "Mostrar Tudo",
+			"services":        "Serviços",
+			"undo":            "Desfazer",
+			"redo":            "Refazer",
+			"cut":             "Recortar",
+			"copy":            "Copiar",
+			"paste":           "Colar",
+			"selectAll":       "Selecionar Tudo",
+			"minimize":        "Minimizar",
+			"zoom":            "Zoom",
+			"bringAllToFront": "Trazer Tudo para a Frente",
+			"enterFullScreen": "Entrar em Tela Cheia",
+			"exitFullScreen":  "Sair da Tela Cheia",
+			"close":           "Fechar",
+		},
+		AboutApp: func(app string) string {
+			return "Sobre o " + app
+		},
+		HideApp: func(app string) string {
+			return "Ocultar " + app
+		},
+		QuitApp: func(app string) string {
+			return "Encerrar " + app
+		},
+	})
+	desktoplocales.Supply("ru", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Правка",
+			"window":          "Окно",
+			"hideOthers":      "Скрыть остальные",
+			"showAll":         "Показать все",
+			"services":        "Службы",
+			"undo":            "Отменить",
+			"redo":            "Повторить",
+			"cut":             "Вырезать",
+			"copy":            "Скопировать",
+			"paste":           "Вставить",
+			"selectAll":       "Выбрать все",
+			"minimize":        "Свернуть",
+			"zoom":            "Изменить масштаб",
+			"bringAllToFront": "Все окна — на передний план",
+			"enterFullScreen": "Войти в полноэкранный режим",
+			"exitFullScreen":  "Выйти из полноэкранного режима",
+			"close":           "Закрыть",
+		},
+		AboutApp: func(app string) string {
+			return "О программе " + app
+		},
+		HideApp: func(app string) string {
+			return "Скрыть " + app
+		},
+		QuitApp: func(app string) string {
+			return "Завершить " + app
+		},
+	})
+	desktoplocales.Supply("sv", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Redigera",
+			"window":          "Fönster",
+			"hideOthers":      "Göm övriga",
+			"showAll":         "Visa alla",
+			"services":        "Tjänster",
+			"undo":            "Ångra",
+			"redo":            "Gör om",
+			"cut":             "Klipp ut",
+			"copy":            "Kopiera",
+			"paste":           "Klistra in",
+			"selectAll":       "Markera allt",
+			"minimize":        "Minimera",
+			"zoom":            "Zooma",
+			"bringAllToFront": "Flytta alla till förgrunden",
+			"enterFullScreen": "Visa i helskärm",
+			"exitFullScreen":  "Avsluta helskärm",
+			"close":           "Stäng",
+		},
+		AboutApp: func(app string) string {
+			return "Om " + app
+		},
+		HideApp: func(app string) string {
+			return "Göm " + app
+		},
+		QuitApp: func(app string) string {
+			return "Avsluta " + app
+		},
+	})
+	desktoplocales.Supply("th", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "แก้ไข",
+			"window":          "หน้าต่าง",
+			"hideOthers":      "ซ่อนแอปอื่น",
+			"showAll":         "แสดงทั้งหมด",
+			"services":        "บริการ",
+			"undo":            "เลิกทำ",
+			"redo":            "ทำซ้ำ",
+			"cut":             "ตัด",
+			"copy":            "คัดลอก",
+			"paste":           "วาง",
+			"selectAll":       "เลือกทั้งหมด",
+			"minimize":        "ย่อ",
+			"zoom":            "ซูม",
+			"bringAllToFront": "นำทั้งหมดมาด้านหน้า",
+			"enterFullScreen": "เข้าสู่เต็มจอ",
+			"exitFullScreen":  "ออกจากเต็มจอ",
+			"close":           "ปิด",
+		},
+		AboutApp: func(app string) string {
+			return "เกี่ยวกับ " + app
+		},
+		HideApp: func(app string) string {
+			return "ซ่อน " + app
+		},
+		QuitApp: func(app string) string {
+			return "ออกจาก " + app
+		},
+	})
+	desktoplocales.Supply("tr", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Düzen",
+			"window":          "Pencere",
+			"hideOthers":      "Diğerlerini Gizle",
+			"showAll":         "Tümünü Göster",
+			"services":        "Servisler",
+			"undo":            "Geri Al",
+			"redo":            "Yinele",
+			"cut":             "Kes",
+			"copy":            "Kopyala",
+			"paste":           "Yapıştır",
+			"selectAll":       "Tümünü Seç",
+			"minimize":        "Küçült",
+			"zoom":            "Büyüt/Küçült",
+			"bringAllToFront": "Tümünü Öne Getir",
+			"enterFullScreen": "Tam Ekrana Gir",
+			"exitFullScreen":  "Tam Ekrandan Çık",
+			"close":           "Kapat",
+		},
+		AboutApp: func(app string) string {
+			return app + " Hakkında"
+		},
+		HideApp: func(app string) string {
+			return app + " Uygulamasını Gizle"
+		},
+		QuitApp: func(app string) string {
+			return app + " Uygulamasından Çık"
+		},
+	})
+	desktoplocales.Supply("uk", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Редагування",
+			"window":          "Вікно",
+			"hideOthers":      "Сховати інші",
+			"showAll":         "Показати всі",
+			"services":        "Служби",
+			"undo":            "Відмінити",
+			"redo":            "Повторити",
+			"cut":             "Вирізати",
+			"copy":            "Копіювати",
+			"paste":           "Вставити",
+			"selectAll":       "Вибрати все",
+			"minimize":        "Згорнути",
+			"zoom":            "Масштабувати",
+			"bringAllToFront": "Усі вікна на передній план",
+			"enterFullScreen": "Перейти в повноекранний режим",
+			"exitFullScreen":  "Вийти з повноекранного режиму",
+			"close":           "Закрити",
+		},
+		AboutApp: func(app string) string {
+			return "Про " + app
+		},
+		HideApp: func(app string) string {
+			return "Сховати " + app
+		},
+		QuitApp: func(app string) string {
+			return "Вийти з " + app
+		},
+	})
+	desktoplocales.Supply("vi", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "Sửa",
+			"window":          "Cửa sổ",
+			"hideOthers":      "Ẩn các ứng dụng khác",
+			"showAll":         "Hiện tất cả",
+			"services":        "Dịch vụ",
+			"undo":            "Hoàn tác",
+			"redo":            "Làm lại",
+			"cut":             "Cắt",
+			"copy":            "Sao chép",
+			"paste":           "Dán",
+			"selectAll":       "Chọn tất cả",
+			"minimize":        "Thu nhỏ",
+			"zoom":            "Thu/phóng",
+			"bringAllToFront": "Đưa tất cả ra trước",
+			"enterFullScreen": "Vào toàn màn hình",
+			"exitFullScreen":  "Thoát toàn màn hình",
+			"close":           "Đóng",
+		},
+		AboutApp: func(app string) string {
+			return "Giới thiệu về " + app
+		},
+		HideApp: func(app string) string {
+			return "Ẩn " + app
+		},
+		QuitApp: func(app string) string {
+			return "Thoát " + app
+		},
+	})
+	desktoplocales.Supply("zh-Hant", desktoplocales.Translation{
+		Texts: map[string]string{
+			"edit":            "編輯",
+			"window":          "視窗",
+			"hideOthers":      "隱藏其他",
+			"showAll":         "全部顯示",
+			"services":        "服務",
+			"undo":            "還原",
+			"redo":            "重做",
+			"cut":             "剪下",
+			"copy":            "拷貝",
+			"paste":           "貼上",
+			"selectAll":       "全選",
+			"minimize":        "縮到最小",
+			"zoom":            "縮放",
+			"bringAllToFront": "將全部移至最前",
+			"enterFullScreen": "進入全螢幕",
+			"exitFullScreen":  "結束全螢幕",
+			"close":           "關閉",
+		},
+		AboutApp: func(app string) string {
+			return "關於 " + app
+		},
+		HideApp: func(app string) string {
+			return "隱藏 " + app
+		},
+		QuitApp: func(app string) string {
+			return "結束 " + app
+		},
+	})
 }
 
 // Messages say the messages in one language, their times in the hour
@@ -232,6 +927,1832 @@ var textsEn = i18n.NewTexts(""+
 		28,
 	})
 
+// textsAr are the messages without arguments in ar.
+var textsAr = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"بعد البدء، يملأ البيانو الشاشة ويتولى لوحة المفاتيح بالكامل. أي مفتاح يضغطه الطفل يعزف نغمة بيانو هادئة، ولا شيء يُغلق التطبيق أو يبدّل التطبيقات أو يفتح اختصارات النظام. لكل مفتاح نغمته الخاصة: المنخفضة أسفل اليسار والعالية أعلى اليمين."+
+	"للإيقاف: اضغط بالماوس مع الاستمرار في الزاوية العلوية اليمنى من الشاشة لمدة 3 ثوانٍ، أو اكتب quitpiano على لوحة المفاتيح."+
+	"للإيقاف: اكتب quitpiano على لوحة المفاتيح."+
+	"يحتاج البيانو إلى إذن تسهيلات الاستخدام ليتولى لوحة المفاتيح. افتح الإعداد وفعّل Mash Piano، وسيتحول هذا السطر إلى الأخضر تلقائيًا."+
+	"يمكن للبيانو أن يتولى لوحة المفاتيح بالكامل."+
+	"فتح إعدادات تسهيلات الاستخدام"+
+	"جارٍ تحميل البيانو…"+
+	"مستوى الصوت"+
+	"تُقفل مفاتيح الصوت في لوحة المفاتيح أثناء لعب الطفل، لذا اضبطه هنا أولًا."+
+	"جرّب"+
+	"لا يمكن قراءة مستوى صوت هذا المخرج، كما في HDMI وبعض السماعات. تأكّد أنه ليس مرتفعًا جدًا."+
+	"ابدأ العزف (ملء الشاشة، لوحة المفاتيح مقفلة)"+
+	"شغّل تطبيق آخر إدخال لوحة المفاتيح الآمن، مثل الذي في تطبيق Terminal أو حقل كلمة سر، وعندها لا يستطيع أي تطبيق قفل لوحة المفاتيح. أوقفه أو أعد تشغيل الكمبيوتر، ثم ابدأ من جديد."+
+	"تعذّر قفل لوحة المفاتيح. تحقّق من تفعيل Mash Piano في إعدادات النظام › الخصوصية والأمن › تسهيلات الاستخدام؛ وبعد التحديث، احذف الإدخال القديم (−) ثم أضفه مجددًا."+
+	"لا يمكن لأي تطبيق منع Ctrl+Alt+Del؛ ويُمنع Win+L أثناء لعب الطفل."+
+	"للأهل: اضغطوا مع الاستمرار على الزاوية العلوية اليمنى 3 ثوانٍ للإيقاف"+
+	"كل لمسة، أو كل مفتاح في لوحة مفاتيح موصولة، يعزف نغمة بيانو هادئة، وكلها من سلّم يبدو جميلًا دائمًا."+
+	"لإبقاء الطفل داخل البيانو، شغّل الوصول الموجّه: الإعدادات › تسهيلات الاستخدام › الوصول الموجّه، ثم اضغط الزر الجانبي ثلاث مرات أثناء عزف البيانو."+
+	"لإبقاء الطفل داخل البيانو، ثبّته: الإعدادات › الأمان › تثبيت التطبيق، ثم ثبّت Mash Piano من التطبيقات الحديثة."+
+	"ابدأ العزف"+
+	"النغمات"+
+	"خمس نغمات"+
+	"دو ري مي صول لا. جميلة دائمًا."+
+	"سبع نغمات"+
+	"المفاتيح البيضاء: دو ري مي فا صول لا سي."+
+	"الاثنتا عشرة كلها"+
+	"المفاتيح البيضاء والسوداء، كل النغمات."+
+	"ألعاب نارية"+
+	"انفجار ملوّن مع كل نغمة. لا حاجة إليه إن كان الطفل لا يرى الشاشة."+
+	"اقفل الماوس ولوحة التعقب أيضًا"+
+	"يُنصح به على أجهزة اللابتوب. وللإيقاف حينها اكتب quitpiano."+
+	"لوحة المفاتيح متصلة"+
+	"يعزف الطفل على لوحة المفاتيح، لكل مفتاح نغمة، كما على الكمبيوتر."+
+	"لا توجد لوحة مفاتيح"+
+	"يلمس الطفل المفاتيح الملوّنة الكبيرة على الشاشة. صِل لوحة مفاتيح ليعزف عليها بدلًا من ذلك."+
+	"Mash Piano مجاني أيضًا على Mac وWindows، حيث يعزف الطفل على لوحة مفاتيح كمبيوتر حقيقية وتُقفل لوحة المفاتيح بالكامل."+
+	"التنزيل لـ Mac وWindows",
+	[]uint16{
+		10,
+		10,
+		433,
+		211,
+		68,
+		232,
+		81,
+		55,
+		37,
+		21,
+		133,
+		8,
+		158,
+		80,
+		310,
+		286,
+		102,
+		126,
+		181,
+		268,
+		194,
+		19,
+		14,
+		17,
+		52,
+		17,
+		70,
+		32,
+		71,
+		21,
+		115,
+		56,
+		99,
+		36,
+		117,
+		35,
+		164,
+		194,
+		33,
+	})
+
+// textsDa are the messages without arguments in da.
+var textsDa = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Når klaveret starter, fylder det skærmen og overtager hele tastaturet. Uanset hvad babyen trykker på, spiller det en blød klavertone, og intet lukker appen, skifter program eller åbner systemgenveje. Hver tast har sin egen tone, dyb nederst til venstre og lys øverst til højre."+
+	"Stop: hold musen i skærmens øverste højre hjørne i 3 sekunder, eller skriv quitpiano på tastaturet."+
+	"Stop: skriv quitpiano på tastaturet."+
+	"Klaveret skal have tilladelsen Tilgængelighed for at overtage tastaturet. Åbn indstillingen, og slå Mash Piano til; linjen bliver selv grøn."+
+	"Klaveret må overtage hele tastaturet."+
+	"Åbn indstillinger for Tilgængelighed"+
+	"Indlæser klaveret …"+
+	"Lydstyrke"+
+	"Tastaturets lydstyrketaster er låst, mens babyen spiller, så indstil den her først."+
+	"Prøv"+
+	"Lydstyrken for denne udgang kan ikke aflæses, som med HDMI og nogle højttalere. Tjek, at den ikke er for høj."+
+	"Begynd at spille (fuld skærm, tastatur låst)"+
+	"En anden app har slået sikker indtastning til, f.eks. Terminals eller et adgangskodefelt, og så kan ingen app låse tastaturet. Slå den fra, eller genstart computeren, og begynd så igen."+
+	"Tastaturet kunne ikke låses. Tjek, at Mash Piano er slået til under Systemindstillinger › Anonymitet & sikkerhed › Tilgængelighed; efter en opdatering skal du fjerne den gamle post (−) og tilføje den igen."+
+	"Ctrl+Alt+Del kan ingen app blokere; Win+L er blokeret, mens babyen spiller."+
+	"Forældre: hold øverste højre hjørne i 3 sekunder for at stoppe"+
+	"Hvert tryk, eller hver tast på et tilsluttet tastatur, spiller en blød klavertone, alle i en skala, der altid lyder pænt sammen."+
+	"For at holde babyen i klaveret skal du slå Guidet adgang til: Indstillinger › Tilgængelighed › Guidet adgang, og derefter trykke tre gange på sideknappen, mens klaveret spiller."+
+	"For at holde babyen i klaveret skal du fastgøre det: Indstillinger › Sikkerhed › Fastgørelse af apps, og derefter fastgøre Mash Piano fra de seneste apps."+
+	"Begynd at spille"+
+	"Toner"+
+	"Fem toner"+
+	"Do re mi sol la. Lyder altid dejligt."+
+	"Syv toner"+
+	"De hvide tangenter, do re mi fa sol la si."+
+	"Alle tolv"+
+	"Hvide og sorte tangenter, hver eneste tone."+
+	"Fyrværkeri"+
+	"Et farverigt brag for hver tone. Ikke nødvendigt, hvis babyen ikke kan se skærmen."+
+	"Lås også mus og pegefelt"+
+	"Anbefales på bærbare. Stop så ved at skrive quitpiano."+
+	"Tastatur tilsluttet"+
+	"Babyen spiller på tastaturet, en tone pr. tast, som på en computer."+
+	"Intet tastatur"+
+	"Babyen trykker på de store farvede tangenter på skærmen. Tilslut et tastatur for at spille på det."+
+	"Mash Piano er også gratis til Mac og Windows, hvor babyen spiller på et rigtigt computertastatur, og hele tastaturet er låst."+
+	"Hent til Mac og Windows",
+	[]uint16{
+		10,
+		10,
+		284,
+		104,
+		37,
+		144,
+		38,
+		38,
+		22,
+		9,
+		86,
+		5,
+		112,
+		46,
+		190,
+		215,
+		75,
+		66,
+		131,
+		184,
+		161,
+		16,
+		5,
+		9,
+		37,
+		9,
+		42,
+		9,
+		43,
+		11,
+		84,
+		26,
+		57,
+		19,
+		69,
+		14,
+		102,
+		128,
+		23,
+	})
+
+// textsDe are the messages without arguments in de.
+var textsDe = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Nach dem Start füllt das Klavier den Bildschirm und übernimmt die ganze Tastatur. Was das Baby auch drückt, es erklingt ein sanfter Klavierton, und nichts beendet die App, wechselt Programme oder öffnet Systemkurzbefehle. Jede Taste hat ihren eigenen Ton, tief unten links und hoch oben rechts."+
+	"Zum Beenden: die Maus 3 Sekunden in der oberen rechten Bildschirmecke gedrückt halten oder auf der Tastatur quitpiano tippen."+
+	"Zum Beenden: auf der Tastatur quitpiano tippen."+
+	"Das Klavier braucht die Berechtigung für Bedienungshilfen, um die Tastatur zu übernehmen. Öffne die Einstellung und schalte Mash Piano ein; diese Zeile wird dann von selbst grün."+
+	"Das Klavier darf die ganze Tastatur übernehmen."+
+	"Einstellungen für Bedienungshilfen öffnen"+
+	"Klavier wird geladen …"+
+	"Lautstärke"+
+	"Die Lautstärketasten der Tastatur sind gesperrt, während das Baby spielt – stelle sie also zuerst hier ein."+
+	"Ausprobieren"+
+	"Die Lautstärke dieser Ausgabe lässt sich nicht lesen, etwa bei HDMI und manchen Lautsprechern. Prüfe, dass sie nicht zu laut ist."+
+	"Spielen starten (Vollbild, Tastatur gesperrt)"+
+	"Eine andere App hat die sichere Tastatureingabe eingeschaltet, etwa die des Terminals oder ein Passwortfeld, und dann kann keine App die Tastatur sperren. Schalte sie aus oder starte den Computer neu und starte dann erneut."+
+	"Die Tastatur konnte nicht gesperrt werden. Prüfe, ob Mash Piano unter Systemeinstellungen › Datenschutz & Sicherheit › Bedienungshilfen eingeschaltet ist; entferne nach einem Update den alten Eintrag (−) und füge ihn neu hinzu."+
+	"Strg+Alt+Entf kann keine App blockieren; Win+L ist gesperrt, während das Baby spielt."+
+	"Eltern: obere rechte Ecke 3 Sekunden halten zum Beenden"+
+	"Jedes Tippen oder jede Taste einer angeschlossenen Tastatur spielt einen sanften Klavierton, alle in einer Tonleiter, die immer schön zusammenklingt."+
+	"Damit das Baby im Klavier bleibt, schalte den geführten Zugriff ein: Einstellungen › Bedienungshilfen › Geführter Zugriff, und drücke dann beim Spielen dreimal die Seitentaste."+
+	"Damit das Baby im Klavier bleibt, fixiere es: Einstellungen › Sicherheit › Bildschirmfixierung, und fixiere dann Mash Piano in den letzten Apps."+
+	"Spielen starten"+
+	"Töne"+
+	"Fünf Töne"+
+	"C D E G A. Klingt immer schön."+
+	"Sieben Töne"+
+	"Die weißen Tasten, C D E F G A H."+
+	"Alle zwölf"+
+	"Weiße und schwarze Tasten, jeder Ton."+
+	"Feuerwerk"+
+	"Ein bunter Funkenregen zu jedem Ton. Nicht nötig, wenn das Baby den Bildschirm nicht sieht."+
+	"Auch Maus und Trackpad sperren"+
+	"Empfohlen für Laptops. Beenden dann durch Tippen von quitpiano."+
+	"Tastatur verbunden"+
+	"Das Baby spielt auf der Tastatur, jede Taste ein Ton, wie am Computer."+
+	"Keine Tastatur"+
+	"Das Baby tippt auf die großen bunten Tasten am Bildschirm. Schließe eine Tastatur an, um darauf zu spielen."+
+	"Mash Piano gibt es auch kostenlos für Mac und Windows: Dort spielt das Baby auf einer echten Computertastatur, und die ganze Tastatur ist gesperrt."+
+	"Für Mac und Windows laden",
+	[]uint16{
+		10,
+		10,
+		298,
+		126,
+		47,
+		182,
+		48,
+		43,
+		24,
+		11,
+		111,
+		12,
+		132,
+		45,
+		223,
+		235,
+		86,
+		55,
+		150,
+		183,
+		148,
+		15,
+		5,
+		11,
+		31,
+		12,
+		34,
+		11,
+		38,
+		9,
+		92,
+		30,
+		64,
+		18,
+		70,
+		14,
+		109,
+		148,
+		26,
+	})
+
+// textsEs are the messages without arguments in es.
+var textsEs = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Al empezar, el piano ocupa toda la pantalla y se queda con todo el teclado. Cualquier tecla que pulse el bebé toca una nota suave de piano, y nada cierra la app, cambia de aplicación ni abre atajos del sistema. Cada tecla tiene su nota: grave abajo a la izquierda y aguda arriba a la derecha."+
+	"Para salir: mantén el ratón en la esquina superior derecha de la pantalla durante 3 segundos o escribe quitpiano en el teclado."+
+	"Para salir: escribe quitpiano en el teclado."+
+	"El piano necesita el permiso de Accesibilidad para quedarse con el teclado. Abre el ajuste y activa Mash Piano; esta línea se pondrá verde sola."+
+	"El piano puede quedarse con todo el teclado."+
+	"Abrir ajustes de Accesibilidad"+
+	"Cargando el piano…"+
+	"Volumen"+
+	"Las teclas de volumen se bloquean mientras el bebé toca, así que ajústalo aquí primero."+
+	"Probar"+
+	"No se puede leer el volumen de esta salida, como ocurre con HDMI y algunos altavoces. Comprueba que no esté demasiado alto."+
+	"Empezar a tocar (pantalla completa, teclado bloqueado)"+
+	"Otra app activó la entrada de teclado segura, como la de Terminal o un campo de contraseña, y así ninguna app puede bloquear el teclado. Desactívala o reinicia el ordenador y vuelve a empezar."+
+	"No se pudo bloquear el teclado. Comprueba que Mash Piano esté activado en Ajustes del Sistema › Privacidad y seguridad › Accesibilidad; tras una actualización, elimina la entrada antigua (−) y vuelve a añadirla."+
+	"Ninguna app puede bloquear Ctrl+Alt+Supr; Win+L se bloquea mientras el bebé toca."+
+	"Padres: mantened pulsada la esquina superior derecha 3 segundos para salir"+
+	"Cada toque, o cada tecla de un teclado conectado, suena como una nota suave de piano, todas en una escala que siempre suena bien."+
+	"Para que el bebé no salga del piano, activa Acceso Guiado: Ajustes › Accesibilidad › Acceso Guiado y, con el piano sonando, pulsa tres veces el botón lateral."+
+	"Para que el bebé no salga del piano, fíjalo: Ajustes › Seguridad › Fijar aplicaciones y fija Mash Piano desde las aplicaciones recientes."+
+	"Empezar a tocar"+
+	"Notas"+
+	"Cinco notas"+
+	"Do re mi sol la. Siempre suena bonito."+
+	"Siete notas"+
+	"Las teclas blancas: do re mi fa sol la si."+
+	"Las doce"+
+	"Teclas blancas y negras, todas las notas."+
+	"Fuegos artificiales"+
+	"Un estallido de color con cada nota. No hace falta si el bebé no ve la pantalla."+
+	"Bloquear también el ratón y el trackpad"+
+	"Recomendado en portátiles. Para salir, escribe quitpiano."+
+	"Teclado conectado"+
+	"El bebé toca el teclado, cada tecla una nota, como en un ordenador."+
+	"Sin teclado"+
+	"El bebé toca las teclas grandes de colores en la pantalla. Conecta un teclado para tocar con él."+
+	"Mash Piano también es gratis para Mac y Windows, donde el bebé toca un teclado de ordenador de verdad y todo el teclado queda bloqueado."+
+	"Descargar para Mac y Windows",
+	[]uint16{
+		10,
+		10,
+		294,
+		129,
+		44,
+		146,
+		44,
+		30,
+		20,
+		7,
+		91,
+		6,
+		124,
+		54,
+		196,
+		220,
+		82,
+		74,
+		129,
+		164,
+		143,
+		15,
+		5,
+		11,
+		38,
+		11,
+		42,
+		8,
+		41,
+		19,
+		81,
+		41,
+		58,
+		17,
+		68,
+		11,
+		98,
+		138,
+		28,
+	})
+
+// textsFi are the messages without arguments in fi.
+var textsFi = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Käynnistyttyään piano täyttää näytön ja ottaa koko näppäimistön haltuunsa. Mitä tahansa vauva painaa, kuuluu pehmeä pianon sävel, eikä mikään sulje sovellusta, vaihda ohjelmaa tai avaa järjestelmän pikanäppäimiä. Jokaisella näppäimellä on oma sävelensä: matala vasemmalla alhaalla ja korkea oikealla ylhäällä."+
+	"Lopettaminen: pidä hiirtä näytön oikeassa yläkulmassa 3 sekuntia tai kirjoita näppäimistöllä quitpiano."+
+	"Lopettaminen: kirjoita näppäimistöllä quitpiano."+
+	"Piano tarvitsee Käyttöapu-luvan ottaakseen näppäimistön haltuun. Avaa asetus ja laita Mash Piano päälle; tämä rivi muuttuu itsestään vihreäksi."+
+	"Piano voi ottaa koko näppäimistön haltuunsa."+
+	"Avaa Käyttöapu-asetukset"+
+	"Ladataan pianoa…"+
+	"Äänenvoimakkuus"+
+	"Näppäimistön äänenvoimakkuusnäppäimet ovat lukittuina vauvan soittaessa, joten säädä se ensin tästä."+
+	"Kokeile"+
+	"Tämän ulostulon äänenvoimakkuutta ei voi lukea, kuten HDMI:n ja joidenkin kaiuttimien kohdalla. Tarkista, ettei ääni ole liian kova."+
+	"Aloita soittaminen (koko näyttö, näppäimistö lukittu)"+
+	"Toinen sovellus on laittanut suojatun näppäimistösyötön päälle, kuten Päätteen suojattu syöttö tai salasanakenttä, eikä mikään sovellus voi silloin lukita näppäimistöä. Laita se pois tai käynnistä tietokone uudelleen ja aloita sitten uudestaan."+
+	"Näppäimistöä ei voitu lukita. Tarkista, että Mash Piano on päällä kohdassa Järjestelmäasetukset › Tietosuoja ja suojaus › Käyttöapu; päivityksen jälkeen poista vanha kohde (−) ja lisää se uudelleen."+
+	"Ctrl+Alt+Del-yhdistelmää ei voi estää mikään sovellus; Win+L on estetty vauvan soittaessa."+
+	"Vanhemmat: lopeta pitämällä oikeaa yläkulmaa 3 sekuntia"+
+	"Jokainen napautus tai liitetyn näppäimistön näppäin soittaa pehmeän pianon sävelen, ja kaikki ovat asteikossa, joka kuulostaa aina kauniilta yhdessä."+
+	"Pitääksesi vauvan pianossa laita Ohjattu käyttö päälle: Asetukset › Käyttöapu › Ohjattu käyttö, ja paina sitten sivupainiketta kolmesti pianon soidessa."+
+	"Pitääksesi vauvan pianossa kiinnitä se: Asetukset › Tietoturva › Sovelluksen kiinnitys, ja kiinnitä sitten Mash Piano viimeisimmistä sovelluksista."+
+	"Aloita soittaminen"+
+	"Sävelet"+
+	"Viisi säveltä"+
+	"Do re mi sol la. Kuulostaa aina ihanalta."+
+	"Seitsemän säveltä"+
+	"Valkoiset koskettimet, do re mi fa sol la ti."+
+	"Kaikki kaksitoista"+
+	"Valkoiset ja mustat koskettimet, jokainen sävel."+
+	"Ilotulitus"+
+	"Värikäs räjähdys jokaisesta sävelestä. Ei tarpeen, jos vauva ei näe näyttöä."+
+	"Lukitse myös hiiri ja ohjauslevy"+
+	"Suositellaan kannettavissa. Lopeta silloin kirjoittamalla quitpiano."+
+	"Näppäimistö liitetty"+
+	"Vauva soittaa näppäimistöä, jokainen näppäin yksi sävel, kuten tietokoneella."+
+	"Ei näppäimistöä"+
+	"Vauva napauttaa näytön isoja värikkäitä koskettimia. Liitä näppäimistö soittaaksesi sillä."+
+	"Mash Piano on ilmainen myös Macille ja Windowsille: niissä vauva soittaa oikeaa tietokoneen näppäimistöä, ja koko näppäimistö on lukittu."+
+	"Lataa Macille ja Windowsille",
+	[]uint16{
+		10,
+		10,
+		339,
+		112,
+		52,
+		155,
+		47,
+		26,
+		18,
+		17,
+		112,
+		7,
+		138,
+		58,
+		265,
+		220,
+		96,
+		59,
+		157,
+		166,
+		156,
+		18,
+		8,
+		15,
+		41,
+		20,
+		45,
+		18,
+		49,
+		10,
+		86,
+		33,
+		68,
+		23,
+		84,
+		19,
+		100,
+		146,
+		28,
+	})
+
+// textsFr are the messages without arguments in fr.
+var textsFr = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Une fois lancé, le piano occupe tout l’écran et prend tout le clavier. Chaque touche que bébé presse joue une douce note de piano, et rien ne quitte l’app, ne change d’application ni n’ouvre de raccourci système. Chaque touche a sa note : grave en bas à gauche, aiguë en haut à droite."+
+	"Pour arrêter : maintenez la souris dans le coin supérieur droit de l’écran pendant 3 secondes, ou tapez quitpiano au clavier."+
+	"Pour arrêter : tapez quitpiano au clavier."+
+	"Le piano a besoin de l’autorisation Accessibilité pour prendre le clavier. Ouvrez le réglage et activez Mash Piano ; cette ligne passe au vert d’elle-même."+
+	"Le piano peut prendre tout le clavier."+
+	"Ouvrir les réglages Accessibilité"+
+	"Chargement du piano…"+
+	"Volume"+
+	"Les touches de volume du clavier sont verrouillées pendant que bébé joue : réglez-le d’abord ici."+
+	"Essayer"+
+	"Le volume de cette sortie ne peut pas être lu, comme avec le HDMI et certaines enceintes. Vérifiez qu’il n’est pas trop fort."+
+	"Commencer à jouer (plein écran, clavier verrouillé)"+
+	"Une autre app a activé la saisie sécurisée au clavier, comme celle du Terminal ou un champ de mot de passe, et aucune app ne peut alors verrouiller le clavier. Désactivez-la ou redémarrez l’ordinateur, puis recommencez."+
+	"Le clavier n’a pas pu être verrouillé. Vérifiez que Mash Piano est activé dans Réglages Système › Confidentialité et sécurité › Accessibilité ; après une mise à jour, supprimez l’ancienne entrée (−) et ajoutez-la à nouveau."+
+	"Aucune app ne peut bloquer Ctrl+Alt+Suppr ; Win+L est bloqué pendant que bébé joue."+
+	"Parents : maintenez le coin supérieur droit 3 secondes pour arrêter"+
+	"Chaque toucher, ou chaque touche d’un clavier branché, joue une douce note de piano, toutes dans une gamme qui sonne toujours juste."+
+	"Pour garder bébé dans le piano, activez l’Accès guidé : Réglages › Accessibilité › Accès guidé, puis cliquez trois fois sur le bouton latéral pendant que le piano joue."+
+	"Pour garder bébé dans le piano, épinglez-le : Paramètres › Sécurité › Épinglage d’application, puis épinglez Mash Piano depuis les applis récentes."+
+	"Commencer à jouer"+
+	"Notes"+
+	"Cinq notes"+
+	"Do ré mi sol la. Toujours joli."+
+	"Sept notes"+
+	"Les touches blanches, do ré mi fa sol la si."+
+	"Les douze"+
+	"Touches blanches et noires, toutes les notes."+
+	"Feux d’artifice"+
+	"Une gerbe de couleurs pour chaque note. Inutile si bébé ne voit pas l’écran."+
+	"Verrouiller aussi la souris et le trackpad"+
+	"Conseillé sur les portables. Arrêtez alors en tapant quitpiano."+
+	"Clavier connecté"+
+	"Bébé joue sur le clavier, une note par touche, comme sur un ordinateur."+
+	"Pas de clavier"+
+	"Bébé touche les grandes touches colorées à l’écran. Branchez un clavier pour jouer dessus."+
+	"Mash Piano est aussi gratuit sur Mac et Windows : bébé joue sur un vrai clavier d’ordinateur, entièrement verrouillé."+
+	"Télécharger pour Mac et Windows",
+	[]uint16{
+		10,
+		10,
+		301,
+		130,
+		43,
+		162,
+		38,
+		35,
+		22,
+		6,
+		103,
+		7,
+		131,
+		54,
+		226,
+		247,
+		86,
+		69,
+		135,
+		183,
+		162,
+		18,
+		5,
+		10,
+		32,
+		10,
+		45,
+		9,
+		45,
+		17,
+		81,
+		42,
+		65,
+		17,
+		73,
+		14,
+		97,
+		123,
+		33,
+	})
+
+// textsHe are the messages without arguments in he.
+var textsHe = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"אחרי ההפעלה הפסנתר ממלא את המסך ומשתלט על כל המקלדת. כל מקש שהתינוק לוחץ מנגן צליל פסנתר רך, ושום דבר לא סוגר את היישום, לא מחליף יישומים ולא פותח קיצורי מערכת. לכל מקש צליל משלו: נמוך למטה משמאל וגבוה למעלה מימין."+
+	"כדי לעצור: החזיקו את העכבר בפינה הימנית העליונה של המסך במשך 3 שניות, או הקלידו quitpiano במקלדת."+
+	"כדי לעצור: הקלידו quitpiano במקלדת."+
+	"הפסנתר צריך את הרשאת הנגישות כדי להשתלט על המקלדת. פתחו את ההגדרה והפעילו את Mash Piano; השורה הזו תהפוך לירוקה מעצמה."+
+	"הפסנתר יכול להשתלט על כל המקלדת."+
+	"פתיחת הגדרות הנגישות"+
+	"טוען את הפסנתר…"+
+	"עוצמת קול"+
+	"מקשי עוצמת הקול במקלדת נעולים בזמן שהתינוק מנגן, לכן כוונו אותה כאן קודם."+
+	"נסו"+
+	"אי אפשר לקרוא את עוצמת הקול של יציאה זו, כמו ב-HDMI ובחלק מהרמקולים. ודאו שהיא לא חזקה מדי."+
+	"להתחיל לנגן (מסך מלא, מקלדת נעולה)"+
+	"יישום אחר הפעיל הזנת מקלדת מאובטחת, כמו ב-Terminal או בשדה סיסמה, ואז אף יישום לא יכול לנעול את המקלדת. כבו אותה או הפעילו מחדש את המחשב, ואז התחילו שוב."+
+	"לא ניתן היה לנעול את המקלדת. ודאו ש-Mash Piano מופעל בהגדרות המערכת › פרטיות ואבטחה › נגישות; אחרי עדכון, הסירו את הרשומה הישנה (−) והוסיפו אותה מחדש."+
+	"אף יישום לא יכול לחסום את Ctrl+Alt+Del; \u200fWin+L חסום בזמן שהתינוק מנגן."+
+	"להורים: החזיקו את הפינה הימנית העליונה 3 שניות כדי לעצור"+
+	"כל נגיעה, או כל מקש במקלדת מחוברת, מנגנים צליל פסנתר רך, וכולם מסולם שתמיד נשמע יפה ביחד."+
+	"כדי שהתינוק יישאר בפסנתר, הפעילו גישה מודרכת: הגדרות › נגישות › גישה מודרכת, ואז לחצו שלוש פעמים על הכפתור הצדדי בזמן שהפסנתר מנגן."+
+	"כדי שהתינוק יישאר בפסנתר, הצמידו אותו: הגדרות › אבטחה › הצמדת אפליקציה, ואז הצמידו את Mash Piano מתוך האפליקציות האחרונות."+
+	"להתחיל לנגן"+
+	"צלילים"+
+	"חמישה צלילים"+
+	"דו רה מי סול לה. תמיד נשמע מקסים."+
+	"שבעה צלילים"+
+	"הקלידים הלבנים, דו רה מי פה סול לה סי."+
+	"כל השנים־עשר"+
+	"קלידים לבנים ושחורים, כל צליל."+
+	"זיקוקים"+
+	"פרץ צבעוני לכל צליל. לא נחוץ אם התינוק לא רואה את המסך."+
+	"לנעול גם את העכבר ומשטח המגע"+
+	"מומלץ במחשבים ניידים. כדי לעצור, הקלידו quitpiano."+
+	"מקלדת מחוברת"+
+	"התינוק מנגן על המקלדת, כל מקש צליל, כמו במחשב."+
+	"אין מקלדת"+
+	"התינוק נוגע בקלידים הצבעוניים הגדולים שעל המסך. חברו מקלדת כדי לנגן עליה."+
+	"Mash Piano זמין בחינם גם ל-Mac ול-Windows, שם התינוק מנגן על מקלדת מחשב אמיתית וכל המקלדת נעולה."+
+	"הורדה ל-Mac ול-Windows",
+	[]uint16{
+		10,
+		10,
+		382,
+		165,
+		55,
+		204,
+		58,
+		38,
+		29,
+		17,
+		132,
+		6,
+		157,
+		60,
+		264,
+		261,
+		111,
+		101,
+		158,
+		238,
+		214,
+		21,
+		12,
+		23,
+		57,
+		21,
+		66,
+		23,
+		54,
+		14,
+		97,
+		51,
+		82,
+		23,
+		81,
+		17,
+		133,
+		153,
+		30,
+	})
+
+// textsHi are the messages without arguments in hi.
+var textsHi = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"शुरू करने पर पियानो पूरी स्क्रीन पर आ जाता है और पूरा कीबोर्ड अपने हाथ में ले लेता है। बच्चा जो भी दबाए, एक मधुर पियानो सुर बजता है, और कुछ भी ऐप बंद नहीं करता, ऐप नहीं बदलता और सिस्टम शॉर्टकट नहीं खोलता। हर कुंजी का अपना सुर है, नीचे बाईं ओर नीचा और ऊपर दाईं ओर ऊँचा।"+
+	"रोकने के लिए: माउस को स्क्रीन के ऊपरी दाएँ कोने में 3 सेकंड दबाए रखें, या कीबोर्ड पर quitpiano टाइप करें।"+
+	"रोकने के लिए: कीबोर्ड पर quitpiano टाइप करें।"+
+	"कीबोर्ड अपने हाथ में लेने के लिए पियानो को ऐक्सेसिबिलिटी अनुमति चाहिए। सेटिंग खोलें और Mash Piano चालू करें; यह पंक्ति अपने आप हरी हो जाएगी।"+
+	"पियानो पूरा कीबोर्ड अपने हाथ में ले सकता है।"+
+	"ऐक्सेसिबिलिटी सेटिंग्ज़ खोलें"+
+	"पियानो लोड हो रहा है…"+
+	"आवाज़"+
+	"बच्चे के खेलते समय कीबोर्ड की वॉल्यूम कुंजियाँ लॉक रहती हैं, इसलिए पहले यहाँ सेट कर लें।"+
+	"सुनकर देखें"+
+	"इस आउटपुट की आवाज़ पढ़ी नहीं जा सकती, जैसे HDMI और कुछ स्पीकर में। जाँच लें कि बहुत तेज़ न हो।"+
+	"बजाना शुरू करें (पूरी स्क्रीन, कीबोर्ड लॉक)"+
+	"किसी दूसरे ऐप ने सुरक्षित कीबोर्ड प्रविष्टि चालू कर दी है, जैसे Terminal में या पासवर्ड फ़ील्ड में, और तब कोई भी ऐप कीबोर्ड लॉक नहीं कर सकता। उसे बंद करें, या कंप्यूटर रीस्टार्ट करें, फिर दोबारा शुरू करें।"+
+	"कीबोर्ड लॉक नहीं हो सका। जाँचें कि सिस्टम सेटिंग्ज़ › गोपनीयता और सुरक्षा › ऐक्सेसिबिलिटी में Mash Piano चालू है; अपडेट के बाद पुरानी प्रविष्टि हटाएँ (−) और फिर से जोड़ें।"+
+	"Ctrl+Alt+Del को कोई ऐप नहीं रोक सकता; बच्चे के खेलते समय Win+L रोका रहता है।"+
+	"माता-पिता: रोकने के लिए ऊपरी दायाँ कोना 3 सेकंड दबाए रखें"+
+	"हर टैप, या जुड़े कीबोर्ड की हर कुंजी, एक मधुर पियानो सुर बजाती है, सब ऐसे सरगम में जो हमेशा साथ में अच्छा लगता है।"+
+	"बच्चे को पियानो में ही रखने के लिए, गाइडेड ऐक्सेस चालू करें: सेटिंग्ज़ › ऐक्सेसिबिलिटी › गाइडेड ऐक्सेस, फिर पियानो बजते समय साइड बटन तीन बार दबाएँ।"+
+	"बच्चे को पियानो में ही रखने के लिए, उसे पिन करें: सेटिंग › सुरक्षा › ऐप पिन करना, फिर हाल ही के ऐप में से Mash Piano को पिन करें।"+
+	"बजाना शुरू करें"+
+	"सुर"+
+	"पाँच सुर"+
+	"सा रे ग प ध। हमेशा प्यारा लगता है।"+
+	"सात सुर"+
+	"सफ़ेद कुंजियाँ, सा रे ग म प ध नि।"+
+	"सभी बारह"+
+	"सफ़ेद और काली कुंजियाँ, हर सुर।"+
+	"आतिशबाज़ी"+
+	"हर सुर पर एक रंगीन फुहार। अगर बच्चा स्क्रीन नहीं देख सकता तो ज़रूरी नहीं।"+
+	"माउस और ट्रैकपैड भी लॉक करें"+
+	"लैपटॉप पर सुझाया गया। तब रोकने के लिए quitpiano टाइप करें।"+
+	"कीबोर्ड जुड़ा है"+
+	"बच्चा कीबोर्ड बजाता है, हर कुंजी एक सुर, जैसे कंप्यूटर पर।"+
+	"कोई कीबोर्ड नहीं"+
+	"बच्चा स्क्रीन पर बड़ी रंगीन कुंजियाँ टैप करता है। उस पर बजाने के लिए कीबोर्ड जोड़ें।"+
+	"Mash Piano Mac और Windows के लिए भी मुफ़्त है, जहाँ बच्चा असली कंप्यूटर कीबोर्ड बजाता है और पूरा कीबोर्ड लॉक रहता है।"+
+	"Mac और Windows के लिए डाउनलोड करें",
+	[]uint16{
+		10,
+		10,
+		680,
+		251,
+		101,
+		350,
+		116,
+		83,
+		55,
+		15,
+		230,
+		31,
+		232,
+		111,
+		515,
+		429,
+		164,
+		145,
+		288,
+		383,
+		305,
+		41,
+		9,
+		22,
+		86,
+		19,
+		81,
+		22,
+		81,
+		27,
+		191,
+		74,
+		136,
+		44,
+		150,
+		44,
+		222,
+		267,
+		70,
+	})
+
+// textsId are the messages without arguments in id.
+var textsId = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Setelah dimulai, piano memenuhi layar dan mengambil alih seluruh keyboard. Tombol apa pun yang ditekan bayi akan memainkan nada piano yang lembut, dan tidak ada yang menutup app, berpindah app, atau membuka pintasan sistem. Setiap tombol punya nadanya sendiri, rendah di kiri bawah dan tinggi di kanan atas."+
+	"Untuk berhenti: tahan mouse di pojok kanan atas layar selama 3 detik, atau ketik quitpiano di keyboard."+
+	"Untuk berhenti: ketik quitpiano di keyboard."+
+	"Piano memerlukan izin Aksesibilitas untuk mengambil alih keyboard. Buka pengaturan dan nyalakan Mash Piano; baris ini akan berubah hijau dengan sendirinya."+
+	"Piano boleh mengambil alih seluruh keyboard."+
+	"Buka pengaturan Aksesibilitas"+
+	"Memuat piano…"+
+	"Volume"+
+	"Tombol volume keyboard dikunci selama bayi bermain, jadi atur di sini terlebih dahulu."+
+	"Coba"+
+	"Volume output ini tidak dapat dibaca, seperti pada HDMI dan beberapa speaker. Pastikan tidak terlalu keras."+
+	"Mulai bermain (layar penuh, keyboard terkunci)"+
+	"App lain menyalakan input keyboard aman, misalnya di Terminal atau kolom kata sandi, sehingga tidak ada app yang bisa mengunci keyboard. Matikan, atau mulai ulang komputer, lalu mulai lagi."+
+	"Keyboard tidak dapat dikunci. Pastikan Mash Piano dinyalakan di Pengaturan Sistem › Privasi & Keamanan › Aksesibilitas; setelah pembaruan, hapus entri lama (−) lalu tambahkan lagi."+
+	"Tidak ada app yang bisa memblokir Ctrl+Alt+Del; Win+L diblokir selama bayi bermain."+
+	"Orang tua: tahan pojok kanan atas selama 3 detik untuk berhenti"+
+	"Setiap ketukan, atau setiap tombol pada keyboard yang terpasang, memainkan nada piano yang lembut, semuanya dalam tangga nada yang selalu terdengar indah."+
+	"Agar bayi tetap di piano, nyalakan Akses Terpandu: Pengaturan › Aksesibilitas › Akses Terpandu, lalu klik tiga kali tombol samping saat piano bermain."+
+	"Agar bayi tetap di piano, sematkan aplikasinya: Setelan › Keamanan › Penyematan aplikasi, lalu sematkan Mash Piano dari aplikasi terbaru."+
+	"Mulai bermain"+
+	"Nada"+
+	"Lima nada"+
+	"Do re mi sol la. Selalu terdengar indah."+
+	"Tujuh nada"+
+	"Tuts putih, do re mi fa sol la si."+
+	"Kedua belas nada"+
+	"Tuts putih dan hitam, semua nada."+
+	"Kembang api"+
+	"Ledakan warna untuk setiap nada. Tidak perlu jika bayi tidak bisa melihat layar."+
+	"Kunci juga mouse dan trackpad"+
+	"Disarankan untuk laptop. Berhenti dengan mengetik quitpiano."+
+	"Keyboard terhubung"+
+	"Bayi memainkan keyboard, setiap tombol satu nada, seperti di komputer."+
+	"Tidak ada keyboard"+
+	"Bayi mengetuk tuts besar berwarna di layar. Pasang keyboard untuk memainkannya."+
+	"Mash Piano juga gratis untuk Mac dan Windows, tempat bayi memainkan keyboard komputer sungguhan dan seluruh keyboard terkunci."+
+	"Unduh untuk Mac dan Windows",
+	[]uint16{
+		10,
+		10,
+		307,
+		103,
+		44,
+		155,
+		44,
+		29,
+		15,
+		6,
+		86,
+		4,
+		107,
+		46,
+		189,
+		186,
+		83,
+		63,
+		154,
+		154,
+		141,
+		13,
+		4,
+		9,
+		40,
+		10,
+		34,
+		16,
+		33,
+		11,
+		80,
+		29,
+		60,
+		18,
+		70,
+		18,
+		79,
+		126,
+		27,
+	})
+
+// textsIt are the messages without arguments in it.
+var textsIt = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Una volta avviato, il piano riempie lo schermo e prende tutta la tastiera. Qualunque tasto il bambino prema suona una dolce nota di pianoforte, e niente chiude l’app, cambia applicazione o apre scorciatoie di sistema. Ogni tasto ha la sua nota, grave in basso a sinistra e acuta in alto a destra."+
+	"Per uscire: tieni il mouse nell’angolo in alto a destra dello schermo per 3 secondi, oppure digita quitpiano sulla tastiera."+
+	"Per uscire: digita quitpiano sulla tastiera."+
+	"Il piano ha bisogno del permesso Accessibilità per prendere la tastiera. Apri l’impostazione e attiva Mash Piano; questa riga diventerà verde da sola."+
+	"Il piano può prendere tutta la tastiera."+
+	"Apri le impostazioni Accessibilità"+
+	"Caricamento del piano…"+
+	"Volume"+
+	"I tasti del volume sono bloccati mentre il bambino suona, quindi regolalo prima qui."+
+	"Prova"+
+	"Il volume di questa uscita non si può leggere, come con HDMI e alcuni altoparlanti. Controlla che non sia troppo alto."+
+	"Inizia a suonare (schermo intero, tastiera bloccata)"+
+	"Un’altra app ha attivato l’inserimento sicuro da tastiera, come quello di Terminale o un campo password, e così nessuna app può bloccare la tastiera. Disattivalo o riavvia il computer, poi ricomincia."+
+	"Impossibile bloccare la tastiera. Controlla che Mash Piano sia attivo in Impostazioni di Sistema › Privacy e sicurezza › Accessibilità; dopo un aggiornamento, rimuovi la vecchia voce (−) e aggiungila di nuovo."+
+	"Nessuna app può bloccare Ctrl+Alt+Canc; Win+L è bloccato mentre il bambino suona."+
+	"Genitori: tenete premuto l’angolo in alto a destra per 3 secondi per uscire"+
+	"Ogni tocco, o ogni tasto di una tastiera collegata, suona una dolce nota di pianoforte, tutte in una scala che suona sempre bene."+
+	"Per tenere il bambino nel piano, attiva Accesso Guidato: Impostazioni › Accessibilità › Accesso Guidato, poi premi tre volte il tasto laterale mentre il piano suona."+
+	"Per tenere il bambino nel piano, bloccalo sullo schermo: Impostazioni › Sicurezza › Blocco app su schermo, poi blocca Mash Piano dalle app recenti."+
+	"Inizia a suonare"+
+	"Note"+
+	"Cinque note"+
+	"Do re mi sol la. Suona sempre bene."+
+	"Sette note"+
+	"I tasti bianchi, do re mi fa sol la si."+
+	"Tutte e dodici"+
+	"Tasti bianchi e neri, ogni nota."+
+	"Fuochi d’artificio"+
+	"Un’esplosione di colori per ogni nota. Non serve se il bambino non vede lo schermo."+
+	"Blocca anche mouse e trackpad"+
+	"Consigliato sui portatili. Poi esci digitando quitpiano."+
+	"Tastiera collegata"+
+	"Il bambino suona la tastiera, ogni tasto una nota, come su un computer."+
+	"Nessuna tastiera"+
+	"Il bambino tocca i grandi tasti colorati sullo schermo. Collega una tastiera per suonare con quella."+
+	"Mash Piano è gratis anche per Mac e Windows, dove il bambino suona una vera tastiera del computer e tutta la tastiera è bloccata."+
+	"Scarica per Mac e Windows",
+	[]uint16{
+		10,
+		10,
+		298,
+		126,
+		44,
+		154,
+		41,
+		35,
+		24,
+		6,
+		84,
+		5,
+		119,
+		52,
+		206,
+		216,
+		83,
+		77,
+		129,
+		170,
+		151,
+		16,
+		4,
+		11,
+		35,
+		10,
+		39,
+		14,
+		32,
+		20,
+		85,
+		29,
+		56,
+		18,
+		71,
+		16,
+		100,
+		131,
+		25,
+	})
+
+// textsJa are the messages without arguments in ja.
+var textsJa = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"始めると画面いっぱいに広がり、キーボード全体を引き受けます。赤ちゃんがどこを押してもやさしいピアノの音が鳴るだけで、終了やアプリの切り替え、システムのショートカットは起きません。キーごとに音があり、左下がいちばん低く、右上がいちばん高い音です。"+
+	"終了するには：画面の右上隅でマウスを 3 秒押し続けるか、キーボードで quitpiano と入力します。"+
+	"終了するには：キーボードで quitpiano と入力します。"+
+	"キーボードを引き受けるには「アクセシビリティ」の許可が必要です。設定を開いて Mash Piano をオンにしてください。オンになるとこの行は自動で緑になります。"+
+	"キーボード全体を引き受けられます。"+
+	"「アクセシビリティ」設定を開く"+
+	"ピアノを読み込み中…"+
+	"音量"+
+	"赤ちゃんが遊んでいる間はキーボードの音量キーがロックされるので、先にここで調整してください。"+
+	"試し弾き"+
+	"この出力（HDMI や一部のスピーカーなど）の音量は読み取れません。大きすぎないか確認してください。"+
+	"演奏を始める（全画面・キーボードをロック）"+
+	"別のアプリが「セキュアキーボード入力」をオンにしています（ターミナルのセキュアキーボード入力やパスワード欄など）。この間はどのアプリもキーボードをロックできません。オフにするかコンピュータを再起動してから、もう一度始めてください。"+
+	"キーボードをロックできませんでした。システム設定 › プライバシーとセキュリティ › アクセシビリティ で Mash Piano がオンになっているか確認してください。アップデート後は古い項目を削除（−）してから追加し直してください。"+
+	"Ctrl+Alt+Del はどのアプリも止められません。Win+L は遊んでいる間ブロックされます。"+
+	"保護者の方：右上隅を 3 秒押すと終了"+
+	"画面をタップしても、つないだキーボードのキーを押しても、やさしいピアノの音が鳴ります。音はすべて同じ音階なので、いつもきれいに響きます。"+
+	"赤ちゃんがアプリから出ないようにするには「アクセスガイド」をオンに：設定 › アクセシビリティ › アクセスガイド。ピアノが鳴っている間にサイドボタンをトリプルクリックします。"+
+	"赤ちゃんがアプリから出ないようにするには固定します：設定 › セキュリティ › アプリ固定。その後、最近使ったアプリから Mash Piano を固定します。"+
+	"演奏を始める"+
+	"音"+
+	"5つの音"+
+	"ド・レ・ミ・ソ・ラ。いつでもきれいに響きます。"+
+	"7つの音"+
+	"白鍵の ド・レ・ミ・ファ・ソ・ラ・シ。"+
+	"12の音すべて"+
+	"白鍵も黒鍵も、すべての音。"+
+	"花火"+
+	"音ごとにカラフルな花火。赤ちゃんが画面を見られないなら不要です。"+
+	"マウスとトラックパッドもロック"+
+	"ノートパソコンにおすすめ。終了は quitpiano の入力で。"+
+	"キーボード接続中"+
+	"コンピュータと同じように、赤ちゃんがキーボードを弾きます。キーごとに音があります。"+
+	"キーボードなし"+
+	"赤ちゃんは画面の大きなカラフルな鍵盤をタップします。キーボードをつなぐとそちらで弾けます。"+
+	"Mash Piano は Mac と Windows でも無料です。本物のキーボードで遊べて、キーボード全体がロックされます。"+
+	"Mac・Windows 版をダウンロード",
+	[]uint16{
+		10,
+		10,
+		366,
+		131,
+		71,
+		219,
+		51,
+		45,
+		30,
+		6,
+		138,
+		12,
+		140,
+		63,
+		345,
+		317,
+		112,
+		51,
+		204,
+		256,
+		205,
+		18,
+		3,
+		10,
+		69,
+		10,
+		55,
+		17,
+		39,
+		6,
+		96,
+		45,
+		74,
+		24,
+		123,
+		21,
+		135,
+		139,
+		38,
+	})
+
+// textsKo are the messages without arguments in ko.
+var textsKo = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"시작하면 피아노가 화면을 가득 채우고 키보드 전체를 맡습니다. 아기가 무엇을 눌러도 부드러운 피아노 소리만 나고, 종료되거나 앱이 바뀌거나 시스템 단축키가 열리지 않습니다. 키마다 음이 있어 왼쪽 아래가 가장 낮고 오른쪽 위가 가장 높습니다."+
+	"끝내려면: 화면 오른쪽 위 모서리에서 마우스를 3초간 누르고 있거나, 키보드로 quitpiano를 입력하세요."+
+	"끝내려면: 키보드로 quitpiano를 입력하세요."+
+	"키보드를 맡으려면 '손쉬운 사용' 권한이 필요합니다. 설정을 열고 Mash Piano를 켜세요. 켜면 이 줄이 저절로 초록색으로 바뀝니다."+
+	"키보드 전체를 맡을 수 있습니다."+
+	"'손쉬운 사용' 설정 열기"+
+	"피아노 불러오는 중…"+
+	"음량"+
+	"아기가 노는 동안 키보드의 음량 키가 잠기니 여기서 먼저 맞춰 두세요."+
+	"들어보기"+
+	"이 출력 장치(HDMI, 일부 스피커 등)의 음량은 읽을 수 없습니다. 너무 크지 않은지 확인하세요."+
+	"연주 시작 (전체 화면, 키보드 잠금)"+
+	"다른 앱이 '보안 키보드 입력'을 켰습니다(터미널의 보안 키보드 입력, 암호 입력란 등). 이 상태에서는 어떤 앱도 키보드를 잠글 수 없습니다. 끄거나 컴퓨터를 재시동한 뒤 다시 시작하세요."+
+	"키보드를 잠글 수 없습니다. 시스템 설정 › 개인정보 보호 및 보안 › 손쉬운 사용에서 Mash Piano가 켜져 있는지 확인하세요. 업데이트 후에는 이전 항목을 삭제(−)하고 다시 추가하세요."+
+	"Ctrl+Alt+Del은 어떤 앱도 막을 수 없습니다. Win+L은 노는 동안 막힙니다."+
+	"부모님: 오른쪽 위 모서리를 3초간 누르면 종료"+
+	"화면을 탭하거나 연결된 키보드의 키를 누를 때마다 부드러운 피아노 음이 납니다. 모두 같은 음계라 언제나 잘 어울립니다."+
+	"아기가 피아노에서 나가지 않게 하려면 '사용법 유도'를 켜세요: 설정 › 손쉬운 사용 › 사용법 유도. 그런 다음 피아노가 연주되는 동안 측면 버튼을 세 번 누르세요."+
+	"아기가 피아노에서 나가지 않게 하려면 앱을 고정하세요: 설정 › 보안 › 앱 고정. 그런 다음 최근 앱에서 Mash Piano를 고정하세요."+
+	"연주 시작"+
+	"음"+
+	"다섯 음"+
+	"도 레 미 솔 라. 언제나 듣기 좋아요."+
+	"일곱 음"+
+	"흰 건반의 도 레 미 파 솔 라 시."+
+	"열두 음 모두"+
+	"흰 건반과 검은 건반, 모든 음."+
+	"불꽃놀이"+
+	"음마다 알록달록한 불꽃. 아기가 화면을 볼 수 없다면 필요 없습니다."+
+	"마우스와 트랙패드도 잠그기"+
+	"노트북에 권장. 끝내려면 quitpiano를 입력하세요."+
+	"키보드 연결됨"+
+	"컴퓨터에서처럼 아기가 키보드를 칩니다. 키마다 음이 하나씩 있습니다."+
+	"키보드 없음"+
+	"아기가 화면의 크고 알록달록한 건반을 탭합니다. 키보드를 연결하면 키보드로 연주합니다."+
+	"Mash Piano는 Mac과 Windows에서도 무료입니다. 아기가 진짜 컴퓨터 키보드를 치고, 키보드 전체가 잠깁니다."+
+	"Mac 및 Windows용 다운로드",
+	[]uint16{
+		10,
+		10,
+		333,
+		135,
+		56,
+		171,
+		44,
+		32,
+		29,
+		6,
+		95,
+		12,
+		124,
+		47,
+		252,
+		246,
+		91,
+		62,
+		165,
+		221,
+		172,
+		13,
+		3,
+		10,
+		48,
+		10,
+		42,
+		17,
+		40,
+		12,
+		92,
+		38,
+		63,
+		19,
+		96,
+		16,
+		122,
+		136,
+		31,
+	})
+
+// textsNb are the messages without arguments in nb.
+var textsNb = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Når pianoet starter, fyller det skjermen og tar over hele tastaturet. Uansett hva babyen trykker på, spilles en myk pianotone, og ingenting avslutter appen, bytter program eller åpner systemsnarveier. Hver tast har sin egen tone, dyp nederst til venstre og lys øverst til høyre."+
+	"Slik stopper du: hold musen i skjermens øvre høyre hjørne i 3 sekunder, eller skriv quitpiano på tastaturet."+
+	"Slik stopper du: skriv quitpiano på tastaturet."+
+	"Pianoet trenger tillatelsen Tilgjengelighet for å ta over tastaturet. Åpne innstillingen og slå på Mash Piano; denne linjen blir grønn av seg selv."+
+	"Pianoet kan ta over hele tastaturet."+
+	"Åpne innstillinger for Tilgjengelighet"+
+	"Laster inn pianoet …"+
+	"Volum"+
+	"Volumtastene på tastaturet er låst mens babyen spiller, så still inn volumet her først."+
+	"Prøv"+
+	"Volumet til denne utgangen kan ikke leses, som med HDMI og noen høyttalere. Sjekk at det ikke er for høyt."+
+	"Begynn å spille (fullskjerm, tastatur låst)"+
+	"En annen app har slått på sikker tastaturinndata, for eksempel Terminals eller et passordfelt, og da kan ingen app låse tastaturet. Slå det av, eller start datamaskinen på nytt, og begynn så igjen."+
+	"Tastaturet kunne ikke låses. Sjekk at Mash Piano er slått på under Systeminnstillinger › Personvern og sikkerhet › Tilgjengelighet; etter en oppdatering fjerner du den gamle oppføringen (−) og legger den til igjen."+
+	"Ctrl+Alt+Del kan ingen app blokkere; Win+L er blokkert mens babyen spiller."+
+	"Foreldre: hold øvre høyre hjørne i 3 sekunder for å stoppe"+
+	"Hvert trykk, eller hver tast på et tilkoblet tastatur, spiller en myk pianotone, alle i en skala som alltid høres fin ut sammen."+
+	"For å holde babyen i pianoet slår du på Veiledet tilgang: Innstillinger › Tilgjengelighet › Veiledet tilgang, og trykker så tre ganger på sideknappen mens pianoet spiller."+
+	"For å holde babyen i pianoet fester du det: Innstillinger › Sikkerhet › Festing av apper, og fester så Mash Piano fra nylige apper."+
+	"Begynn å spille"+
+	"Toner"+
+	"Fem toner"+
+	"Do re mi sol la. Høres alltid fint ut."+
+	"Sju toner"+
+	"De hvite tangentene, do re mi fa sol la si."+
+	"Alle tolv"+
+	"Hvite og svarte tangenter, hver eneste tone."+
+	"Fyrverkeri"+
+	"Et fargerikt smell for hver tone. Ikke nødvendig hvis babyen ikke ser skjermen."+
+	"Lås også mus og styreflate"+
+	"Anbefales på bærbare. Stopp da ved å skrive quitpiano."+
+	"Tastatur tilkoblet"+
+	"Babyen spiller på tastaturet, en tone per tast, som på en datamaskin."+
+	"Ingen tastatur"+
+	"Babyen trykker på de store fargede tangentene på skjermen. Koble til et tastatur for å spille på det."+
+	"Mash Piano er også gratis for Mac og Windows, der babyen spiller på et ekte datatastatur og hele tastaturet er låst."+
+	"Last ned for Mac og Windows",
+	[]uint16{
+		10,
+		10,
+		283,
+		112,
+		48,
+		152,
+		36,
+		39,
+		22,
+		5,
+		91,
+		5,
+		108,
+		45,
+		203,
+		224,
+		75,
+		62,
+		130,
+		180,
+		137,
+		16,
+		5,
+		9,
+		39,
+		9,
+		43,
+		9,
+		44,
+		10,
+		80,
+		28,
+		57,
+		18,
+		71,
+		14,
+		105,
+		119,
+		27,
+	})
+
+// textsNl are the messages without arguments in nl.
+var textsNl = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Na het starten vult de piano het scherm en neemt hij het hele toetsenbord over. Welke toets de baby ook indrukt, er klinkt een zachte pianotoon, en niets sluit de app, wisselt van programma of opent systeemsneltoetsen. Elke toets heeft zijn eigen toon: laag linksonder en hoog rechtsboven."+
+	"Stoppen: houd de muis 3 seconden in de rechterbovenhoek van het scherm, of typ quitpiano op het toetsenbord."+
+	"Stoppen: typ quitpiano op het toetsenbord."+
+	"De piano heeft de toestemming voor Toegankelijkheid nodig om het toetsenbord over te nemen. Open de instelling en zet Mash Piano aan; deze regel wordt vanzelf groen."+
+	"De piano mag het hele toetsenbord overnemen."+
+	"Open instellingen voor Toegankelijkheid"+
+	"Piano laden…"+
+	"Volume"+
+	"De volumetoetsen zijn vergrendeld terwijl de baby speelt, dus stel het hier eerst in."+
+	"Probeer"+
+	"Het volume van deze uitvoer is niet te lezen, zoals bij HDMI en sommige luidsprekers. Controleer dat het niet te hard staat."+
+	"Begin met spelen (volledig scherm, toetsenbord vergrendeld)"+
+	"Een andere app heeft beveiligde toetsenbordinvoer aangezet, zoals die van Terminal of een wachtwoordveld, en dan kan geen app het toetsenbord vergrendelen. Zet het uit of herstart de computer en begin opnieuw."+
+	"Het toetsenbord kon niet worden vergrendeld. Controleer dat Mash Piano aanstaat in Systeeminstellingen › Privacy en beveiliging › Toegankelijkheid; verwijder na een update het oude item (−) en voeg het opnieuw toe."+
+	"Ctrl+Alt+Del kan geen enkele app blokkeren; Win+L is geblokkeerd terwijl de baby speelt."+
+	"Ouders: houd de rechterbovenhoek 3 seconden vast om te stoppen"+
+	"Elke tik, of elke toets op een aangesloten toetsenbord, speelt een zachte pianotoon, allemaal in een toonladder die altijd mooi samen klinkt."+
+	"Om de baby in de piano te houden, zet je Begeleide toegang aan: Instellingen › Toegankelijkheid › Begeleide toegang, en druk dan drie keer op de zijknop terwijl de piano speelt."+
+	"Om de baby in de piano te houden, zet je hem vast: Instellingen › Beveiliging › App vastzetten, en zet Mash Piano vast vanuit de recente apps."+
+	"Begin met spelen"+
+	"Tonen"+
+	"Vijf tonen"+
+	"Do re mi sol la. Klinkt altijd lief."+
+	"Zeven tonen"+
+	"De witte toetsen, do re mi fa sol la si."+
+	"Alle twaalf"+
+	"Witte en zwarte toetsen, elke toon."+
+	"Vuurwerk"+
+	"Een kleurige knal bij elke toon. Niet nodig als de baby het scherm niet ziet."+
+	"Ook muis en trackpad vergrendelen"+
+	"Aanbevolen op laptops. Stop dan door quitpiano te typen."+
+	"Toetsenbord verbonden"+
+	"De baby speelt op het toetsenbord, elke toets een toon, zoals op een computer."+
+	"Geen toetsenbord"+
+	"De baby tikt op de grote gekleurde toetsen op het scherm. Sluit een toetsenbord aan om daarop te spelen."+
+	"Mash Piano is ook gratis voor Mac en Windows, waar de baby op een echt computertoetsenbord speelt en het hele toetsenbord vergrendeld is."+
+	"Download voor Mac en Windows",
+	[]uint16{
+		10,
+		10,
+		289,
+		108,
+		42,
+		165,
+		44,
+		39,
+		14,
+		6,
+		85,
+		7,
+		124,
+		59,
+		209,
+		220,
+		88,
+		62,
+		141,
+		181,
+		146,
+		16,
+		5,
+		10,
+		36,
+		11,
+		40,
+		11,
+		35,
+		8,
+		77,
+		33,
+		56,
+		21,
+		78,
+		16,
+		104,
+		137,
+		28,
+	})
+
+// textsPl are the messages without arguments in pl.
+var textsPl = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Po uruchomieniu pianino wypełnia ekran i przejmuje całą klawiaturę. Cokolwiek naciśnie maluch, zabrzmi łagodna nuta pianina, a nic nie zamknie aplikacji, nie przełączy programów ani nie otworzy skrótów systemowych. Każdy klawisz ma swoją nutę: niskie na dole po lewej, wysokie na górze po prawej."+
+	"Aby zakończyć: przytrzymaj mysz w prawym górnym rogu ekranu przez 3 sekundy albo wpisz na klawiaturze quitpiano."+
+	"Aby zakończyć: wpisz na klawiaturze quitpiano."+
+	"Aby przejąć klawiaturę, pianino potrzebuje uprawnienia Dostępność. Otwórz ustawienie i włącz Mash Piano; ten wiersz sam zmieni kolor na zielony."+
+	"Pianino może przejąć całą klawiaturę."+
+	"Otwórz ustawienia Dostępności"+
+	"Wczytywanie pianina…"+
+	"Głośność"+
+	"Klawisze głośności są zablokowane, gdy maluch gra, więc najpierw ustaw ją tutaj."+
+	"Wypróbuj"+
+	"Nie można odczytać głośności tego wyjścia, tak jak w przypadku HDMI i niektórych głośników. Sprawdź, czy nie jest za głośno."+
+	"Zacznij grać (pełny ekran, klawiatura zablokowana)"+
+	"Inna aplikacja włączyła bezpieczne wprowadzanie z klawiatury, np. w Terminalu lub w polu hasła, i wtedy żadna aplikacja nie może zablokować klawiatury. Wyłącz je lub uruchom ponownie komputer i zacznij od nowa."+
+	"Nie udało się zablokować klawiatury. Sprawdź, czy Mash Piano jest włączone w Ustawieniach systemowych › Prywatność i ochrona › Dostępność; po aktualizacji usuń stary wpis (−) i dodaj go ponownie."+
+	"Ctrl+Alt+Del nie może zablokować żadna aplikacja; Win+L jest zablokowane, gdy maluch gra."+
+	"Rodzice: przytrzymajcie prawy górny róg przez 3 sekundy, aby zakończyć"+
+	"Każde dotknięcie lub klawisz podłączonej klawiatury gra łagodną nutę pianina, a wszystkie należą do skali, która zawsze ładnie brzmi."+
+	"Aby maluch nie wyszedł z pianina, włącz Dostęp nadzorowany: Ustawienia › Dostępność › Dostęp nadzorowany, a potem trzy razy naciśnij przycisk boczny, gdy pianino gra."+
+	"Aby maluch nie wyszedł z pianina, przypnij je: Ustawienia › Bezpieczeństwo › Przypinanie aplikacji, a potem przypnij Mash Piano z ostatnich aplikacji."+
+	"Zacznij grać"+
+	"Nuty"+
+	"Pięć nut"+
+	"Do re mi sol la. Zawsze brzmi ślicznie."+
+	"Siedem nut"+
+	"Białe klawisze: do re mi fa sol la si."+
+	"Wszystkie dwanaście"+
+	"Białe i czarne klawisze, każda nuta."+
+	"Fajerwerki"+
+	"Kolorowy wybuch przy każdej nucie. Niepotrzebne, jeśli maluch nie widzi ekranu."+
+	"Zablokuj też mysz i gładzik"+
+	"Zalecane na laptopach. Wtedy zakończ, wpisując quitpiano."+
+	"Klawiatura podłączona"+
+	"Maluch gra na klawiaturze, każdy klawisz to nuta, jak na komputerze."+
+	"Brak klawiatury"+
+	"Maluch dotyka dużych kolorowych klawiszy na ekranie. Podłącz klawiaturę, aby grać na niej."+
+	"Mash Piano jest też darmowe na Maca i Windows: tam maluch gra na prawdziwej klawiaturze komputera, a cała klawiatura jest zablokowana."+
+	"Pobierz na Maca i Windows",
+	[]uint16{
+		10,
+		10,
+		311,
+		115,
+		48,
+		153,
+		43,
+		32,
+		22,
+		12,
+		86,
+		9,
+		137,
+		52,
+		219,
+		213,
+		92,
+		74,
+		144,
+		179,
+		156,
+		13,
+		4,
+		10,
+		40,
+		10,
+		39,
+		20,
+		38,
+		10,
+		81,
+		29,
+		59,
+		23,
+		69,
+		15,
+		95,
+		136,
+		25,
+	})
+
+// textsPtBR are the messages without arguments in pt-BR.
+var textsPtBR = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Ao começar, o piano ocupa a tela inteira e assume todo o teclado. Qualquer tecla que o bebê aperte toca uma nota suave de piano, e nada fecha o app, troca de aplicativo ou abre atalhos do sistema. Cada tecla tem sua nota: grave embaixo à esquerda e aguda em cima à direita."+
+	"Para sair: segure o mouse no canto superior direito da tela por 3 segundos ou digite quitpiano no teclado."+
+	"Para sair: digite quitpiano no teclado."+
+	"O piano precisa da permissão de Acessibilidade para assumir o teclado. Abra o ajuste e ative o Mash Piano; esta linha fica verde sozinha."+
+	"O piano pode assumir todo o teclado."+
+	"Abrir ajustes de Acessibilidade"+
+	"Carregando o piano…"+
+	"Volume"+
+	"As teclas de volume do teclado ficam bloqueadas enquanto o bebê toca, então ajuste aqui primeiro."+
+	"Testar"+
+	"Não é possível ler o volume desta saída, como no HDMI e em algumas caixas de som. Confira se não está alto demais."+
+	"Começar a tocar (tela cheia, teclado bloqueado)"+
+	"Outro app ativou a entrada segura de teclado, como a do Terminal ou um campo de senha, e assim nenhum app consegue bloquear o teclado. Desative-a ou reinicie o computador e comece de novo."+
+	"Não foi possível bloquear o teclado. Verifique se o Mash Piano está ativado em Ajustes do Sistema › Privacidade e Segurança › Acessibilidade; depois de uma atualização, remova o item antigo (−) e adicione-o de novo."+
+	"Nenhum app consegue bloquear Ctrl+Alt+Del; Win+L fica bloqueado enquanto o bebê toca."+
+	"Pais: segurem o canto superior direito por 3 segundos para sair"+
+	"Cada toque, ou cada tecla de um teclado conectado, toca uma nota suave de piano, todas numa escala que sempre soa bem junta."+
+	"Para manter o bebê no piano, ative o Acesso Guiado: Ajustes › Acessibilidade › Acesso Guiado e clique três vezes no botão lateral enquanto o piano toca."+
+	"Para manter o bebê no piano, fixe o app: Configurações › Segurança › Fixar app e fixe o Mash Piano nos apps recentes."+
+	"Começar a tocar"+
+	"Notas"+
+	"Cinco notas"+
+	"Dó ré mi sol lá. Sempre soa bonito."+
+	"Sete notas"+
+	"As teclas brancas, dó ré mi fá sol lá si."+
+	"Todas as doze"+
+	"Teclas brancas e pretas, todas as notas."+
+	"Fogos de artifício"+
+	"Uma explosão colorida a cada nota. Não precisa se o bebê não vê a tela."+
+	"Bloquear também o mouse e o trackpad"+
+	"Recomendado em notebooks. Para sair, digite quitpiano."+
+	"Teclado conectado"+
+	"O bebê toca no teclado, cada tecla uma nota, como num computador."+
+	"Sem teclado"+
+	"O bebê toca nas teclas grandes e coloridas da tela. Conecte um teclado para tocar nele."+
+	"O Mash Piano também é grátis para Mac e Windows, onde o bebê toca num teclado de computador de verdade e o teclado inteiro fica bloqueado."+
+	"Baixar para Mac e Windows",
+	[]uint16{
+		10,
+		10,
+		277,
+		106,
+		39,
+		138,
+		36,
+		31,
+		21,
+		6,
+		99,
+		6,
+		120,
+		48,
+		188,
+		227,
+		86,
+		63,
+		124,
+		159,
+		125,
+		16,
+		5,
+		11,
+		38,
+		10,
+		45,
+		13,
+		40,
+		19,
+		76,
+		37,
+		54,
+		17,
+		66,
+		11,
+		88,
+		142,
+		25,
+	})
+
+// textsRu are the messages without arguments in ru.
+var textsRu = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"После запуска пианино занимает весь экран и забирает себе всю клавиатуру. Что бы ни нажал малыш, звучит мягкая нота пианино, и ничто не закрывает приложение, не переключает программы и не вызывает системные сочетания клавиш. У каждой клавиши своя нота: низкие внизу слева, высокие вверху справа."+
+	"Чтобы выйти: удерживайте мышь в правом верхнем углу экрана 3 секунды или наберите quitpiano на клавиатуре."+
+	"Чтобы выйти: наберите quitpiano на клавиатуре."+
+	"Чтобы забрать клавиатуру, пианино нужен доступ к Универсальному доступу. Откройте настройку и включите Mash Piano — эта строка сама станет зелёной."+
+	"Пианино может забрать всю клавиатуру."+
+	"Открыть настройки Универсального доступа"+
+	"Загружаем пианино…"+
+	"Громкость"+
+	"Пока малыш играет, клавиши громкости заблокированы, поэтому сначала настройте её здесь."+
+	"Послушать"+
+	"Громкость этого выхода прочитать нельзя, как у HDMI и некоторых колонок. Убедитесь, что не слишком громко."+
+	"Начать играть (весь экран, клавиатура заблокирована)"+
+	"Другое приложение включило защищённый ввод с клавиатуры, например в Терминале или в поле пароля, и тогда ни одно приложение не может заблокировать клавиатуру. Отключите его или перезагрузите компьютер и начните снова."+
+	"Не удалось заблокировать клавиатуру. Проверьте, что Mash Piano включено в Системных настройках › Конфиденциальность и безопасность › Универсальный доступ; после обновления удалите старую запись (−) и добавьте её снова."+
+	"Ctrl+Alt+Del не может заблокировать ни одно приложение; Win+L заблокировано, пока малыш играет."+
+	"Родителям: удерживайте правый верхний угол 3 секунды, чтобы выйти"+
+	"Каждое касание или клавиша подключённой клавиатуры играет мягкую ноту пианино, и все они из одного лада, который всегда звучит красиво."+
+	"Чтобы малыш не вышел из пианино, включите Гид-доступ: Настройки › Универсальный доступ › Гид-доступ, а затем трижды нажмите боковую кнопку, пока играет пианино."+
+	"Чтобы малыш не вышел из пианино, закрепите его: Настройки › Безопасность › Закрепление приложений, а затем закрепите Mash Piano в недавних приложениях."+
+	"Начать играть"+
+	"Ноты"+
+	"Пять нот"+
+	"До ре ми соль ля. Всегда звучит мило."+
+	"Семь нот"+
+	"Белые клавиши: до ре ми фа соль ля си."+
+	"Все двенадцать"+
+	"Белые и чёрные клавиши, все ноты."+
+	"Фейерверк"+
+	"Цветной салют на каждую ноту. Не нужен, если малыш не видит экран."+
+	"Заблокировать также мышь и трекпад"+
+	"Рекомендуется на ноутбуках. Выход — набрать quitpiano."+
+	"Клавиатура подключена"+
+	"Малыш играет на клавиатуре, каждая клавиша — нота, как на компьютере."+
+	"Нет клавиатуры"+
+	"Малыш нажимает большие цветные клавиши на экране. Подключите клавиатуру, чтобы играть на ней."+
+	"Mash Piano бесплатно есть и для Mac и Windows: там малыш играет на настоящей клавиатуре компьютера, и вся клавиатура заблокирована."+
+	"Скачать для Mac и Windows",
+	[]uint16{
+		10,
+		10,
+		538,
+		185,
+		76,
+		263,
+		69,
+		77,
+		36,
+		18,
+		161,
+		18,
+		189,
+		96,
+		400,
+		396,
+		159,
+		119,
+		248,
+		293,
+		270,
+		25,
+		8,
+		15,
+		65,
+		15,
+		66,
+		27,
+		59,
+		18,
+		118,
+		64,
+		92,
+		41,
+		126,
+		27,
+		171,
+		221,
+		36,
+	})
+
+// textsSv are the messages without arguments in sv.
+var textsSv = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"När pianot startar fyller det skärmen och tar över hela tangentbordet. Vad bebisen än trycker på spelas en mjuk pianoton, och inget avslutar appen, byter program eller öppnar systemkortkommandon. Varje tangent har sin egen ton, låg längst ned till vänster och hög längst upp till höger."+
+	"Avsluta: håll musen i skärmens övre högra hörn i 3 sekunder, eller skriv quitpiano på tangentbordet."+
+	"Avsluta: skriv quitpiano på tangentbordet."+
+	"Pianot behöver behörigheten Hjälpmedel för att ta över tangentbordet. Öppna inställningen och slå på Mash Piano; raden blir grön av sig själv."+
+	"Pianot får ta över hela tangentbordet."+
+	"Öppna inställningar för Hjälpmedel"+
+	"Laddar pianot …"+
+	"Volym"+
+	"Tangentbordets volymknappar är låsta medan bebisen spelar, så ställ in volymen här först."+
+	"Prova"+
+	"Volymen för den här utgången går inte att läsa, som med HDMI och vissa högtalare. Kontrollera att den inte är för hög."+
+	"Börja spela (helskärm, tangentbordet låst)"+
+	"En annan app har slagit på säker tangentbordsinmatning, till exempel Terminals eller ett lösenordsfält, och då kan ingen app låsa tangentbordet. Stäng av den eller starta om datorn och börja sedan igen."+
+	"Tangentbordet kunde inte låsas. Kontrollera att Mash Piano är påslaget i Systeminställningar › Integritet och säkerhet › Hjälpmedel; efter en uppdatering tar du bort den gamla posten (−) och lägger till den igen."+
+	"Ctrl+Alt+Del kan ingen app blockera; Win+L är blockerat medan bebisen spelar."+
+	"Föräldrar: håll det övre högra hörnet i 3 sekunder för att avsluta"+
+	"Varje tryck, eller varje tangent på ett anslutet tangentbord, spelar en mjuk pianoton, alla i en skala som alltid låter fint ihop."+
+	"För att hålla bebisen kvar i pianot slår du på Guidad åtkomst: Inställningar › Hjälpmedel › Guidad åtkomst, och trycker sedan tre gånger på sidoknappen medan pianot spelar."+
+	"För att hålla bebisen kvar i pianot fäster du det: Inställningar › Säkerhet › Fäst app, och fäster sedan Mash Piano från de senaste apparna."+
+	"Börja spela"+
+	"Toner"+
+	"Fem toner"+
+	"Do re mi sol la. Låter alltid fint."+
+	"Sju toner"+
+	"De vita tangenterna, do re mi fa sol la ti."+
+	"Alla tolv"+
+	"Vita och svarta tangenter, varje ton."+
+	"Fyrverkeri"+
+	"En färgglad explosion för varje ton. Behövs inte om bebisen inte ser skärmen."+
+	"Lås även mus och styrplatta"+
+	"Rekommenderas på bärbara datorer. Avsluta då genom att skriva quitpiano."+
+	"Tangentbord anslutet"+
+	"Bebisen spelar på tangentbordet, en ton per tangent, som på en dator."+
+	"Inget tangentbord"+
+	"Bebisen trycker på de stora färgade tangenterna på skärmen. Anslut ett tangentbord för att spela på det."+
+	"Mash Piano finns också gratis för Mac och Windows, där bebisen spelar på ett riktigt datortangentbord och hela tangentbordet är låst."+
+	"Hämta för Mac och Windows",
+	[]uint16{
+		10,
+		10,
+		298,
+		106,
+		43,
+		153,
+		40,
+		38,
+		17,
+		5,
+		95,
+		5,
+		127,
+		45,
+		210,
+		225,
+		78,
+		73,
+		132,
+		186,
+		152,
+		12,
+		5,
+		9,
+		36,
+		9,
+		43,
+		9,
+		37,
+		10,
+		81,
+		29,
+		75,
+		20,
+		71,
+		17,
+		110,
+		139,
+		27,
+	})
+
+// textsTh are the messages without arguments in th.
+var textsTh = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"เมื่อเริ่ม เปียโนจะเต็มหน้าจอและควบคุมแป้นพิมพ์ทั้งหมด ไม่ว่าลูกน้อยจะกดอะไรก็จะได้ยินเสียงเปียโนนุ่มๆ และไม่มีอะไรปิดแอป สลับแอป หรือเปิดปุ่มลัดของระบบ แต่ละปุ่มมีโน้ตของตัวเอง เสียงต่ำอยู่ซ้ายล่าง เสียงสูงอยู่ขวาบน"+
+	"วิธีหยุด: กดเมาส์ค้างไว้ที่มุมขวาบนของหน้าจอ 3 วินาที หรือพิมพ์ quitpiano บนแป้นพิมพ์"+
+	"วิธีหยุด: พิมพ์ quitpiano บนแป้นพิมพ์"+
+	"เปียโนต้องได้รับสิทธิ์การช่วยการเข้าถึงเพื่อควบคุมแป้นพิมพ์ เปิดการตั้งค่าแล้วเปิด Mash Piano บรรทัดนี้จะเปลี่ยนเป็นสีเขียวเอง"+
+	"เปียโนควบคุมแป้นพิมพ์ทั้งหมดได้แล้ว"+
+	"เปิดการตั้งค่าการช่วยการเข้าถึง"+
+	"กำลังโหลดเปียโน…"+
+	"ระดับเสียง"+
+	"ปุ่มปรับเสียงบนแป้นพิมพ์จะถูกล็อกขณะลูกน้อยเล่น จึงควรปรับที่นี่ก่อน"+
+	"ลองฟัง"+
+	"อ่านระดับเสียงของอุปกรณ์นี้ไม่ได้ เช่น HDMI และลำโพงบางรุ่น โปรดตรวจดูว่าเสียงไม่ดังเกินไป"+
+	"เริ่มเล่น (เต็มหน้าจอ ล็อกแป้นพิมพ์)"+
+	"มีแอปอื่นเปิดการป้อนข้อมูลแป้นพิมพ์แบบปลอดภัยอยู่ เช่นใน Terminal หรือช่องรหัสผ่าน ซึ่งทำให้ไม่มีแอปใดล็อกแป้นพิมพ์ได้ โปรดปิด หรือรีสตาร์ทคอมพิวเตอร์ แล้วเริ่มใหม่"+
+	"ล็อกแป้นพิมพ์ไม่ได้ โปรดตรวจว่าเปิด Mash Piano ไว้ใน การตั้งค่าระบบ › ความเป็นส่วนตัวและความปลอดภัย › การช่วยการเข้าถึง หลังอัปเดต ให้ลบรายการเดิม (−) แล้วเพิ่มใหม่"+
+	"ไม่มีแอปใดบล็อก Ctrl+Alt+Del ได้ ส่วน Win+L จะถูกบล็อกขณะลูกน้อยเล่น"+
+	"ผู้ปกครอง: กดมุมขวาบนค้างไว้ 3 วินาทีเพื่อหยุด"+
+	"ทุกครั้งที่แตะ หรือกดปุ่มบนแป้นพิมพ์ที่ต่อไว้ จะได้ยินเสียงเปียโนนุ่มๆ ทุกเสียงอยู่ในบันไดเสียงเดียวกันจึงไพเราะเสมอ"+
+	"เพื่อให้ลูกน้อยอยู่ในเปียโน ให้เปิดการเข้าถึงที่ได้รับคำแนะนำ: การตั้งค่า › การช่วยการเข้าถึง › การเข้าถึงที่ได้รับคำแนะนำ แล้วกดปุ่มด้านข้างสามครั้งขณะเปียโนเล่น"+
+	"เพื่อให้ลูกน้อยอยู่ในเปียโน ให้ปักหมุดแอป: การตั้งค่า › ความปลอดภัย › การปักหมุดแอป แล้วปักหมุด Mash Piano จากแอปล่าสุด"+
+	"เริ่มเล่น"+
+	"โน้ต"+
+	"ห้าโน้ต"+
+	"โด เร มี ซอล ลา ไพเราะเสมอ"+
+	"เจ็ดโน้ต"+
+	"คีย์สีขาว โด เร มี ฟา ซอล ลา ที"+
+	"ครบสิบสอง"+
+	"คีย์ขาวและดำ ทุกโน้ต"+
+	"พลุ"+
+	"พลุสีสันสดใสทุกโน้ต ไม่จำเป็นถ้าลูกน้อยมองไม่เห็นหน้าจอ"+
+	"ล็อกเมาส์และแทร็คแพดด้วย"+
+	"แนะนำสำหรับโน้ตบุ๊ก หยุดได้ด้วยการพิมพ์ quitpiano"+
+	"เชื่อมต่อแป้นพิมพ์แล้ว"+
+	"ลูกน้อยเล่นบนแป้นพิมพ์ ปุ่มละหนึ่งโน้ต เหมือนบนคอมพิวเตอร์"+
+	"ไม่มีแป้นพิมพ์"+
+	"ลูกน้อยแตะคีย์สีใหญ่บนหน้าจอ ต่อแป้นพิมพ์เพื่อเล่นบนแป้นพิมพ์แทน"+
+	"Mash Piano ใช้ฟรีบน Mac และ Windows ด้วย ลูกน้อยได้เล่นบนแป้นพิมพ์คอมพิวเตอร์จริง และแป้นพิมพ์ทั้งหมดจะถูกล็อก"+
+	"ดาวน์โหลดสำหรับ Mac และ Windows",
+	[]uint16{
+		10,
+		10,
+		632,
+		221,
+		85,
+		352,
+		105,
+		93,
+		48,
+		30,
+		202,
+		18,
+		254,
+		100,
+		462,
+		444,
+		160,
+		128,
+		342,
+		470,
+		317,
+		27,
+		12,
+		21,
+		68,
+		24,
+		79,
+		27,
+		58,
+		9,
+		163,
+		72,
+		125,
+		66,
+		170,
+		42,
+		190,
+		276,
+		67,
+	})
+
+// textsTr are the messages without arguments in tr.
+var textsTr = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Başladığında piyano tüm ekranı kaplar ve klavyenin tamamını devralır. Bebek hangi tuşa basarsa bassın yumuşak bir piyano notası çalar; hiçbir şey uygulamayı kapatmaz, uygulama değiştirmez ya da sistem kısayollarını açmaz. Her tuşun kendi notası vardır: pesler sol altta, tizler sağ üstte."+
+	"Durdurmak için: fareyi ekranın sağ üst köşesinde 3 saniye basılı tutun ya da klavyede quitpiano yazın."+
+	"Durdurmak için: klavyede quitpiano yazın."+
+	"Piyanonun klavyeyi devralması için Erişilebilirlik izni gerekir. Ayarı açın ve Mash Piano’yu etkinleştirin; bu satır kendiliğinden yeşile döner."+
+	"Piyano klavyenin tamamını devralabilir."+
+	"Erişilebilirlik ayarlarını aç"+
+	"Piyano yükleniyor…"+
+	"Ses düzeyi"+
+	"Bebek çalarken klavyenin ses tuşları kilitlenir, bu yüzden önce burada ayarlayın."+
+	"Dene"+
+	"HDMI ve bazı hoparlörlerde olduğu gibi bu çıkışın ses düzeyi okunamıyor. Çok yüksek olmadığından emin olun."+
+	"Çalmaya başla (tam ekran, klavye kilitli)"+
+	"Başka bir uygulama, örneğin Terminal’in güvenli klavye girişi ya da bir parola alanı, güvenli klavye girişini açtı; bu durumda hiçbir uygulama klavyeyi kilitleyemez. Kapatın ya da bilgisayarı yeniden başlatın, sonra tekrar başlayın."+
+	"Klavye kilitlenemedi. Sistem Ayarları › Gizlilik ve Güvenlik › Erişilebilirlik’te Mash Piano’nun açık olduğunu kontrol edin; bir güncellemeden sonra eski kaydı kaldırıp (−) yeniden ekleyin."+
+	"Ctrl+Alt+Del’i hiçbir uygulama engelleyemez; Win+L bebek çalarken engellenir."+
+	"Ebeveynler: durdurmak için sağ üst köşeyi 3 saniye basılı tutun"+
+	"Her dokunuş ya da bağlı bir klavyedeki her tuş yumuşak bir piyano notası çalar; hepsi her zaman uyumlu duyulan bir dizidendir."+
+	"Bebeği piyanoda tutmak için Rehberli Erişim’i açın: Ayarlar › Erişilebilirlik › Rehberli Erişim, ardından piyano çalarken yan düğmeye üç kez basın."+
+	"Bebeği piyanoda tutmak için sabitleyin: Ayarlar › Güvenlik › Uygulama sabitleme, ardından son uygulamalardan Mash Piano’yu sabitleyin."+
+	"Çalmaya başla"+
+	"Notalar"+
+	"Beş nota"+
+	"Do re mi sol la. Her zaman güzel duyulur."+
+	"Yedi nota"+
+	"Beyaz tuşlar: do re mi fa sol la si."+
+	"On ikisi de"+
+	"Beyaz ve siyah tuşlar, her nota."+
+	"Havai fişek"+
+	"Her notada renkli bir patlama. Bebek ekranı göremiyorsa gerekmez."+
+	"Fareyi ve izleme dörtgenini de kilitle"+
+	"Dizüstü bilgisayarlarda önerilir. Durdurmak için quitpiano yazın."+
+	"Klavye bağlı"+
+	"Bebek bilgisayardaki gibi klavyeyi çalar, her tuş bir nota."+
+	"Klavye yok"+
+	"Bebek ekrandaki büyük renkli tuşlara dokunur. Klavyeyle çalmak için bir klavye bağlayın."+
+	"Mash Piano, Mac ve Windows için de ücretsiz: orada bebek gerçek bir bilgisayar klavyesini çalar ve klavyenin tamamı kilitlenir."+
+	"Mac ve Windows için indir",
+	[]uint16{
+		10,
+		10,
+		316,
+		111,
+		43,
+		157,
+		41,
+		33,
+		21,
+		11,
+		87,
+		4,
+		122,
+		43,
+		251,
+		209,
+		81,
+		70,
+		133,
+		167,
+		144,
+		15,
+		7,
+		9,
+		42,
+		9,
+		37,
+		11,
+		33,
+		12,
+		67,
+		39,
+		70,
+		14,
+		61,
+		10,
+		95,
+		132,
+		26,
+	})
+
+// textsUk are the messages without arguments in uk.
+var textsUk = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Після запуску піаніно займає весь екран і забирає всю клавіатуру. Що б не натиснуло маля, звучить м’яка нота піаніно, і ніщо не закриває застосунок, не перемикає програми й не викликає системних скорочень. Кожна клавіша має свою ноту: низькі внизу ліворуч, високі вгорі праворуч."+
+	"Щоб вийти: утримуйте мишу у правому верхньому куті екрана 3 секунди або наберіть quitpiano на клавіатурі."+
+	"Щоб вийти: наберіть quitpiano на клавіатурі."+
+	"Щоб забрати клавіатуру, піаніно потрібен дозвіл Універсального доступу. Відкрийте налаштування й увімкніть Mash Piano — цей рядок сам стане зеленим."+
+	"Піаніно може забрати всю клавіатуру."+
+	"Відкрити параметри Універсального доступу"+
+	"Завантажуємо піаніно…"+
+	"Гучність"+
+	"Поки маля грає, клавіші гучності заблоковані, тож спершу налаштуйте її тут."+
+	"Послухати"+
+	"Гучність цього виходу прочитати неможливо, як у HDMI та деяких колонок. Переконайтеся, що не надто гучно."+
+	"Почати грати (весь екран, клавіатура заблокована)"+
+	"Інший застосунок увімкнув захищене введення з клавіатури, наприклад у Терміналі чи в полі пароля, і тоді жоден застосунок не може заблокувати клавіатуру. Вимкніть його або перезавантажте комп’ютер і почніть знову."+
+	"Не вдалося заблокувати клавіатуру. Перевірте, що Mash Piano увімкнено в Системних параметрах › Приватність і безпека › Універсальний доступ; після оновлення видаліть старий запис (−) і додайте його знову."+
+	"Ctrl+Alt+Del не може заблокувати жоден застосунок; Win+L заблоковано, поки маля грає."+
+	"Батькам: утримуйте правий верхній кут 3 секунди, щоб вийти"+
+	"Кожен дотик або клавіша під’єднаної клавіатури грає м’яку ноту піаніно, і всі вони з одного ладу, що завжди звучить гарно."+
+	"Щоб маля не вийшло з піаніно, увімкніть Гід-доступ: Параметри › Універсальний доступ › Гід-доступ, а тоді тричі натисніть бічну кнопку, поки грає піаніно."+
+	"Щоб маля не вийшло з піаніно, закріпіть його: Налаштування › Безпека › Закріплення додатка, а тоді закріпіть Mash Piano в нещодавніх додатках."+
+	"Почати грати"+
+	"Ноти"+
+	"П’ять нот"+
+	"До ре мі соль ля. Завжди звучить мило."+
+	"Сім нот"+
+	"Білі клавіші: до ре мі фа соль ля сі."+
+	"Усі дванадцять"+
+	"Білі й чорні клавіші, усі ноти."+
+	"Феєрверк"+
+	"Кольоровий салют на кожну ноту. Не потрібен, якщо маля не бачить екрана."+
+	"Заблокувати також мишу й трекпад"+
+	"Радимо на ноутбуках. Вихід — набрати quitpiano."+
+	"Клавіатуру під’єднано"+
+	"Маля грає на клавіатурі, кожна клавіша — нота, як на комп’ютері."+
+	"Немає клавіатури"+
+	"Маля торкається великих кольорових клавіш на екрані. Під’єднайте клавіатуру, щоб грати на ній."+
+	"Mash Piano безкоштовно є і для Mac та Windows: там маля грає на справжній клавіатурі комп’ютера, і вся клавіатура заблокована."+
+	"Завантажити для Mac і Windows",
+	[]uint16{
+		10,
+		10,
+		509,
+		183,
+		72,
+		266,
+		67,
+		79,
+		42,
+		16,
+		137,
+		18,
+		187,
+		90,
+		394,
+		368,
+		140,
+		105,
+		224,
+		281,
+		252,
+		23,
+		8,
+		18,
+		67,
+		13,
+		64,
+		27,
+		55,
+		16,
+		130,
+		60,
+		78,
+		42,
+		117,
+		31,
+		174,
+		212,
+		44,
+	})
+
+// textsVi are the messages without arguments in vi.
+var textsVi = i18n.NewTexts(""+
+	"Mash Piano"+
+	"Mash Piano"+
+	"Khi bắt đầu, đàn sẽ phủ kín màn hình và tiếp quản toàn bộ bàn phím. Bé bấm phím nào cũng chỉ phát ra một nốt piano êm dịu, không gì có thể thoát ứng dụng, chuyển ứng dụng hay mở phím tắt hệ thống. Mỗi phím có một nốt riêng, trầm ở góc dưới bên trái và cao ở góc trên bên phải."+
+	"Để dừng: giữ chuột ở góc trên bên phải màn hình trong 3 giây, hoặc gõ quitpiano trên bàn phím."+
+	"Để dừng: gõ quitpiano trên bàn phím."+
+	"Đàn cần quyền Trợ năng để tiếp quản bàn phím. Hãy mở cài đặt và bật Mash Piano; dòng này sẽ tự chuyển sang màu xanh."+
+	"Đàn có thể tiếp quản toàn bộ bàn phím."+
+	"Mở cài đặt Trợ năng"+
+	"Đang tải đàn…"+
+	"Âm lượng"+
+	"Các phím âm lượng bị khóa khi bé chơi, nên hãy chỉnh ở đây trước."+
+	"Nghe thử"+
+	"Không đọc được âm lượng của đầu ra này, như HDMI và một số loa. Hãy kiểm tra để không quá to."+
+	"Bắt đầu chơi (toàn màn hình, khóa bàn phím)"+
+	"Một ứng dụng khác đã bật nhập bàn phím bảo mật, chẳng hạn trong Terminal hoặc ô mật khẩu, nên không ứng dụng nào khóa được bàn phím. Hãy tắt nó hoặc khởi động lại máy tính, rồi bắt đầu lại."+
+	"Không thể khóa bàn phím. Hãy kiểm tra Mash Piano đã được bật trong Cài đặt hệ thống › Quyền riêng tư & Bảo mật › Trợ năng; sau khi cập nhật, hãy xóa mục cũ (−) rồi thêm lại."+
+	"Không ứng dụng nào chặn được Ctrl+Alt+Del; Win+L bị chặn khi bé chơi."+
+	"Phụ huynh: giữ góc trên bên phải 3 giây để dừng"+
+	"Mỗi lần chạm, hoặc mỗi phím trên bàn phím đã kết nối, sẽ phát một nốt piano êm dịu, tất cả trong một thang âm luôn nghe hài hòa."+
+	"Để bé không thoát khỏi đàn, hãy bật Truy cập được hướng dẫn: Cài đặt › Trợ năng › Truy cập được hướng dẫn, rồi bấm ba lần nút sườn khi đàn đang chơi."+
+	"Để bé không thoát khỏi đàn, hãy ghim ứng dụng: Cài đặt › Bảo mật › Ghim ứng dụng, rồi ghim Mash Piano từ các ứng dụng gần đây."+
+	"Bắt đầu chơi"+
+	"Nốt"+
+	"Năm nốt"+
+	"Đô rê mi son la. Luôn nghe dễ thương."+
+	"Bảy nốt"+
+	"Các phím trắng, đô rê mi fa son la si."+
+	"Đủ mười hai"+
+	"Phím trắng và phím đen, mọi nốt."+
+	"Pháo hoa"+
+	"Một chùm pháo hoa rực rỡ cho mỗi nốt. Không cần nếu bé không nhìn thấy màn hình."+
+	"Khóa cả chuột và bàn di chuột"+
+	"Nên dùng trên máy tính xách tay. Khi đó dừng bằng cách gõ quitpiano."+
+	"Đã kết nối bàn phím"+
+	"Bé chơi trên bàn phím, mỗi phím một nốt, như trên máy tính."+
+	"Không có bàn phím"+
+	"Bé chạm vào các phím lớn nhiều màu trên màn hình. Kết nối bàn phím để chơi trên đó."+
+	"Mash Piano cũng miễn phí cho Mac và Windows, nơi bé chơi trên bàn phím máy tính thật và toàn bộ bàn phím được khóa."+
+	"Tải về cho Mac và Windows",
+	[]uint16{
+		10,
+		10,
+		368,
+		119,
+		45,
+		153,
+		52,
+		28,
+		20,
+		12,
+		87,
+		10,
+		125,
+		55,
+		257,
+		229,
+		87,
+		62,
+		168,
+		209,
+		170,
+		18,
+		5,
+		10,
+		45,
+		11,
+		45,
+		17,
+		42,
+		9,
+		104,
+		38,
+		82,
+		27,
+		75,
+		21,
+		110,
+		141,
+		30,
+	})
+
 // textsZhHans are the messages without arguments in zh-Hans.
 var textsZhHans = i18n.NewTexts(""+
 	"Mash Piano"+
@@ -315,14 +2836,143 @@ var textsZhHans = i18n.NewTexts(""+
 		26,
 	})
 
+// textsZhHant are the messages without arguments in zh-Hant.
+var textsZhHant = i18n.NewTexts(""+
+	"Mash Piano"+
+	"寶寶鋼琴"+
+	"開始後會全螢幕，並接管整個鍵盤：寶寶隨便按都只會彈出好聽的鋼琴聲，不會退出、切換程式或觸發系統快捷鍵。每個鍵都有自己的音，左下最低，右上最高。"+
+	"家長退出：用滑鼠在螢幕右上角按住不放 3 秒，或在鍵盤上輸入 quitpiano。"+
+	"家長退出：在鍵盤上輸入 quitpiano。"+
+	"鎖住鍵盤需要「輔助使用」權限。請打開設定，開啟「Mash Piano」的開關，開啟後這裡會自動變綠。"+
+	"已取得權限，可以鎖住整個鍵盤。"+
+	"打開「輔助使用」設定"+
+	"正在載入鋼琴……"+
+	"音量"+
+	"開始後鍵盤上的音量鍵會被鎖住，請先在這裡調好。"+
+	"試聽"+
+	"目前的輸出裝置無法讀取音量（如 HDMI、部分外接喇叭），請自行確認音量不要太大。"+
+	"開始彈琴（全螢幕鎖定鍵盤）"+
+	"有程式開啟了「安全鍵盤輸入」（如終端機的「安全鍵盤輸入」、正在輸入的密碼欄），這時任何程式都鎖不住鍵盤。請關閉它（或重新開機）後再開始。"+
+	"無法鎖定鍵盤。請確認已在 系統設定 › 隱私權與安全性 › 輔助使用 中開啟「Mash Piano」；更新版本後，請先刪除舊項目（−）再重新加入。"+
+	"Ctrl+Alt+Del 任何程式都擋不住；Win+L 在彈琴時會被停用。"+
+	"家長：在右上角按住 3 秒退出"+
+	"點一下螢幕，或按一下接上的鍵盤，都會彈出一個輕柔的鋼琴音，所有的音都在同一個音階裡，怎麼彈都好聽。"+
+	"想讓寶寶出不去，請開啟「引導使用模式」：設定 › 輔助使用 › 引導使用模式，然後在彈琴時連按三下側邊按鈕。"+
+	"想讓寶寶出不去，請固定應用程式：設定 › 安全性 › 應用程式固定，然後在最近使用的應用程式中固定「Mash Piano」。"+
+	"開始彈琴"+
+	"音階"+
+	"五聲音階"+
+	"do re mi sol la，怎麼按都好聽。"+
+	"七聲音階"+
+	"鋼琴白鍵的 do re mi fa sol la si。"+
+	"全部的音"+
+	"黑鍵白鍵都有，12 個音全用上。"+
+	"彩色煙火"+
+	"每個音放一朵煙火。寶寶看不到螢幕的話不用開。"+
+	"同時鎖住滑鼠和觸控板"+
+	"筆電建議開啟。開啟後只能輸入 quitpiano 退出。"+
+	"已連接鍵盤"+
+	"寶寶直接彈鍵盤，每個鍵一個音，跟電腦上一樣。"+
+	"沒有連接鍵盤"+
+	"寶寶點螢幕上的彩色大按鍵。接上鍵盤就改成彈鍵盤。"+
+	"Mash Piano 也有免費的 Mac 和 Windows 版：寶寶直接拍電腦鍵盤，整個鍵盤都會被鎖住。"+
+	"下載 Mac 和 Windows 版",
+	[]uint16{
+		10,
+		12,
+		213,
+		97,
+		46,
+		130,
+		45,
+		30,
+		24,
+		6,
+		69,
+		6,
+		113,
+		39,
+		204,
+		187,
+		73,
+		39,
+		147,
+		154,
+		158,
+		12,
+		6,
+		12,
+		39,
+		12,
+		40,
+		12,
+		42,
+		12,
+		66,
+		30,
+		62,
+		15,
+		66,
+		18,
+		72,
+		109,
+		26,
+	})
+
 // texts returns the messages without arguments in lang, nil for a
 // language the catalog lacks.
 func texts(lang string) *i18n.Texts {
 	switch lang {
 	case "en":
 		return textsEn
+	case "ar":
+		return textsAr
+	case "da":
+		return textsDa
+	case "de":
+		return textsDe
+	case "es":
+		return textsEs
+	case "fi":
+		return textsFi
+	case "fr":
+		return textsFr
+	case "he":
+		return textsHe
+	case "hi":
+		return textsHi
+	case "id":
+		return textsId
+	case "it":
+		return textsIt
+	case "ja":
+		return textsJa
+	case "ko":
+		return textsKo
+	case "nb":
+		return textsNb
+	case "nl":
+		return textsNl
+	case "pl":
+		return textsPl
+	case "pt-BR":
+		return textsPtBR
+	case "ru":
+		return textsRu
+	case "sv":
+		return textsSv
+	case "th":
+		return textsTh
+	case "tr":
+		return textsTr
+	case "uk":
+		return textsUk
+	case "vi":
+		return textsVi
 	case "zh-Hans":
 		return textsZhHans
+	case "zh-Hant":
+		return textsZhHant
 	}
 	return nil
 }
@@ -472,8 +3122,54 @@ func (msgs Messages) SoundFailed(error_ string) string {
 		switch lang {
 		case "", "en":
 			return "Sound could not start: " + msgs.arg(error_) + ". Check the sound output, then open the piano again."
+		case "ar":
+			return "تعذّر تشغيل الصوت: " + error_ + ". تحقّق من مخرج الصوت، ثم افتح البيانو مرة أخرى."
+		case "da":
+			return "Lyden kunne ikke starte: " + error_ + ". Tjek lydudgangen, og åbn klaveret igen."
+		case "de":
+			return "Der Ton konnte nicht starten: " + error_ + ". Prüfe die Tonausgabe und öffne das Klavier dann erneut."
+		case "es":
+			return "No se pudo iniciar el sonido: " + error_ + ". Revisa la salida de sonido y vuelve a abrir el piano."
+		case "fi":
+			return "Ääntä ei voitu käynnistää: " + error_ + ". Tarkista äänen ulostulo ja avaa piano uudelleen."
+		case "fr":
+			return "Impossible de démarrer le son : " + error_ + ". Vérifiez la sortie audio, puis rouvrez le piano."
+		case "he":
+			return "לא ניתן היה להפעיל את הצליל: " + error_ + ". בדקו את יציאת השמע ופתחו שוב את הפסנתר."
+		case "hi":
+			return "आवाज़ शुरू नहीं हो सकी: " + error_ + "। साउंड आउटपुट जाँचें, फिर पियानो दोबारा खोलें।"
+		case "id":
+			return "Suara tidak dapat dimulai: " + error_ + ". Periksa output suara, lalu buka piano lagi."
+		case "it":
+			return "Impossibile avviare l’audio: " + error_ + ". Controlla l’uscita audio, poi riapri il piano."
+		case "ja":
+			return "音を出せませんでした：" + error_ + "。サウンド出力を確認してから、もう一度開いてください。"
+		case "ko":
+			return "소리를 시작할 수 없습니다: " + error_ + ". 사운드 출력을 확인한 뒤 다시 열어 주세요."
+		case "nb":
+			return "Lyden kunne ikke starte: " + error_ + ". Sjekk lydutgangen, og åpne pianoet igjen."
+		case "nl":
+			return "Het geluid kon niet starten: " + error_ + ". Controleer de geluidsuitvoer en open de piano opnieuw."
+		case "pl":
+			return "Nie udało się uruchomić dźwięku: " + error_ + ". Sprawdź wyjście dźwięku i otwórz pianino ponownie."
+		case "pt-BR":
+			return "Não foi possível iniciar o som: " + error_ + ". Verifique a saída de som e abra o piano de novo."
+		case "ru":
+			return "Не удалось включить звук: " + error_ + ". Проверьте вывод звука и снова откройте пианино."
+		case "sv":
+			return "Ljudet kunde inte starta: " + error_ + ". Kontrollera ljudutgången och öppna pianot igen."
+		case "th":
+			return "ไม่สามารถเริ่มเสียงได้: " + error_ + " โปรดตรวจสอบอุปกรณ์เสียงออก แล้วเปิดเปียโนอีกครั้ง"
+		case "tr":
+			return "Ses başlatılamadı: " + error_ + ". Ses çıkışını kontrol edin, ardından piyanoyu yeniden açın."
+		case "uk":
+			return "Не вдалося ввімкнути звук: " + error_ + ". Перевірте виведення звуку й знову відкрийте піаніно."
+		case "vi":
+			return "Không thể bật âm thanh: " + error_ + ". Hãy kiểm tra đầu ra âm thanh rồi mở lại đàn."
 		case "zh-Hans":
 			return "声音无法启动：" + error_ + "。请检查声音输出设备后重新打开程序。"
+		case "zh-Hant":
+			return "聲音無法啟動：" + error_ + "。請檢查聲音輸出裝置後重新打開程式。"
 		}
 	}
 }
@@ -517,8 +3213,54 @@ func (msgs Messages) SystemVolumeOver(percent int, cap_ int) string {
 		switch lang {
 		case "", "en":
 			return "The computer's volume is " + msgs.arg(i18n.FormatNumber("en", float64(percent))) + "%. It drops to " + msgs.arg(i18n.FormatNumber("en", float64(cap_))) + "% when the baby starts, to protect their ears."
+		case "ar":
+			return "مستوى صوت الكمبيوتر " + i18n.FormatNumber("ar", float64(percent)) + "%. سينخفض إلى " + i18n.FormatNumber("ar", float64(cap_)) + "% عندما يبدأ الطفل، لحماية أذنيه."
+		case "da":
+			return "Computerens lydstyrke er " + i18n.FormatNumber("da", float64(percent)) + " %. Den falder til " + i18n.FormatNumber("da", float64(cap_)) + " %, når babyen begynder, for at skåne ørerne."
+		case "de":
+			return "Die Lautstärke des Computers ist " + i18n.FormatNumber("de", float64(percent)) + " %. Zum Schutz der Ohren sinkt sie auf " + i18n.FormatNumber("de", float64(cap_)) + " %, wenn das Baby loslegt."
+		case "es":
+			return "El volumen del ordenador está al " + i18n.FormatNumber("es", float64(percent)) + " %. Bajará al " + i18n.FormatNumber("es", float64(cap_)) + " % cuando empiece el bebé, para cuidar sus oídos."
+		case "fi":
+			return "Tietokoneen äänenvoimakkuus on " + i18n.FormatNumber("fi", float64(percent)) + " %. Se laskee " + i18n.FormatNumber("fi", float64(cap_)) + " prosenttiin, kun vauva aloittaa, korvien suojaamiseksi."
+		case "fr":
+			return "Le volume de l’ordinateur est à " + i18n.FormatNumber("fr", float64(percent)) + " %. Il descend à " + i18n.FormatNumber("fr", float64(cap_)) + " % quand bébé commence, pour protéger ses oreilles."
+		case "he":
+			return "עוצמת הקול של המחשב היא " + i18n.FormatNumber("he", float64(percent)) + "%. היא תרד ל-" + i18n.FormatNumber("he", float64(cap_)) + "% כשהתינוק יתחיל, כדי להגן על האוזניים."
+		case "hi":
+			return "कंप्यूटर की आवाज़ " + i18n.FormatNumber("hi", float64(percent)) + "% है। बच्चे के कानों की सुरक्षा के लिए, बच्चे के शुरू करते ही यह " + i18n.FormatNumber("hi", float64(cap_)) + "% पर आ जाएगी।"
+		case "id":
+			return "Volume komputer " + i18n.FormatNumber("id", float64(percent)) + "%. Volume akan turun ke " + i18n.FormatNumber("id", float64(cap_)) + "% saat bayi mulai, untuk melindungi telinganya."
+		case "it":
+			return "Il volume del computer è al " + i18n.FormatNumber("it", float64(percent)) + "%. Scenderà al " + i18n.FormatNumber("it", float64(cap_)) + "% quando il bambino inizia, per proteggere le sue orecchie."
+		case "ja":
+			return "コンピュータの音量は " + i18n.FormatNumber("ja", float64(percent)) + "% です。赤ちゃんの耳を守るため、始めると " + i18n.FormatNumber("ja", float64(cap_)) + "% に下がります。"
+		case "ko":
+			return "컴퓨터 음량은 " + i18n.FormatNumber("ko", float64(percent)) + "%입니다. 아기 귀를 보호하기 위해 시작하면 " + i18n.FormatNumber("ko", float64(cap_)) + "%로 낮아집니다."
+		case "nb":
+			return "Datamaskinens volum er " + i18n.FormatNumber("nb", float64(percent)) + " %. Det senkes til " + i18n.FormatNumber("nb", float64(cap_)) + " % når babyen begynner, for å beskytte ørene."
+		case "nl":
+			return "Het volume van de computer is " + i18n.FormatNumber("nl", float64(percent)) + "%. Het gaat naar " + i18n.FormatNumber("nl", float64(cap_)) + "% als de baby begint, om de oortjes te beschermen."
+		case "pl":
+			return "Głośność komputera wynosi " + i18n.FormatNumber("pl", float64(percent)) + "%. Gdy maluch zacznie, spadnie do " + i18n.FormatNumber("pl", float64(cap_)) + "%, by chronić jego uszy."
+		case "pt-BR":
+			return "O volume do computador está em " + i18n.FormatNumber("pt-BR", float64(percent)) + "%. Ele cai para " + i18n.FormatNumber("pt-BR", float64(cap_)) + "% quando o bebê começa, para proteger os ouvidos."
+		case "ru":
+			return "Громкость компьютера — " + i18n.FormatNumber("ru", float64(percent)) + "%. Когда малыш начнёт, она снизится до " + i18n.FormatNumber("ru", float64(cap_)) + "%, чтобы беречь его уши."
+		case "sv":
+			return "Datorns volym är " + i18n.FormatNumber("sv", float64(percent)) + " %. Den sänks till " + i18n.FormatNumber("sv", float64(cap_)) + " % när bebisen börjar, för att skydda öronen."
+		case "th":
+			return "ระดับเสียงคอมพิวเตอร์อยู่ที่ " + i18n.FormatNumber("th", float64(percent)) + "% และจะลดลงเหลือ " + i18n.FormatNumber("th", float64(cap_)) + "% เมื่อลูกน้อยเริ่มเล่น เพื่อถนอมหู"
+		case "tr":
+			return "Bilgisayarın ses düzeyi %" + i18n.FormatNumber("tr", float64(percent)) + ". Bebek başlayınca kulaklarını korumak için %" + i18n.FormatNumber("tr", float64(cap_)) + " düzeyine iner."
+		case "uk":
+			return "Гучність комп’ютера — " + i18n.FormatNumber("uk", float64(percent)) + "%. Коли маля почне, вона знизиться до " + i18n.FormatNumber("uk", float64(cap_)) + "%, щоб берегти вушка."
+		case "vi":
+			return "Âm lượng máy tính là " + i18n.FormatNumber("vi", float64(percent)) + "%. Âm lượng sẽ giảm xuống " + i18n.FormatNumber("vi", float64(cap_)) + "% khi bé bắt đầu, để bảo vệ tai bé."
 		case "zh-Hans":
 			return "电脑音量现在是 " + i18n.FormatNumber("zh-Hans", float64(percent)) + "%，开始弹琴时会自动降到 " + i18n.FormatNumber("zh-Hans", float64(cap_)) + "%，保护宝宝耳朵。"
+		case "zh-Hant":
+			return "電腦音量現在是 " + i18n.FormatNumber("zh-Hant", float64(percent)) + "%，開始彈琴時會自動降到 " + i18n.FormatNumber("zh-Hant", float64(cap_)) + "%，保護寶寶的耳朵。"
 		}
 	}
 }
@@ -541,8 +3283,54 @@ func (msgs Messages) SystemVolumeOk(percent int, cap_ int) string {
 		switch lang {
 		case "", "en":
 			return "The computer's volume is " + msgs.arg(i18n.FormatNumber("en", float64(percent))) + "%, and stays at " + msgs.arg(i18n.FormatNumber("en", float64(cap_))) + "% or below while the baby plays."
+		case "ar":
+			return "مستوى صوت الكمبيوتر " + i18n.FormatNumber("ar", float64(percent)) + "%، ويبقى عند " + i18n.FormatNumber("ar", float64(cap_)) + "% أو أقل أثناء لعب الطفل."
+		case "da":
+			return "Computerens lydstyrke er " + i18n.FormatNumber("da", float64(percent)) + " % og bliver på " + i18n.FormatNumber("da", float64(cap_)) + " % eller lavere, mens babyen spiller."
+		case "de":
+			return "Die Lautstärke des Computers ist " + i18n.FormatNumber("de", float64(percent)) + " % und bleibt beim Spielen bei höchstens " + i18n.FormatNumber("de", float64(cap_)) + " %."
+		case "es":
+			return "El volumen del ordenador está al " + i18n.FormatNumber("es", float64(percent)) + " % y se mantiene en el " + i18n.FormatNumber("es", float64(cap_)) + " % o menos mientras el bebé toca."
+		case "fi":
+			return "Tietokoneen äänenvoimakkuus on " + i18n.FormatNumber("fi", float64(percent)) + " % ja pysyy enintään " + i18n.FormatNumber("fi", float64(cap_)) + " prosentissa vauvan soittaessa."
+		case "fr":
+			return "Le volume de l’ordinateur est à " + i18n.FormatNumber("fr", float64(percent)) + " % et reste à " + i18n.FormatNumber("fr", float64(cap_)) + " % ou moins pendant que bébé joue."
+		case "he":
+			return "עוצמת הקול של המחשב היא " + i18n.FormatNumber("he", float64(percent)) + "%, והיא נשארת על " + i18n.FormatNumber("he", float64(cap_)) + "% או פחות בזמן שהתינוק מנגן."
+		case "hi":
+			return "कंप्यूटर की आवाज़ " + i18n.FormatNumber("hi", float64(percent)) + "% है, और बच्चे के खेलते समय " + i18n.FormatNumber("hi", float64(cap_)) + "% या उससे कम रहती है।"
+		case "id":
+			return "Volume komputer " + i18n.FormatNumber("id", float64(percent)) + "% dan tetap di " + i18n.FormatNumber("id", float64(cap_)) + "% atau kurang selama bayi bermain."
+		case "it":
+			return "Il volume del computer è al " + i18n.FormatNumber("it", float64(percent)) + "% e resta al " + i18n.FormatNumber("it", float64(cap_)) + "% o meno mentre il bambino suona."
+		case "ja":
+			return "コンピュータの音量は " + i18n.FormatNumber("ja", float64(percent)) + "% で、遊んでいる間は " + i18n.FormatNumber("ja", float64(cap_)) + "% 以下に保たれます。"
+		case "ko":
+			return "컴퓨터 음량은 " + i18n.FormatNumber("ko", float64(percent)) + "%이며, 노는 동안 " + i18n.FormatNumber("ko", float64(cap_)) + "% 이하로 유지됩니다."
+		case "nb":
+			return "Datamaskinens volum er " + i18n.FormatNumber("nb", float64(percent)) + " % og holder seg på " + i18n.FormatNumber("nb", float64(cap_)) + " % eller lavere mens babyen spiller."
+		case "nl":
+			return "Het volume van de computer is " + i18n.FormatNumber("nl", float64(percent)) + "% en blijft op " + i18n.FormatNumber("nl", float64(cap_)) + "% of lager terwijl de baby speelt."
+		case "pl":
+			return "Głośność komputera wynosi " + i18n.FormatNumber("pl", float64(percent)) + "% i podczas gry nie przekroczy " + i18n.FormatNumber("pl", float64(cap_)) + "%."
+		case "pt-BR":
+			return "O volume do computador está em " + i18n.FormatNumber("pt-BR", float64(percent)) + "% e fica em " + i18n.FormatNumber("pt-BR", float64(cap_)) + "% ou menos enquanto o bebê toca."
+		case "ru":
+			return "Громкость компьютера — " + i18n.FormatNumber("ru", float64(percent)) + "%, и пока малыш играет, она не превысит " + i18n.FormatNumber("ru", float64(cap_)) + "%."
+		case "sv":
+			return "Datorns volym är " + i18n.FormatNumber("sv", float64(percent)) + " % och håller sig på " + i18n.FormatNumber("sv", float64(cap_)) + " % eller lägre medan bebisen spelar."
+		case "th":
+			return "ระดับเสียงคอมพิวเตอร์อยู่ที่ " + i18n.FormatNumber("th", float64(percent)) + "% และจะไม่เกิน " + i18n.FormatNumber("th", float64(cap_)) + "% ขณะลูกน้อยเล่น"
+		case "tr":
+			return "Bilgisayarın ses düzeyi %" + i18n.FormatNumber("tr", float64(percent)) + " ve bebek çalarken %" + i18n.FormatNumber("tr", float64(cap_)) + " veya altında kalır."
+		case "uk":
+			return "Гучність комп’ютера — " + i18n.FormatNumber("uk", float64(percent)) + "%, і поки маля грає, вона не перевищить " + i18n.FormatNumber("uk", float64(cap_)) + "%."
+		case "vi":
+			return "Âm lượng máy tính là " + i18n.FormatNumber("vi", float64(percent)) + "% và giữ ở mức " + i18n.FormatNumber("vi", float64(cap_)) + "% trở xuống khi bé chơi."
 		case "zh-Hans":
 			return "电脑音量：" + i18n.FormatNumber("zh-Hans", float64(percent)) + "%（弹琴时不会超过 " + i18n.FormatNumber("zh-Hans", float64(cap_)) + "%）。"
+		case "zh-Hant":
+			return "電腦音量：" + i18n.FormatNumber("zh-Hant", float64(percent)) + "%（彈琴時不會超過 " + i18n.FormatNumber("zh-Hant", float64(cap_)) + "%）。"
 		}
 	}
 }
