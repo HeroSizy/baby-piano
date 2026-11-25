@@ -20,8 +20,8 @@ var errSecureInput = errors.New("secure keyboard entry is on")
 // setupScreen is where parents set the volume and start the piano.
 func (a *app) setupScreen(cx *core.Scope) core.Node {
 	cx.SetTheme(setupTheme())
-	cx.SetSubtreeAppearance(core.AppearanceLight)
 	colors := ui.ColorsOf(cx)
+	tn := func() *tones { return tonesOf(cx) }
 	computer := a.kiosk.Supported()
 	startErr := core.NewSignal[error](cx, nil)
 	permission := core.NewSignal(cx, core.PermissionUnavailable)
@@ -55,7 +55,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 		}}
 	}
 	note := func(fn func() string) core.Node {
-		return text(fn, core.Style{FontSize: 14, LineHeight: 20}, ui.Fixed(muted))
+		return text(fn, core.Style{FontSize: 14, LineHeight: 20}, func() core.Color { return tn().muted })
 	}
 	shown := func(when func() bool, node core.Node) core.Node {
 		return core.Show{When: when, Then: func(*core.Scope) core.Node { return node }}
@@ -93,7 +93,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 			case needsPermission():
 				c = colors.Warn()
 			case a.piano.Get() == nil:
-				c = muted
+				c = tn().muted
 			}
 			return core.Style{Direction: core.Row, Gap: 10, AlignItems: core.AlignStart, Padding: core.Symmetric(12, 16),
 				CornerRadius: 16, Background: ui.Alpha(c, 0.12)}
@@ -108,7 +108,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 				case needsPermission():
 					s.Color = colors.Warn()
 				case a.piano.Get() == nil:
-					s.Color = muted
+					s.Color = tn().muted
 				default:
 					s.Color = colors.Up()
 				}
@@ -119,7 +119,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 	})
 
 	heading := func(s string) core.Node {
-		return core.Text{Content: s, Style: ui.TypeBody.Merge(core.Style{FontSize: 17, LineHeight: 22, FontWeight: ui.Bold, Color: ink})}
+		return core.Text{Content: s, StyleFunc: inked(cx, core.Style{FontSize: 17, LineHeight: 22, FontWeight: ui.Bold})}
 	}
 	volume := []core.Node{
 		heading(locales.Volume(cx)),
@@ -150,9 +150,11 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 		intro = locales.DesktopIntro(cx)
 	}
 	header := core.View{Style: core.Style{AlignItems: core.AlignCenter, Gap: 14, Padding: core.Edges{Bottom: 4}}, Children: []core.Node{
-		logo(),
-		core.Text{Content: locales.Title(cx), Style: ui.TypeHeading.Merge(core.Style{FontSize: 34, LineHeight: 40, FontWeight: ui.Bold, Color: ink, TextAlign: core.TextAlignCenter})},
-		core.Text{Content: intro, Style: ui.TypeBody.Merge(core.Style{FontSize: 16, LineHeight: 24, Color: muted, TextAlign: core.TextAlignCenter, MaxWidth: core.Pt(480)})},
+		logo(cx),
+		core.Text{Content: locales.Title(cx), StyleFunc: func() core.Style {
+			return ui.TypeHeading.Merge(core.Style{FontSize: 34, LineHeight: 40, FontWeight: ui.Bold, Color: tn().ink, TextAlign: core.TextAlignCenter})
+		}},
+		core.Text{Content: intro, StyleFunc: hushed(cx, core.Style{FontSize: 16, LineHeight: 24, TextAlign: core.TextAlignCenter, MaxWidth: core.Pt(480)})},
 	}}
 
 	var card []core.Node
@@ -174,23 +176,23 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 			}),
 		)
 	}
-	card = append(card, divider(), heading(locales.Scale(cx)), scaleChoice(cx, a.settings.scale), divider())
+	card = append(card, divider(cx), heading(locales.Scale(cx)), scaleChoice(cx, a.settings.scale), divider(cx))
 	if computer {
-		card = append(card, toggleRow("🖱️", locales.LockMouseTitle(cx), locales.LockMouseNote(cx), "lockMouse", a.settings.lockMouse))
+		card = append(card, toggleRow(cx, "🖱️", locales.LockMouseTitle(cx), locales.LockMouseNote(cx), "lockMouse", a.settings.lockMouse))
 	}
-	card = append(card, toggleRow("🎆", locales.VisualsTitle(cx), locales.VisualsNote(cx), "visuals", a.settings.visuals))
+	card = append(card, toggleRow(cx, "🎆", locales.VisualsTitle(cx), locales.VisualsNote(cx), "visuals", a.settings.visuals))
 
 	// tips are how parents keep the baby in and how they stop.
 	var tips []core.Node
 	if computer {
-		tips = append(tips, tip("👋", func() string {
+		tips = append(tips, tip(cx, "👋", func() string {
 			if a.settings.lockMouse.Get() {
 				return locales.ExitHowTyped(cx)
 			}
 			return locales.ExitHow(cx)
 		}))
 		if cx.Env().OS() == core.OSWindows {
-			tips = append(tips, tip("⌨️", func() string { return locales.WindowsLimits(cx) }))
+			tips = append(tips, tip(cx, "⌨️", func() string { return locales.WindowsLimits(cx) }))
 		}
 	} else {
 		lock := locales.TouchLockAndroid(cx)
@@ -198,8 +200,8 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 			lock = locales.TouchLockIOS(cx)
 		}
 		tips = append(tips,
-			tip("🔒", func() string { return lock }),
-			tip("👋", func() string { return locales.CornerHint(cx) }),
+			tip(cx, "🔒", func() string { return lock }),
+			tip(cx, "👋", func() string { return locales.CornerHint(cx) }),
 			desktopTip(cx),
 		)
 	}
@@ -212,9 +214,10 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 		Style: core.Style{CornerRadius: 999, AlignSelf: core.AlignCenter}, OnPress: func() {
 			desktop.GuidePermission(cx, core.PermissionAccessibility, desktop.GuideOptions{}, permission.Set)
 		}})
-	settingsCard := core.View{Style: core.Style{Gap: 16, Padding: core.All(24), CornerRadius: 28, Background: core.RGB(0xffffff),
-		Shadows: []core.BoxShadow{{Offset: core.Point{Y: 12}, Blur: 32, Color: core.RGBA(0x8a4b2a, 0.14)}}},
-		Children: card}
+	settingsCard := core.View{StyleFunc: func() core.Style {
+		return core.Style{Gap: 16, Padding: core.All(24), CornerRadius: 28, Background: tn().card,
+			Shadows: []core.BoxShadow{{Offset: core.Point{Y: 12}, Blur: 32, Color: tn().cardShadow}}}
+	}, Children: card}
 	tipList := core.View{Style: core.Style{Gap: 10}, Children: tips}
 	kb := keyboardStatus(cx, computer, a.keyboard.Get)
 	start := startButton(startText,
@@ -253,12 +256,15 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 		}}
 
 	return core.View{
-		// The page is the icon's warm paper whatever the system's
-		// appearance: dark gray on black is hard to read at a glance.
+		// The page is the icon's warm paper in light appearance and a
+		// plum night in dark, following the system's as it changes.
 		// It takes the window's height and no more, so the settings scroll
 		// inside it when they are taller.
-		Style: core.Style{FlexGrow: 1, FlexShrink: 1, MinHeight: core.Pt(0), Overflow: core.Hidden,
-			Background: paperTop, Gradients: []core.Gradient{core.LinearGradient(180, paperTop, paperBottom)}},
+		StyleFunc: func() core.Style {
+			t := tn()
+			return core.Style{FlexGrow: 1, FlexShrink: 1, MinHeight: core.Pt(0), Overflow: core.Hidden,
+				Background: t.paperTop, Gradients: []core.Gradient{core.LinearGradient(180, t.paperTop, t.paperBottom)}}
+		},
 		OnLayout: func(b core.Bounds) { animateTurn(cx, page.GetUntracked(), b.Size); page.Set(b.Size) },
 		Children: []core.Node{ui.ScrollView{
 			EdgeColor: ui.Fixed(core.RGBA(0xffffff, 0)),
@@ -278,43 +284,108 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 }
 
 // The setup's colors, from the app's icon: warm paper, dark plum ink and
-// the keys' rainbow.
+// the keys' rainbow in light appearance; in dark, the ink becomes the
+// night, a deep plum, and the paper the text.
 var (
-	paperTop    = core.RGB(0xfff4dc)
-	paperBottom = core.RGB(0xffd9b8)
-	ink         = core.RGB(0x3b3355)
-	muted       = core.RGB(0x6e6585)
-	coral       = core.RGB(0xf0645a)
-	keyColors   = []core.Color{core.RGB(0xff8a80), core.RGB(0xffb74d), core.RGB(0xffe066), core.RGB(0x7edc9a), core.RGB(0x6ec6ff)}
+	coral     = core.RGB(0xf0645a)
+	keyColors = []core.Color{core.RGB(0xff8a80), core.RGB(0xffb74d), core.RGB(0xffe066), core.RGB(0x7edc9a), core.RGB(0x6ec6ff)}
 )
 
-// setupTheme is the default theme, light, with the icon's ink and a coral
-// accent, so the controls match the page.
+// tones are the setup's colors in one appearance.
+type tones struct {
+	paperTop, paperBottom core.Color // the page, top to bottom
+	card, cardShadow      core.Color // the settings card
+	ink, muted            core.Color // text
+	panel                 core.Color // the soft boxes on the page: tips, the keyboard, the logo
+	tile, tileEdge        core.Color // a scale not chosen
+	chosen                core.Color // the chosen scale's tint
+	chip                  core.Color // the square behind a setting's emoji
+	line, track, knob     core.Color // dividers; a switch's track when off and its knob
+	green                 core.Color // a keyboard attached
+}
+
+var (
+	lightTones = tones{
+		paperTop: core.RGB(0xfff4dc), paperBottom: core.RGB(0xffd9b8),
+		card: core.RGB(0xffffff), cardShadow: core.RGBA(0x8a4b2a, 0.14),
+		ink: core.RGB(0x3b3355), muted: core.RGB(0x6e6585),
+		panel: core.RGBA(0xffffff, 0.55),
+		tile:  core.RGB(0xfffaf4), tileEdge: core.RGBA(0x3b3355, 0.08), chosen: core.RGBA(0xf0645a, 0.08),
+		chip: core.RGB(0xfff1e4),
+		line: core.RGBA(0x3b3355, 0.08), track: core.RGBA(0x3b3355, 0.15), knob: core.RGB(0xffffff),
+		green: core.RGB(0x2f8f5f),
+	}
+	darkTones = tones{
+		paperTop: core.RGB(0x2e2540), paperBottom: core.RGB(0x1c1628),
+		card: core.RGB(0x352c48), cardShadow: core.RGBA(0x000000, 0.35),
+		ink: core.RGB(0xfbf1e4), muted: core.RGB(0xc0b6d2),
+		panel: core.RGBA(0xffffff, 0.07),
+		tile:  core.RGB(0x3e3453), tileEdge: core.RGBA(0xffffff, 0.08), chosen: core.RGBA(0xf0645a, 0.18),
+		chip: core.RGB(0x4a3e60),
+		line: core.RGBA(0xffffff, 0.10), track: core.RGBA(0xffffff, 0.22), knob: core.RGB(0xffffff),
+		green: core.RGB(0x74d6a2),
+	}
+)
+
+// tonesOf is the tones of the appearance cx shows; a binding that reads
+// it runs again when the system turns light or dark.
+func tonesOf(cx *core.Scope) *tones {
+	if cx.Dark() {
+		return &darkTones
+	}
+	return &lightTones
+}
+
+// inked and hushed are text styles in the ink and the muted ink of the
+// appearance cx shows.
+func inked(cx *core.Scope, s core.Style) func() core.Style {
+	return func() core.Style { s := s; s.Color = tonesOf(cx).ink; return ui.TypeBody.Merge(s) }
+}
+
+func hushed(cx *core.Scope, s core.Style) func() core.Style {
+	return func() core.Style { s := s; s.Color = tonesOf(cx).muted; return ui.TypeBody.Merge(s) }
+}
+
+// setupTheme is the default theme with the icon's ink and a coral accent,
+// light and dark, so the controls match the page.
 func setupTheme() *core.Theme {
 	t := core.DefaultTheme().Clone()
-	p := &t.Light
-	p.Background, p.Surface = core.RGB(0xffffff), core.RGB(0xffffff)
-	p.Text, p.TextMuted = ink, muted
-	p.Border = ink.Faded(0.18)
-	p.Accent, p.AccentHover, p.AccentPressed = coral, core.RGB(0xe5574d), core.RGB(0xd44b42)
-	p.Selection, p.Focus = core.RGBA(0xf0645a, 0.22), core.RGBA(0xf0645a, 0.55)
-	p.Success, p.Warning = core.RGB(0x2f8f5f), core.RGB(0xb45309)
-	p.SetColor("accentFill", coral)
-	p.SetColor("fieldBorder", p.Border)
-	p.SetColor("track", ink.Faded(0.15))
-	t.Dark = t.Light
+	for _, x := range []struct {
+		p    *core.Palette
+		tn   tones
+		dark bool
+	}{{&t.Light, lightTones, false}, {&t.Dark, darkTones, true}} {
+		p, tn := x.p, x.tn
+		p.Background, p.Surface = tn.card, tn.card
+		p.Text, p.TextMuted = tn.ink, tn.muted
+		p.Border = tn.ink.Faded(0.18)
+		p.SurfaceHover, p.SurfacePressed = tn.ink.Faded(0.08), tn.ink.Faded(0.14)
+		p.Accent, p.AccentHover, p.AccentPressed = coral, core.RGB(0xe5574d), core.RGB(0xd44b42)
+		p.Selection, p.Focus = core.RGBA(0xf0645a, 0.22), core.RGBA(0xf0645a, 0.55)
+		p.Success, p.Warning = tn.green, core.RGB(0xb45309)
+		if x.dark {
+			p.AccentHover, p.AccentPressed = core.RGB(0xf47a70), core.RGB(0xe5574d)
+			p.Warning, p.Danger = core.RGB(0xf5b84f), core.RGB(0xff8f86)
+			p.Scrollbar = tn.ink.Faded(0.35)
+		}
+		p.SetColor("accentFill", coral)
+		p.SetColor("fieldBorder", p.Border)
+		p.SetColor("track", tn.track)
+		p.SetColor("knob", tn.knob)
+	}
 	return t
 }
 
 // logo is the icon's five colored keys, small.
-func logo() core.Node {
+func logo(cx *core.Scope) core.Node {
 	var keys []core.Node
 	for _, c := range keyColors {
 		keys = append(keys, core.View{Style: core.Style{Width: core.Pt(18), Height: core.Pt(56), CornerRadius: 7, Background: c,
 			Gradients: []core.Gradient{core.LinearGradient(180, core.RGBA(0xffffff, 0.35), core.RGBA(0xffffff, 0), core.RGBA(0x000000, 0.08))}}})
 	}
-	return core.View{Style: core.Style{Direction: core.Row, Gap: 5, Padding: core.All(12), CornerRadius: 24, Background: core.RGBA(0xffffff, 0.6)},
-		Children: keys}
+	return core.View{StyleFunc: func() core.Style {
+		return core.Style{Direction: core.Row, Gap: 5, Padding: core.All(12), CornerRadius: 24, Background: tonesOf(cx).panel}
+	}, Children: keys}
 }
 
 // scaleChoice is three tiles, one per scale, each with a row of colored
@@ -342,19 +413,20 @@ func scaleChoice(cx *core.Scope, scale *core.Persisted[piano.Scale]) core.Node {
 			Role: core.RoleRadio, Selected: chosen, Label: names[s][0], TestID: "scale-" + string(s),
 			OnPress: func(core.PressEvent) { _ = scale.Set(s) },
 			StyleFunc: func() core.Style {
+				t := tonesOf(cx)
 				st := core.Style{FlexGrow: 1, FlexBasis: core.Pt(0), MinWidth: core.Pt(0), Gap: 8, Padding: core.All(12), CornerRadius: 18,
-					BorderWidth: 2, BorderColor: ink.Faded(0.08), Background: core.RGB(0xfffaf4),
+					BorderWidth: 2, BorderColor: t.tileEdge, Background: t.tile,
 					Active: &core.Style{Opacity: core.Alpha(0.8)}}
 				if chosen() {
 					st.BorderColor = coral
-					st.Background = core.RGBA(0xf0645a, 0.08)
+					st.Background = t.chosen
 				}
 				return st
 			},
 			Children: []core.Node{
 				core.View{Style: core.Style{Direction: core.Row, Gap: 2}, Children: bars},
-				core.Text{Content: names[s][0], Style: ui.TypeBody.Merge(core.Style{FontSize: 15, LineHeight: 20, FontWeight: ui.Bold, Color: ink})},
-				core.Text{Content: names[s][1], Style: ui.TypeBody.Merge(core.Style{FontSize: 12, LineHeight: 16, Color: muted})},
+				core.Text{Content: names[s][0], StyleFunc: inked(cx, core.Style{FontSize: 15, LineHeight: 20, FontWeight: ui.Bold})},
+				core.Text{Content: names[s][1], StyleFunc: hushed(cx, core.Style{FontSize: 12, LineHeight: 16})},
 			},
 		})
 	}
@@ -363,24 +435,26 @@ func scaleChoice(cx *core.Scope, scale *core.Persisted[piano.Scale]) core.Node {
 
 // toggleRow is a setting the parents turn on or off: an emoji in a tinted
 // square, a title and what it does, and a switch; the whole row presses.
-func toggleRow(emoji, title, note, id string, on *core.Persisted[bool]) core.Node {
+func toggleRow(cx *core.Scope, emoji, title, note, id string, on *core.Persisted[bool]) core.Node {
 	return base.Button{
 		Role: core.RoleSwitch, Selected: on.Get, Label: title, TestID: id,
 		OnPress: func(core.PressEvent) { _ = on.Set(!on.Get()) },
 		Style: core.Style{Direction: core.Row, AlignItems: core.AlignCenter, Gap: 14, Padding: core.Symmetric(4, 0),
 			Active: &core.Style{Opacity: core.Alpha(0.8)}},
 		Children: []core.Node{
-			core.View{Style: core.Style{Width: core.Pt(44), Height: core.Pt(44), CornerRadius: 14, Background: core.RGB(0xfff1e4),
-				AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter},
+			core.View{StyleFunc: func() core.Style {
+				return core.Style{Width: core.Pt(44), Height: core.Pt(44), CornerRadius: 14, Background: tonesOf(cx).chip,
+					AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter}
+			},
 				Children: []core.Node{core.Text{Content: emoji, Style: ui.TypeBody.Merge(core.Style{FontSize: 22, LineHeight: 26})}}},
 			core.View{Style: core.Style{FlexGrow: 1, FlexShrink: 1, Gap: 2}, Children: []core.Node{
-				core.Text{Content: title, Style: ui.TypeBody.Merge(core.Style{FontSize: 15, LineHeight: 20, FontWeight: ui.Semibold, Color: ink})},
-				core.Text{Content: note, Style: ui.TypeBody.Merge(core.Style{FontSize: 13, LineHeight: 18, Color: muted})},
+				core.Text{Content: title, StyleFunc: inked(cx, core.Style{FontSize: 15, LineHeight: 20, FontWeight: ui.Semibold})},
+				core.Text{Content: note, StyleFunc: hushed(cx, core.Style{FontSize: 13, LineHeight: 18})},
 			}},
 			// The row takes the press; the switch shows the state.
 			core.View{Style: core.Style{Width: core.Pt(50), Height: core.Pt(30), CornerRadius: 15, Padding: core.All(3)},
 				StyleFunc: func() core.Style {
-					st := core.Style{Width: core.Pt(50), Height: core.Pt(30), CornerRadius: 15, Padding: core.All(3), Background: ink.Faded(0.15), AlignItems: core.AlignStart}
+					st := core.Style{Width: core.Pt(50), Height: core.Pt(30), CornerRadius: 15, Padding: core.All(3), Background: tonesOf(cx).track, AlignItems: core.AlignStart}
 					if on.Get() {
 						st.Background, st.AlignItems = coral, core.AlignEnd
 					}
@@ -415,10 +489,11 @@ func keyboardStatus(cx *core.Scope, computer bool, attached func() bool) core.No
 	return core.View{
 		TestID: "keyboard",
 		StyleFunc: func() core.Style {
+			t := tonesOf(cx)
 			st := core.Style{Direction: core.Row, Gap: 14, AlignItems: core.AlignCenter, Padding: core.Symmetric(14, 18),
-				CornerRadius: 18, Background: core.RGBA(0xffffff, 0.55), BorderWidth: 2, BorderColor: core.RGBA(0xffffff, 0)}
+				CornerRadius: 18, Background: t.panel, BorderWidth: 2, BorderColor: core.RGBA(0xffffff, 0)}
 			if on() {
-				st.Background, st.BorderColor = core.RGBA(0x2f8f5f, 0.10), core.RGBA(0x2f8f5f, 0.35)
+				st.Background, st.BorderColor = ui.Alpha(t.green, 0.12), ui.Alpha(t.green, 0.4)
 			}
 			return st
 		},
@@ -436,9 +511,9 @@ func keyboardStatus(cx *core.Scope, computer bool, attached func() bool) core.No
 					}
 					return locales.KeyboardOff(cx)
 				}, StyleFunc: func() core.Style {
-					c := ink
+					c := tonesOf(cx).ink
 					if on() {
-						c = core.RGB(0x2f8f5f)
+						c = tonesOf(cx).green
 					}
 					return ui.TypeBody.Merge(core.Style{FontSize: 15, LineHeight: 20, FontWeight: ui.Bold, Color: c})
 				}},
@@ -447,25 +522,33 @@ func keyboardStatus(cx *core.Scope, computer bool, attached func() bool) core.No
 						return locales.KeyboardOnNote(cx)
 					}
 					return locales.KeyboardOffNote(cx)
-				}, Style: ui.TypeBody.Merge(core.Style{FontSize: 13, LineHeight: 18, Color: muted})},
+				}, StyleFunc: hushed(cx, core.Style{FontSize: 13, LineHeight: 18})},
 			}},
 		},
 	}
 }
 
 // divider is a hairline across the card.
-func divider() core.Node {
-	return core.View{Style: core.Style{Height: core.Pt(1), Background: ink.Faded(0.08)}}
+func divider(cx *core.Scope) core.Node {
+	return core.View{StyleFunc: func() core.Style { return core.Style{Height: core.Pt(1), Background: tonesOf(cx).line} }}
 }
 
 // tip is a line of advice for parents beside an emoji.
-func tip(emoji string, fn func() string) core.Node {
-	return core.View{Style: core.Style{Direction: core.Row, Gap: 12, AlignItems: core.AlignStart, Padding: core.Symmetric(14, 18),
-		CornerRadius: 18, Background: core.RGBA(0xffffff, 0.55)},
+func tip(cx *core.Scope, emoji string, fn func() string) core.Node {
+	return core.View{StyleFunc: panelStyle(cx),
 		Children: []core.Node{
 			core.Text{Content: emoji, Style: ui.TypeBody.Merge(core.Style{FontSize: 18, LineHeight: 22})},
-			core.Text{ContentFunc: fn, Style: ui.TypeBody.Merge(core.Style{FontSize: 15, LineHeight: 22, Color: ink, FlexShrink: 1, FlexGrow: 1})},
+			core.Text{ContentFunc: fn, StyleFunc: inked(cx, core.Style{FontSize: 15, LineHeight: 22, FlexShrink: 1, FlexGrow: 1})},
 		}}
+}
+
+// panelStyle is a tip's box: a soft panel on the page, the emoji beside
+// the words.
+func panelStyle(cx *core.Scope) func() core.Style {
+	return func() core.Style {
+		return core.Style{Direction: core.Row, Gap: 12, AlignItems: core.AlignStart, Padding: core.Symmetric(14, 18),
+			CornerRadius: 18, Background: tonesOf(cx).panel}
+	}
 }
 
 // desktopURL is the piano's homepage, where parents download the Mac and
@@ -476,12 +559,11 @@ const desktopURL = "https://mashpiano.herosizy.dev"
 // computer app, with a link to download it; it sits with the tips on the
 // setup page, away from the baby's keys.
 func desktopTip(cx *core.Scope) core.Node {
-	return core.View{Style: core.Style{Direction: core.Row, Gap: 12, AlignItems: core.AlignStart, Padding: core.Symmetric(14, 18),
-		CornerRadius: 18, Background: core.RGBA(0xffffff, 0.55)},
+	return core.View{StyleFunc: panelStyle(cx),
 		Children: []core.Node{
 			core.Text{Content: "💻", Style: ui.TypeBody.Merge(core.Style{FontSize: 18, LineHeight: 22})},
 			core.View{Style: core.Style{FlexGrow: 1, FlexShrink: 1, Gap: 6}, Children: []core.Node{
-				core.Text{Content: locales.DesktopApp(cx), Style: ui.TypeBody.Merge(core.Style{FontSize: 15, LineHeight: 22, Color: ink})},
+				core.Text{Content: locales.DesktopApp(cx), StyleFunc: inked(cx, core.Style{FontSize: 15, LineHeight: 22})},
 				ui.Link{Text: locales.DesktopAppLink(cx) + " ›", Href: desktopURL, TestID: "desktop",
 					Style: core.Style{FontSize: 15, LineHeight: 22, FontWeight: ui.Semibold}},
 			}},
