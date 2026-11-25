@@ -83,6 +83,48 @@ func TestTryItPlaysAChord(t *testing.T) {
 	}
 }
 
+// TestVolumeSliderSetsHowLoudNotesPlay drags the volume to each end, on a
+// computer and on a phone, and checks Try it plays louder and softer: the
+// slider reaches every note the platform plays (nsgo test -target web runs
+// it in a browser too).
+func TestVolumeSliderSetsHowLoudNotesPlay(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		k    *fakeKiosk
+		opts []nsgotest.Option
+	}{
+		{"computer", &fakeKiosk{supported: true}, []nsgotest.Option{onMac}},
+		{"phone", &fakeKiosk{}, []nsgotest.Option{nsgotest.Size(400, 800)}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			app := start(t, tc.k, tc.opts...)
+			loudest := func() float32 {
+				before := make([]int, len(app.Sounds))
+				for i, s := range app.Sounds {
+					before[i] = len(s.Plays)
+				}
+				app.Press("id:try")
+				app.Advance(time.Second)
+				var v float32
+				for i, s := range app.Sounds {
+					for _, p := range s.Plays[before[i]:] {
+						v = max(v, p.Volume)
+					}
+				}
+				return v
+			}
+			start := loudest()
+			app.Drag("id:volume", core.Point{X: 100})
+			high := loudest()
+			app.Drag("id:volume", core.Point{X: -100})
+			low := loudest()
+			if !(high > start && start > low && low > 0) {
+				t.Errorf("Try it's loudest note: %.3f at first, %.3f at the top, %.3f at the bottom", start, high, low)
+			}
+		})
+	}
+}
+
 func TestComputerLocksAndKeysPlay(t *testing.T) {
 	k := &fakeKiosk{supported: true, volume: 0.3}
 	app := start(t, k, onMac)
