@@ -59,8 +59,9 @@ func session() objc.ID {
 
 // keepSession holds iOS's audio session for as long as the app runs: the
 // Playback category mixing with other apps' audio, so the piano plays with
-// the Ring/Silent switch on, leaves a parent's music playing, and moves with the system's output to headphones,
-// a Bluetooth speaker or AirPlay as they connect.
+// the Ring/Silent switch on, leaves a parent's music playing, and moves
+// with the system's output to headphones, a Bluetooth speaker or AirPlay
+// as they connect.
 //
 // Sounds alone hold the session ambient only while they play, and NSGo
 // deactivates it a second after the last; a route that changed meanwhile,
