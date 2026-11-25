@@ -739,6 +739,7 @@ func For(cx *core.Scope) Messages {
 // (tsx.RegisterMessages).
 var Parameters = map[string][]string{
 	"SoundFailed":      {"error_"},
+	"OutputPlayingOn":  {"device"},
 	"SystemVolumeOver": {"percent", "cap_"},
 	"SystemVolumeOk":   {"percent", "cap_"},
 }
@@ -750,6 +751,7 @@ var Parameters = map[string][]string{
 type Translation struct {
 	Texts            map[string]string
 	SoundFailed      func(error_ string) string
+	OutputPlayingOn  func(device string) string
 	SystemVolumeOver func(percent int, cap_ int) string
 	SystemVolumeOk   func(percent int, cap_ int) string
 }
@@ -770,6 +772,9 @@ const (
 	textVolume
 	textVolumeLocked
 	textTryIt
+	textOutput
+	textOutputChoose
+	textOutputNote
 	textSystemVolumeUnknown
 	textStart
 	textSecureInput
@@ -815,6 +820,9 @@ var keyOfText = [numTexts]string{
 	"volume",
 	"volumeLocked",
 	"tryIt",
+	"output",
+	"outputChoose",
+	"outputNote",
 	"systemVolumeUnknown",
 	"start",
 	"secureInput",
@@ -858,6 +866,9 @@ var textsEn = i18n.NewTexts(""+
 	"Volume"+
 	"The keyboard's volume keys are locked while the baby plays, so set it here first."+
 	"Try it"+
+	"Sound output"+
+	"Choose where the sound plays"+
+	"Headphones, a Bluetooth speaker or AirPlay: tap the button to switch."+
 	"This output's volume cannot be read, as with HDMI and some speakers. Check it is not too loud."+
 	"Start playing (full screen, keyboard locked)"+
 	"Another app turned on secure keyboard entry, such as Terminal's Secure Keyboard Entry or a password field, and no app can lock the keyboard through it. Turn it off, or restart the computer, then start again."+
@@ -898,6 +909,9 @@ var textsEn = i18n.NewTexts(""+
 		6,
 		81,
 		6,
+		12,
+		28,
+		69,
 		94,
 		44,
 		207,
@@ -941,6 +955,9 @@ var textsAr = i18n.NewTexts(""+
 	"مستوى الصوت"+
 	"تُقفل مفاتيح الصوت في لوحة المفاتيح أثناء لعب الطفل، لذا اضبطه هنا أولًا."+
 	"جرّب"+
+	"مخرج الصوت"+
+	"اختر مكان تشغيل الصوت"+
+	"سماعات، أو مكبر صوت بلوتوث، أو AirPlay: اضغط الزر للتبديل."+
 	"لا يمكن قراءة مستوى صوت هذا المخرج، كما في HDMI وبعض السماعات. تأكّد أنه ليس مرتفعًا جدًا."+
 	"ابدأ العزف (ملء الشاشة، لوحة المفاتيح مقفلة)"+
 	"شغّل تطبيق آخر إدخال لوحة المفاتيح الآمن، مثل الذي في تطبيق Terminal أو حقل كلمة سر، وعندها لا يستطيع أي تطبيق قفل لوحة المفاتيح. أوقفه أو أعد تشغيل الكمبيوتر، ثم ابدأ من جديد."+
@@ -981,6 +998,9 @@ var textsAr = i18n.NewTexts(""+
 		21,
 		133,
 		8,
+		19,
+		39,
+		98,
 		158,
 		80,
 		310,
@@ -1024,6 +1044,9 @@ var textsDa = i18n.NewTexts(""+
 	"Lydstyrke"+
 	"Tastaturets lydstyrketaster er låst, mens babyen spiller, så indstil den her først."+
 	"Prøv"+
+	"Lydudgang"+
+	"Vælg, hvor lyden spiller"+
+	"Høretelefoner, en Bluetooth-højttaler eller AirPlay: tryk på knappen for at skifte."+
 	"Lydstyrken for denne udgang kan ikke aflæses, som med HDMI og nogle højttalere. Tjek, at den ikke er for høj."+
 	"Begynd at spille (fuld skærm, tastatur låst)"+
 	"En anden app har slået sikker indtastning til, f.eks. Terminals eller et adgangskodefelt, og så kan ingen app låse tastaturet. Slå den fra, eller genstart computeren, og begynd så igen."+
@@ -1064,6 +1087,9 @@ var textsDa = i18n.NewTexts(""+
 		9,
 		86,
 		5,
+		9,
+		25,
+		86,
 		112,
 		46,
 		190,
@@ -1107,6 +1133,9 @@ var textsDe = i18n.NewTexts(""+
 	"Lautstärke"+
 	"Die Lautstärketasten der Tastatur sind gesperrt, während das Baby spielt – stelle sie also zuerst hier ein."+
 	"Ausprobieren"+
+	"Tonausgabe"+
+	"Wählen, wo der Ton spielt"+
+	"Kopfhörer, ein Bluetooth-Lautsprecher oder AirPlay: Tippe auf die Taste, um zu wechseln."+
 	"Die Lautstärke dieser Ausgabe lässt sich nicht lesen, etwa bei HDMI und manchen Lautsprechern. Prüfe, dass sie nicht zu laut ist."+
 	"Spielen starten (Vollbild, Tastatur gesperrt)"+
 	"Eine andere App hat die sichere Tastatureingabe eingeschaltet, etwa die des Terminals oder ein Passwortfeld, und dann kann keine App die Tastatur sperren. Schalte sie aus oder starte den Computer neu und starte dann erneut."+
@@ -1147,6 +1176,9 @@ var textsDe = i18n.NewTexts(""+
 		11,
 		111,
 		12,
+		10,
+		26,
+		89,
 		132,
 		45,
 		223,
@@ -1190,6 +1222,9 @@ var textsEs = i18n.NewTexts(""+
 	"Volumen"+
 	"Las teclas de volumen se bloquean mientras el bebé toca, así que ajústalo aquí primero."+
 	"Probar"+
+	"Salida de sonido"+
+	"Elige dónde suena"+
+	"Auriculares, un altavoz Bluetooth o AirPlay: toca el botón para cambiar."+
 	"No se puede leer el volumen de esta salida, como ocurre con HDMI y algunos altavoces. Comprueba que no esté demasiado alto."+
 	"Empezar a tocar (pantalla completa, teclado bloqueado)"+
 	"Otra app activó la entrada de teclado segura, como la de Terminal o un campo de contraseña, y así ninguna app puede bloquear el teclado. Desactívala o reinicia el ordenador y vuelve a empezar."+
@@ -1230,6 +1265,9 @@ var textsEs = i18n.NewTexts(""+
 		7,
 		91,
 		6,
+		16,
+		18,
+		73,
 		124,
 		54,
 		196,
@@ -1273,6 +1311,9 @@ var textsFi = i18n.NewTexts(""+
 	"Äänenvoimakkuus"+
 	"Näppäimistön äänenvoimakkuusnäppäimet ovat lukittuina vauvan soittaessa, joten säädä se ensin tästä."+
 	"Kokeile"+
+	"Äänen ulostulo"+
+	"Valitse, mistä ääni kuuluu"+
+	"Kuulokkeet, Bluetooth-kaiutin tai AirPlay: vaihda napauttamalla painiketta."+
 	"Tämän ulostulon äänenvoimakkuutta ei voi lukea, kuten HDMI:n ja joidenkin kaiuttimien kohdalla. Tarkista, ettei ääni ole liian kova."+
 	"Aloita soittaminen (koko näyttö, näppäimistö lukittu)"+
 	"Toinen sovellus on laittanut suojatun näppäimistösyötön päälle, kuten Päätteen suojattu syöttö tai salasanakenttä, eikä mikään sovellus voi silloin lukita näppäimistöä. Laita se pois tai käynnistä tietokone uudelleen ja aloita sitten uudestaan."+
@@ -1313,6 +1354,9 @@ var textsFi = i18n.NewTexts(""+
 		17,
 		112,
 		7,
+		16,
+		29,
+		75,
 		138,
 		58,
 		265,
@@ -1356,6 +1400,9 @@ var textsFr = i18n.NewTexts(""+
 	"Volume"+
 	"Les touches de volume du clavier sont verrouillées pendant que bébé joue : réglez-le d’abord ici."+
 	"Essayer"+
+	"Sortie audio"+
+	"Choisir où le son est joué"+
+	"Écouteurs, enceinte Bluetooth ou AirPlay : touchez le bouton pour changer."+
 	"Le volume de cette sortie ne peut pas être lu, comme avec le HDMI et certaines enceintes. Vérifiez qu’il n’est pas trop fort."+
 	"Commencer à jouer (plein écran, clavier verrouillé)"+
 	"Une autre app a activé la saisie sécurisée au clavier, comme celle du Terminal ou un champ de mot de passe, et aucune app ne peut alors verrouiller le clavier. Désactivez-la ou redémarrez l’ordinateur, puis recommencez."+
@@ -1396,6 +1443,9 @@ var textsFr = i18n.NewTexts(""+
 		6,
 		103,
 		7,
+		12,
+		28,
+		75,
 		131,
 		54,
 		226,
@@ -1439,6 +1489,9 @@ var textsHe = i18n.NewTexts(""+
 	"עוצמת קול"+
 	"מקשי עוצמת הקול במקלדת נעולים בזמן שהתינוק מנגן, לכן כוונו אותה כאן קודם."+
 	"נסו"+
+	"פלט שמע"+
+	"בחרו מאיפה יישמע הצליל"+
+	"אוזניות, רמקול Bluetooth או AirPlay: הקישו על הכפתור כדי להחליף."+
 	"אי אפשר לקרוא את עוצמת הקול של יציאה זו, כמו ב-HDMI ובחלק מהרמקולים. ודאו שהיא לא חזקה מדי."+
 	"להתחיל לנגן (מסך מלא, מקלדת נעולה)"+
 	"יישום אחר הפעיל הזנת מקלדת מאובטחת, כמו ב-Terminal או בשדה סיסמה, ואז אף יישום לא יכול לנעול את המקלדת. כבו אותה או הפעילו מחדש את המחשב, ואז התחילו שוב."+
@@ -1479,6 +1532,9 @@ var textsHe = i18n.NewTexts(""+
 		17,
 		132,
 		6,
+		13,
+		41,
+		100,
 		157,
 		60,
 		264,
@@ -1522,6 +1578,9 @@ var textsHi = i18n.NewTexts(""+
 	"आवाज़"+
 	"बच्चे के खेलते समय कीबोर्ड की वॉल्यूम कुंजियाँ लॉक रहती हैं, इसलिए पहले यहाँ सेट कर लें।"+
 	"सुनकर देखें"+
+	"आवाज़ का आउटपुट"+
+	"चुनें कि आवाज़ कहाँ से आए"+
+	"हेडफ़ोन, ब्लूटूथ स्पीकर या AirPlay: बदलने के लिए बटन दबाएँ।"+
 	"इस आउटपुट की आवाज़ पढ़ी नहीं जा सकती, जैसे HDMI और कुछ स्पीकर में। जाँच लें कि बहुत तेज़ न हो।"+
 	"बजाना शुरू करें (पूरी स्क्रीन, कीबोर्ड लॉक)"+
 	"किसी दूसरे ऐप ने सुरक्षित कीबोर्ड प्रविष्टि चालू कर दी है, जैसे Terminal में या पासवर्ड फ़ील्ड में, और तब कोई भी ऐप कीबोर्ड लॉक नहीं कर सकता। उसे बंद करें, या कंप्यूटर रीस्टार्ट करें, फिर दोबारा शुरू करें।"+
@@ -1562,6 +1621,9 @@ var textsHi = i18n.NewTexts(""+
 		15,
 		230,
 		31,
+		41,
+		65,
+		141,
 		232,
 		111,
 		515,
@@ -1605,6 +1667,9 @@ var textsId = i18n.NewTexts(""+
 	"Volume"+
 	"Tombol volume keyboard dikunci selama bayi bermain, jadi atur di sini terlebih dahulu."+
 	"Coba"+
+	"Keluaran suara"+
+	"Pilih tempat suara diputar"+
+	"Headphone, speaker Bluetooth, atau AirPlay: ketuk tombol untuk mengganti."+
 	"Volume output ini tidak dapat dibaca, seperti pada HDMI dan beberapa speaker. Pastikan tidak terlalu keras."+
 	"Mulai bermain (layar penuh, keyboard terkunci)"+
 	"App lain menyalakan input keyboard aman, misalnya di Terminal atau kolom kata sandi, sehingga tidak ada app yang bisa mengunci keyboard. Matikan, atau mulai ulang komputer, lalu mulai lagi."+
@@ -1645,6 +1710,9 @@ var textsId = i18n.NewTexts(""+
 		6,
 		86,
 		4,
+		14,
+		26,
+		73,
 		107,
 		46,
 		189,
@@ -1688,6 +1756,9 @@ var textsIt = i18n.NewTexts(""+
 	"Volume"+
 	"I tasti del volume sono bloccati mentre il bambino suona, quindi regolalo prima qui."+
 	"Prova"+
+	"Uscita audio"+
+	"Scegli dove suona"+
+	"Cuffie, altoparlante Bluetooth o AirPlay: tocca il pulsante per cambiare."+
 	"Il volume di questa uscita non si può leggere, come con HDMI e alcuni altoparlanti. Controlla che non sia troppo alto."+
 	"Inizia a suonare (schermo intero, tastiera bloccata)"+
 	"Un’altra app ha attivato l’inserimento sicuro da tastiera, come quello di Terminale o un campo password, e così nessuna app può bloccare la tastiera. Disattivalo o riavvia il computer, poi ricomincia."+
@@ -1728,6 +1799,9 @@ var textsIt = i18n.NewTexts(""+
 		6,
 		84,
 		5,
+		12,
+		17,
+		73,
 		119,
 		52,
 		206,
@@ -1771,6 +1845,9 @@ var textsJa = i18n.NewTexts(""+
 	"音量"+
 	"赤ちゃんが遊んでいる間はキーボードの音量キーがロックされるので、先にここで調整してください。"+
 	"試し弾き"+
+	"サウンド出力"+
+	"音を出す場所を選ぶ"+
+	"イヤホン、Bluetooth スピーカー、AirPlay：ボタンをタップして切り替えます。"+
 	"この出力（HDMI や一部のスピーカーなど）の音量は読み取れません。大きすぎないか確認してください。"+
 	"演奏を始める（全画面・キーボードをロック）"+
 	"別のアプリが「セキュアキーボード入力」をオンにしています（ターミナルのセキュアキーボード入力やパスワード欄など）。この間はどのアプリもキーボードをロックできません。オフにするかコンピュータを再起動してから、もう一度始めてください。"+
@@ -1811,6 +1888,9 @@ var textsJa = i18n.NewTexts(""+
 		6,
 		138,
 		12,
+		18,
+		27,
+		101,
 		140,
 		63,
 		345,
@@ -1854,6 +1934,9 @@ var textsKo = i18n.NewTexts(""+
 	"음량"+
 	"아기가 노는 동안 키보드의 음량 키가 잠기니 여기서 먼저 맞춰 두세요."+
 	"들어보기"+
+	"소리 출력"+
+	"소리가 나올 곳 선택"+
+	"이어폰, 블루투스 스피커 또는 AirPlay: 버튼을 탭해 바꿉니다."+
 	"이 출력 장치(HDMI, 일부 스피커 등)의 음량은 읽을 수 없습니다. 너무 크지 않은지 확인하세요."+
 	"연주 시작 (전체 화면, 키보드 잠금)"+
 	"다른 앱이 '보안 키보드 입력'을 켰습니다(터미널의 보안 키보드 입력, 암호 입력란 등). 이 상태에서는 어떤 앱도 키보드를 잠글 수 없습니다. 끄거나 컴퓨터를 재시동한 뒤 다시 시작하세요."+
@@ -1894,6 +1977,9 @@ var textsKo = i18n.NewTexts(""+
 		6,
 		95,
 		12,
+		13,
+		27,
+		80,
 		124,
 		47,
 		252,
@@ -1937,6 +2023,9 @@ var textsNb = i18n.NewTexts(""+
 	"Volum"+
 	"Volumtastene på tastaturet er låst mens babyen spiller, så still inn volumet her først."+
 	"Prøv"+
+	"Lydutgang"+
+	"Velg hvor lyden spilles"+
+	"Hodetelefoner, en Bluetooth-høyttaler eller AirPlay: trykk på knappen for å bytte."+
 	"Volumet til denne utgangen kan ikke leses, som med HDMI og noen høyttalere. Sjekk at det ikke er for høyt."+
 	"Begynn å spille (fullskjerm, tastatur låst)"+
 	"En annen app har slått på sikker tastaturinndata, for eksempel Terminals eller et passordfelt, og da kan ingen app låse tastaturet. Slå det av, eller start datamaskinen på nytt, og begynn så igjen."+
@@ -1977,6 +2066,9 @@ var textsNb = i18n.NewTexts(""+
 		5,
 		91,
 		5,
+		9,
+		23,
+		85,
 		108,
 		45,
 		203,
@@ -2020,6 +2112,9 @@ var textsNl = i18n.NewTexts(""+
 	"Volume"+
 	"De volumetoetsen zijn vergrendeld terwijl de baby speelt, dus stel het hier eerst in."+
 	"Probeer"+
+	"Geluidsuitvoer"+
+	"Kies waar het geluid speelt"+
+	"Koptelefoon, een bluetoothspeaker of AirPlay: tik op de knop om te wisselen."+
 	"Het volume van deze uitvoer is niet te lezen, zoals bij HDMI en sommige luidsprekers. Controleer dat het niet te hard staat."+
 	"Begin met spelen (volledig scherm, toetsenbord vergrendeld)"+
 	"Een andere app heeft beveiligde toetsenbordinvoer aangezet, zoals die van Terminal of een wachtwoordveld, en dan kan geen app het toetsenbord vergrendelen. Zet het uit of herstart de computer en begin opnieuw."+
@@ -2060,6 +2155,9 @@ var textsNl = i18n.NewTexts(""+
 		6,
 		85,
 		7,
+		14,
+		27,
+		76,
 		124,
 		59,
 		209,
@@ -2103,6 +2201,9 @@ var textsPl = i18n.NewTexts(""+
 	"Głośność"+
 	"Klawisze głośności są zablokowane, gdy maluch gra, więc najpierw ustaw ją tutaj."+
 	"Wypróbuj"+
+	"Wyjście dźwięku"+
+	"Wybierz, gdzie gra dźwięk"+
+	"Słuchawki, głośnik Bluetooth lub AirPlay: stuknij przycisk, aby zmienić."+
 	"Nie można odczytać głośności tego wyjścia, tak jak w przypadku HDMI i niektórych głośników. Sprawdź, czy nie jest za głośno."+
 	"Zacznij grać (pełny ekran, klawiatura zablokowana)"+
 	"Inna aplikacja włączyła bezpieczne wprowadzanie z klawiatury, np. w Terminalu lub w polu hasła, i wtedy żadna aplikacja nie może zablokować klawiatury. Wyłącz je lub uruchom ponownie komputer i zacznij od nowa."+
@@ -2143,6 +2244,9 @@ var textsPl = i18n.NewTexts(""+
 		12,
 		86,
 		9,
+		18,
+		27,
+		76,
 		137,
 		52,
 		219,
@@ -2186,6 +2290,9 @@ var textsPtBR = i18n.NewTexts(""+
 	"Volume"+
 	"As teclas de volume do teclado ficam bloqueadas enquanto o bebê toca, então ajuste aqui primeiro."+
 	"Testar"+
+	"Saída de som"+
+	"Escolha onde o som toca"+
+	"Fones de ouvido, caixa de som Bluetooth ou AirPlay: toque no botão para trocar."+
 	"Não é possível ler o volume desta saída, como no HDMI e em algumas caixas de som. Confira se não está alto demais."+
 	"Começar a tocar (tela cheia, teclado bloqueado)"+
 	"Outro app ativou a entrada segura de teclado, como a do Terminal ou um campo de senha, e assim nenhum app consegue bloquear o teclado. Desative-a ou reinicie o computador e comece de novo."+
@@ -2226,6 +2333,9 @@ var textsPtBR = i18n.NewTexts(""+
 		6,
 		99,
 		6,
+		13,
+		23,
+		80,
 		120,
 		48,
 		188,
@@ -2269,6 +2379,9 @@ var textsRu = i18n.NewTexts(""+
 	"Громкость"+
 	"Пока малыш играет, клавиши громкости заблокированы, поэтому сначала настройте её здесь."+
 	"Послушать"+
+	"Вывод звука"+
+	"Выберите, где звучит пианино"+
+	"Наушники, Bluetooth-колонка или AirPlay: нажмите кнопку, чтобы переключить."+
 	"Громкость этого выхода прочитать нельзя, как у HDMI и некоторых колонок. Убедитесь, что не слишком громко."+
 	"Начать играть (весь экран, клавиатура заблокирована)"+
 	"Другое приложение включило защищённый ввод с клавиатуры, например в Терминале или в поле пароля, и тогда ни одно приложение не может заблокировать клавиатуру. Отключите его или перезагрузите компьютер и начните снова."+
@@ -2309,6 +2422,9 @@ var textsRu = i18n.NewTexts(""+
 		18,
 		161,
 		18,
+		21,
+		52,
+		122,
 		189,
 		96,
 		400,
@@ -2352,6 +2468,9 @@ var textsSv = i18n.NewTexts(""+
 	"Volym"+
 	"Tangentbordets volymknappar är låsta medan bebisen spelar, så ställ in volymen här först."+
 	"Prova"+
+	"Ljudutgång"+
+	"Välj var ljudet spelas"+
+	"Hörlurar, en Bluetooth-högtalare eller AirPlay: tryck på knappen för att byta."+
 	"Volymen för den här utgången går inte att läsa, som med HDMI och vissa högtalare. Kontrollera att den inte är för hög."+
 	"Börja spela (helskärm, tangentbordet låst)"+
 	"En annan app har slagit på säker tangentbordsinmatning, till exempel Terminals eller ett lösenordsfält, och då kan ingen app låsa tangentbordet. Stäng av den eller starta om datorn och börja sedan igen."+
@@ -2392,6 +2511,9 @@ var textsSv = i18n.NewTexts(""+
 		5,
 		95,
 		5,
+		11,
+		23,
+		82,
 		127,
 		45,
 		210,
@@ -2435,6 +2557,9 @@ var textsTh = i18n.NewTexts(""+
 	"ระดับเสียง"+
 	"ปุ่มปรับเสียงบนแป้นพิมพ์จะถูกล็อกขณะลูกน้อยเล่น จึงควรปรับที่นี่ก่อน"+
 	"ลองฟัง"+
+	"ช่องเสียงออก"+
+	"เลือกว่าจะให้เสียงออกที่ไหน"+
+	"หูฟัง ลำโพงบลูทูธ หรือ AirPlay: แตะปุ่มเพื่อสลับ"+
 	"อ่านระดับเสียงของอุปกรณ์นี้ไม่ได้ เช่น HDMI และลำโพงบางรุ่น โปรดตรวจดูว่าเสียงไม่ดังเกินไป"+
 	"เริ่มเล่น (เต็มหน้าจอ ล็อกแป้นพิมพ์)"+
 	"มีแอปอื่นเปิดการป้อนข้อมูลแป้นพิมพ์แบบปลอดภัยอยู่ เช่นใน Terminal หรือช่องรหัสผ่าน ซึ่งทำให้ไม่มีแอปใดล็อกแป้นพิมพ์ได้ โปรดปิด หรือรีสตาร์ทคอมพิวเตอร์ แล้วเริ่มใหม่"+
@@ -2475,6 +2600,9 @@ var textsTh = i18n.NewTexts(""+
 		30,
 		202,
 		18,
+		36,
+		81,
+		120,
 		254,
 		100,
 		462,
@@ -2518,6 +2646,9 @@ var textsTr = i18n.NewTexts(""+
 	"Ses düzeyi"+
 	"Bebek çalarken klavyenin ses tuşları kilitlenir, bu yüzden önce burada ayarlayın."+
 	"Dene"+
+	"Ses çıkışı"+
+	"Sesin nereden çıkacağını seçin"+
+	"Kulaklık, Bluetooth hoparlör veya AirPlay: değiştirmek için düğmeye dokunun."+
 	"HDMI ve bazı hoparlörlerde olduğu gibi bu çıkışın ses düzeyi okunamıyor. Çok yüksek olmadığından emin olun."+
 	"Çalmaya başla (tam ekran, klavye kilitli)"+
 	"Başka bir uygulama, örneğin Terminal’in güvenli klavye girişi ya da bir parola alanı, güvenli klavye girişini açtı; bu durumda hiçbir uygulama klavyeyi kilitleyemez. Kapatın ya da bilgisayarı yeniden başlatın, sonra tekrar başlayın."+
@@ -2558,6 +2689,9 @@ var textsTr = i18n.NewTexts(""+
 		11,
 		87,
 		4,
+		15,
+		36,
+		83,
 		122,
 		43,
 		251,
@@ -2601,6 +2735,9 @@ var textsUk = i18n.NewTexts(""+
 	"Гучність"+
 	"Поки маля грає, клавіші гучності заблоковані, тож спершу налаштуйте її тут."+
 	"Послухати"+
+	"Виведення звуку"+
+	"Виберіть, де звучить піаніно"+
+	"Навушники, Bluetooth-колонка чи AirPlay: натисніть кнопку, щоб перемкнути."+
 	"Гучність цього виходу прочитати неможливо, як у HDMI та деяких колонок. Переконайтеся, що не надто гучно."+
 	"Почати грати (весь екран, клавіатура заблокована)"+
 	"Інший застосунок увімкнув захищене введення з клавіатури, наприклад у Терміналі чи в полі пароля, і тоді жоден застосунок не може заблокувати клавіатуру. Вимкніть його або перезавантажте комп’ютер і почніть знову."+
@@ -2641,6 +2778,9 @@ var textsUk = i18n.NewTexts(""+
 		16,
 		137,
 		18,
+		29,
+		52,
+		120,
 		187,
 		90,
 		394,
@@ -2684,6 +2824,9 @@ var textsVi = i18n.NewTexts(""+
 	"Âm lượng"+
 	"Các phím âm lượng bị khóa khi bé chơi, nên hãy chỉnh ở đây trước."+
 	"Nghe thử"+
+	"Đầu ra âm thanh"+
+	"Chọn nơi phát âm thanh"+
+	"Tai nghe, loa Bluetooth hoặc AirPlay: chạm nút để chuyển."+
 	"Không đọc được âm lượng của đầu ra này, như HDMI và một số loa. Hãy kiểm tra để không quá to."+
 	"Bắt đầu chơi (toàn màn hình, khóa bàn phím)"+
 	"Một ứng dụng khác đã bật nhập bàn phím bảo mật, chẳng hạn trong Terminal hoặc ô mật khẩu, nên không ứng dụng nào khóa được bàn phím. Hãy tắt nó hoặc khởi động lại máy tính, rồi bắt đầu lại."+
@@ -2724,6 +2867,9 @@ var textsVi = i18n.NewTexts(""+
 		12,
 		87,
 		10,
+		19,
+		27,
+		67,
 		125,
 		55,
 		257,
@@ -2767,6 +2913,9 @@ var textsZhHans = i18n.NewTexts(""+
 	"音量"+
 	"开始后键盘上的音量键会被锁住，请先在这里调好。"+
 	"试听"+
+	"声音输出"+
+	"选择声音从哪里播放"+
+	"耳机、蓝牙音箱或 AirPlay：点右边的按钮切换。"+
 	"当前输出设备无法读取音量（如 HDMI、部分外接音箱），请手动确认音量不要太大。"+
 	"开始弹琴（全屏锁定键盘）"+
 	"有程序开启了“安全键盘输入”（如终端的“安全键盘输入”、正在输入的密码框），这时任何程序都锁不住键盘。请关闭它（或重启电脑）后再开始。"+
@@ -2807,6 +2956,9 @@ var textsZhHans = i18n.NewTexts(""+
 		6,
 		69,
 		6,
+		12,
+		27,
+		62,
 		110,
 		36,
 		201,
@@ -2850,6 +3002,9 @@ var textsZhHant = i18n.NewTexts(""+
 	"音量"+
 	"開始後鍵盤上的音量鍵會被鎖住，請先在這裡調好。"+
 	"試聽"+
+	"聲音輸出"+
+	"選擇聲音從哪裡播放"+
+	"耳機、藍牙喇叭或 AirPlay：點右邊的按鈕切換。"+
 	"目前的輸出裝置無法讀取音量（如 HDMI、部分外接喇叭），請自行確認音量不要太大。"+
 	"開始彈琴（全螢幕鎖定鍵盤）"+
 	"有程式開啟了「安全鍵盤輸入」（如終端機的「安全鍵盤輸入」、正在輸入的密碼欄），這時任何程式都鎖不住鍵盤。請關閉它（或重新開機）後再開始。"+
@@ -2890,6 +3045,9 @@ var textsZhHant = i18n.NewTexts(""+
 		6,
 		69,
 		6,
+		12,
+		27,
+		62,
 		113,
 		39,
 		204,
@@ -3021,6 +3179,9 @@ func Supply(lang string, t Translation) {
 	s := supplied[lang]
 	if t.SoundFailed != nil {
 		s.SoundFailed = t.SoundFailed
+	}
+	if t.OutputPlayingOn != nil {
+		s.OutputPlayingOn = t.OutputPlayingOn
 	}
 	if t.SystemVolumeOver != nil {
 		s.SystemVolumeOver = t.SystemVolumeOver
@@ -3194,6 +3355,95 @@ func TryIt(cx *core.Scope) string { return For(cx).TryIt() }
 
 // TryIt is the package's TryIt in the language of msgs.
 func (msgs Messages) TryIt() string { return msgs.text(textTryIt) }
+
+// Output says "Sound output"
+// in the language the app shows under cx.
+func Output(cx *core.Scope) string { return For(cx).Output() }
+
+// Output is the package's Output in the language of msgs.
+func (msgs Messages) Output() string { return msgs.text(textOutput) }
+
+// OutputPlayingOn says "Playing on {device}"
+// in the language the app shows under cx.
+func OutputPlayingOn(cx *core.Scope, device string) string { return For(cx).OutputPlayingOn(device) }
+
+// OutputPlayingOn is the package's OutputPlayingOn in the language of msgs.
+func (msgs Messages) OutputPlayingOn(device string) string {
+	if i18n.IsPseudo(msgs.lang) {
+		return i18n.Pseudo(msgs.lang, Messages{lang: Source, mark: true}.OutputPlayingOn(device))
+	}
+	for lang := msgs.lang; ; lang = i18n.Parent(lang) {
+		if f := supplied[lang].OutputPlayingOn; f != nil {
+			return f(device)
+		}
+		switch lang {
+		case "", "en":
+			return "Playing on " + msgs.arg(device)
+		case "ar":
+			return "يُشغَّل على " + device
+		case "da":
+			return "Afspiller på " + device
+		case "de":
+			return "Spielt über " + device
+		case "es":
+			return "Suena en " + device
+		case "fi":
+			return "Soi laitteessa " + device
+		case "fr":
+			return "Joue sur " + device
+		case "he":
+			return "מתנגן ב־" + device
+		case "hi":
+			return device + " पर बज रहा है"
+		case "id":
+			return "Diputar di " + device
+		case "it":
+			return "Suona su " + device
+		case "ja":
+			return device + " で再生中"
+		case "ko":
+			return device + "에서 재생 중"
+		case "nb":
+			return "Spiller på " + device
+		case "nl":
+			return "Speelt via " + device
+		case "pl":
+			return "Gra przez: " + device
+		case "pt-BR":
+			return "Tocando em " + device
+		case "ru":
+			return "Звучит через " + device
+		case "sv":
+			return "Spelas på " + device
+		case "th":
+			return "กำลังเล่นที่ " + device
+		case "tr":
+			return device + " üzerinden çalıyor"
+		case "uk":
+			return "Звучить через " + device
+		case "vi":
+			return "Đang phát trên " + device
+		case "zh-Hans":
+			return "正在用 " + device + " 播放"
+		case "zh-Hant":
+			return "正在用 " + device + " 播放"
+		}
+	}
+}
+
+// OutputChoose says "Choose where the sound plays"
+// in the language the app shows under cx.
+func OutputChoose(cx *core.Scope) string { return For(cx).OutputChoose() }
+
+// OutputChoose is the package's OutputChoose in the language of msgs.
+func (msgs Messages) OutputChoose() string { return msgs.text(textOutputChoose) }
+
+// OutputNote says "Headphones, a Bluetooth speaker or AirPlay: tap the button to switch."
+// in the language the app shows under cx.
+func OutputNote(cx *core.Scope) string { return For(cx).OutputNote() }
+
+// OutputNote is the package's OutputNote in the language of msgs.
+func (msgs Messages) OutputNote() string { return msgs.text(textOutputNote) }
 
 // SystemVolumeOver says "The computer's volume is {percent, number}%. It drops to {cap, number}% when the baby starts, to protect their ears."
 // in the language the app shows under cx.

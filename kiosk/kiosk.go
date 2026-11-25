@@ -39,3 +39,17 @@ func (System) Front()                                    { Front() }
 func (System) Tick() bool                                { return Tick() }
 func (System) SystemVolume() (float32, bool)             { return SystemVolume() }
 func (System) Keyboard() bool                            { return Keyboard() }
+
+// Output is a sound output the computer can play through: its speakers,
+// headphones, a USB or Bluetooth speaker, a display's sound.
+type Output struct {
+	// ID names the output to SetOutput.
+	ID string
+	// Name is what the system calls it, in the system's language.
+	Name string
+	// Default is whether the system plays through it now.
+	Default bool
+}
+
+func (System) Outputs() []Output        { return Outputs() }
+func (System) SetOutput(id string) bool { return SetOutput(id) }

@@ -25,6 +25,11 @@ var (
 	iconSpeaker = mustSVG(`<path d="M4 9h2.6L11 5.2v13.6L6.6 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z" fill="currentColor" fill-opacity=".22"/>` +
 		`<path d="M15.2 9.2a4 4 0 0 1 0 5.6"/><path d="M18.2 6.4a8 8 0 0 1 0 11.2"/>`)
 
+	// iconHeadphones is a pair of headphones: the sound plays in them.
+	iconHeadphones = mustSVG(`<path d="M4 15v-3a8 8 0 0 1 16 0v3"/>` +
+		`<rect x="3" y="14" width="5" height="7" rx="2" fill="currentColor" fill-opacity=".22"/>` +
+		`<rect x="16" y="14" width="5" height="7" rx="2" fill="currentColor" fill-opacity=".22"/>`)
+
 	// iconMouse is a mouse with its wheel.
 	iconMouse = mustSVG(`<rect x="6" y="3" width="12" height="18" rx="6" fill="currentColor" fill-opacity=".22"/><path d="M12 7v3"/>`)
 

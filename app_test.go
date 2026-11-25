@@ -27,6 +27,8 @@ type fakeKiosk struct {
 	onKey                                func(kiosk.Key)
 	volume                               float32
 	keyboard                             bool
+	outputs                              []kiosk.Output
+	output                               string
 }
 
 func (f *fakeKiosk) Supported() bool   { return f.supported }
@@ -41,6 +43,14 @@ func (f *fakeKiosk) Front()                        {}
 func (f *fakeKiosk) Keyboard() bool                { return f.keyboard }
 func (f *fakeKiosk) Tick() bool                    { return false }
 func (f *fakeKiosk) SystemVolume() (float32, bool) { return f.volume, true }
+func (f *fakeKiosk) Outputs() []kiosk.Output {
+	outs := append([]kiosk.Output(nil), f.outputs...)
+	for i := range outs {
+		outs[i].Default = outs[i].ID == f.output
+	}
+	return outs
+}
+func (f *fakeKiosk) SetOutput(id string) bool { f.output = id; return true }
 
 // start runs the app on k with every note decodable, a second long, as the
 // platform would decode the embedded samples.
@@ -324,5 +334,36 @@ func TestPhonesLinkTheDesktopApp(t *testing.T) {
 	mac := start(t, &fakeKiosk{supported: true, volume: 0.5}, onMac, nsgotest.Size(600, 800))
 	if mac.Exists("id:desktop") {
 		t.Error("the computer app links to itself")
+	}
+}
+
+// TestComputerChoosesItsOutput lists the computer's outputs on the setup,
+// and pressing one makes it the system's: the piano's sound follows.
+func TestComputerChoosesItsOutput(t *testing.T) {
+	k := &fakeKiosk{supported: true, volume: 0.3, output: "mac",
+		outputs: []kiosk.Output{{ID: "mac", Name: "MacBook Pro Speakers"}, {ID: "pods", Name: "AirPods Pro"}}}
+	app := start(t, k, onMac)
+	if !app.Exists("text:MacBook Pro Speakers") || !app.Exists("text:AirPods Pro") {
+		t.Fatal("the outputs are not listed")
+	}
+	app.Press("label:AirPods Pro")
+	if k.output != "pods" {
+		t.Errorf("output %q, want pods", k.output)
+	}
+	// Headphones plugged in later show up within a second.
+	k.outputs = append(k.outputs, kiosk.Output{ID: "jack", Name: "External Headphones"})
+	app.Advance(1100 * time.Millisecond)
+	if !app.Exists("text:External Headphones") {
+		t.Error("new headphones are not listed")
+	}
+}
+
+// TestPhoneShowsWhereItPlays shows, on an iPhone, the output section with
+// the system's AirPlay button.
+func TestPhoneShowsWhereItPlays(t *testing.T) {
+	app := start(t, &fakeKiosk{}, nsgotest.Size(400, 800),
+		nsgotest.Environment(core.Environment{Audio: true, OS: core.OSIOS, Idiom: core.IdiomPhone}))
+	if !app.Exists("id:airplay") || !app.Exists("id:output") {
+		t.Error("no output section on the phone")
 	}
 }

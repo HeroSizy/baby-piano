@@ -32,3 +32,10 @@ func Front() {}
 
 // SystemVolume is unknown here.
 func SystemVolume() (float32, bool) { return 0, false }
+
+// Outputs lists nothing: phones and tablets choose their output in the
+// system's own picker.
+func Outputs() []Output { return nil }
+
+// SetOutput does nothing here.
+func SetOutput(string) bool { return false }

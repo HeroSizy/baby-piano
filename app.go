@@ -16,7 +16,7 @@ import (
 	"github.com/HeroSizy/baby-piano/sound"
 )
 
-func main() { nsgo.Run(Root, nsgo.WindowSize(600, 620)) }
+func main() { nsgo.Run(Root, append(platformOptions(), nsgo.WindowSize(600, 620))...) }
 
 // Root is the app on this platform's kiosk.
 func Root(cx *core.Scope) core.Node { return newRoot(kiosk.System{})(cx) }
@@ -35,6 +35,10 @@ type locker interface {
 	// Keyboard reports whether a phone or tablet has a physical keyboard
 	// attached, where the system says.
 	Keyboard() bool
+	// Outputs lists a computer's sound outputs, and SetOutput makes one
+	// the system's default.
+	Outputs() []kiosk.Output
+	SetOutput(id string) bool
 }
 
 // settings are the parents' choices, kept between launches.

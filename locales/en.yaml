@@ -13,6 +13,10 @@ soundFailed: "Sound could not start: {error}. Check the sound output, then open 
 volume: Volume
 volumeLocked: The keyboard's volume keys are locked while the baby plays, so set it here first.
 tryIt: Try it
+output: "Sound output"
+outputPlayingOn: "Playing on {device}"
+outputChoose: "Choose where the sound plays"
+outputNote: "Headphones, a Bluetooth speaker or AirPlay: tap the button to switch."
 systemVolumeOver: "The computer's volume is {percent, number}%. It drops to {cap, number}% when the baby starts, to protect their ears."
 systemVolumeOk: "The computer's volume is {percent, number}%, and stays at {cap, number}% or below while the baby plays."
 systemVolumeUnknown: This output's volume cannot be read, as with HDMI and some speakers. Check it is not too loud.

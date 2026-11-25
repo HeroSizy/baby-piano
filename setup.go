@@ -176,6 +176,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 			}),
 		)
 	}
+	card = append(card, a.outputSection(cx, heading)...)
 	card = append(card, divider(cx), heading(locales.Scale(cx)), scaleChoice(cx, a.settings.scale), divider(cx))
 	if computer {
 		card = append(card, toggleRow(cx, iconMouse, accentBlue, locales.LockMouseTitle(cx), locales.LockMouseNote(cx), "lockMouse", a.settings.lockMouse))
