@@ -39,7 +39,7 @@ try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") 
   </header>
 
   <div class="hero">
-    <h1 aria-label="Let them mash."><span aria-hidden="true">Let them <span class="m">m</span><span class="m">a</span><span class="m">s</span><span class="m">h</span><span class="m">.</span></span></h1>
+    <h1 aria-label="Let them mash."><span aria-hidden="true">Let them <span class="word"><span class="m">m</span><span class="m">a</span><span class="m">s</span><span class="m">h</span><span class="m">.</span></span></span></h1>
     <p class="lede">Mash Piano is a piano toy for babies. Every slap, tap and fistful of keys plays a soft piano note, and every note sounds good with the others.</p>
     <div class="dl-top">
       <div class="dl-main-row">
@@ -58,6 +58,7 @@ try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") 
         <a data-os="android" href="/download/android">Android</a>
         <a href="https://github.com/HeroSizy/baby-piano/releases/latest">All files</a>
       </div>
+      <p class="inapp" id="inapp">In WeChat, downloads may not start. Tap ··· and choose Open in Browser.</p>
     </div>
 
     <div class="stage">
@@ -220,6 +221,14 @@ try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") 
     if ((next === "dark") === dark.matches) { delete root.dataset.theme; try { localStorage.removeItem("theme"); } catch (e) {} }
     else { root.dataset.theme = next; try { localStorage.setItem("theme", next); } catch (e) {} }
   });
+
+  // WeChat's in-app browser: keep its "font size" setting from enlarging
+  // the page, and say how to download from a real browser.
+  if (/MicroMessenger/i.test(navigator.userAgent)) {
+    var noScale = function () { try { WeixinJSBridge.invoke("setFontSizeCallback", { fontSize: 0 }); WeixinJSBridge.on("menu:setfont", function () { WeixinJSBridge.invoke("setFontSizeCallback", { fontSize: 0 }); }); } catch (e) {} };
+    if (typeof WeixinJSBridge === "object") noScale(); else document.addEventListener("WeixinJSBridgeReady", noScale);
+    document.getElementById("inapp").classList.add("show");
+  }
 
   // ---- the piano: C3 to C6 in do re mi sol la, like the app ----
   var NAMES = ["C3","D3","E3","G3","A3","C4","D4","E4","G4","A4","C5","D5","E5","G5","A5","C6"];

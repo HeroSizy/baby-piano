@@ -91,7 +91,7 @@
 }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; background: var(--paper); }
+html { -webkit-text-size-adjust: 100% !important; text-size-adjust: 100% !important; scroll-behavior: smooth; background: var(--paper); }
 body {
   margin: 0;
   background: var(--paper);
@@ -129,12 +129,13 @@ a { color: inherit; }
 /* ---------- hero: the playable piano ---------- */
 .hero { position: relative; padding: 24px 0 40px; }
 .hero h1 { font-size: clamp(50px, 10vw, 112px); letter-spacing: -1.5px; }
+.hero h1 .word { white-space: nowrap; }
 .hero h1 .m { display: inline-block; transform-origin: 50% 90%; }
-.hero h1 .m:nth-child(1) { color: var(--red); }
-.hero h1 .m:nth-child(2) { color: var(--orange); }
-.hero h1 .m:nth-child(3) { color: var(--green); }
-.hero h1 .m:nth-child(4) { color: var(--blue); }
-.hero h1 .m:nth-child(5) { color: var(--purple); }
+.hero h1 .word .m:nth-child(1) { color: var(--red); }
+.hero h1 .word .m:nth-child(2) { color: var(--orange); }
+.hero h1 .word .m:nth-child(3) { color: var(--green); }
+.hero h1 .word .m:nth-child(4) { color: var(--blue); }
+.hero h1 .word .m:nth-child(5) { color: var(--purple); }
 .hero h1 .m.hit { animation: hop .35s ease; }
 @keyframes hop { 40% { transform: translateY(-10px) rotate(-4deg); } }
 .hero .lede { max-width: 640px; margin: 18px 0 0; font-size: clamp(18px, 2.2vw, 22px); color: var(--ink-2); }
@@ -158,6 +159,8 @@ a { color: inherit; }
   background: var(--surface); box-shadow: 0 0 0 1.5px var(--line); transition: box-shadow .15s;
 }
 .dl-others a:hover { box-shadow: 0 0 0 2px var(--ink); }
+.inapp { display: none; width: 100%; margin: 0; font-size: 14px; font-weight: 700; color: var(--ink-2); }
+.inapp.show { display: block; }
 
 .stage { position: relative; margin-top: 44px; }
 .try { display: flex; align-items: flex-start; gap: 10px; font-weight: 800; font-size: 15px; color: var(--ink-2); margin-bottom: 14px; }
@@ -314,7 +317,7 @@ footer .links { display: flex; gap: 20px; }
   .theme { width: 36px; height: 36px; }
 
   .hero { padding: 8px 0 24px; }
-  .hero h1 { font-size: clamp(44px, 13.5vw, 64px); letter-spacing: -1px; }
+  .hero h1 { font-size: clamp(40px, 12.5vw, 64px); letter-spacing: -1px; }
   .hero .lede { margin-top: 14px; }
   .dl-top { margin-top: 22px; gap: 14px; }
   .dl-main-row { width: 100%; flex-direction: column; gap: 10px; }
