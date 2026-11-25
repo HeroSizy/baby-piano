@@ -1,0 +1,31 @@
+name: App Store listings
+
+# Uploads the listing translations in store/ to App Store Connect, when run
+# by hand from the Actions tab. dry_run only reads and says what it would do.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Only read App Store Connect and print the plan
+        type: boolean
+        default: true
+      version:
+        description: Version to create when none is being prepared (default the newest release tag)
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: pip install pyjwt cryptography pyyaml
+      - run: python3 tools/store_listings.py ${{ inputs.dry_run && '--dry-run' || '' }} ${{ inputs.version && format('--version {0}', inputs.version) || '' }}
+        env:
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
