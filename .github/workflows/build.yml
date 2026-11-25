@@ -7,7 +7,7 @@ on:
     # The website (site/, which Cloudflare builds and deploys itself) and
     # the docs and the App Store listing text are not the app: a change to
     # them alone cuts no release.
-    paths-ignore: ["site/**", "*.md", "docs/**/*.md", "store/**", "tools/store_listings.py", ".github/workflows/store-listings.yml"]
+    paths-ignore: ["site/**", "*.md", "docs/**/*.md", "store/**"]
   pull_request:
   workflow_dispatch:
 
