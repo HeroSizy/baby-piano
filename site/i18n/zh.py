@@ -72,8 +72,8 @@ PAIRS = [
     # get it
     ('<div class="kicker">Free, everywhere</div>', '<div class="kicker">全平台免费</div>'),
     ('<h2>Get Mash Piano</h2>', '<h2>下载 Mash Piano</h2>'),
-    ('<p class="big">The same toy on every device in the house. No ads, no purchases, no accounts, and it never goes online.</p>',
-     '<p class="big">家里每台设备上都是同一个玩具。没有广告、没有内购、不用注册，也从不联网。</p>'),
+    ('<p class="big">The same toy on every device in the house, in 25 languages. No ads, no purchases, no accounts, and it never goes online.</p>',
+     '<p class="big">家里每台设备上都是同一个玩具，支持 25 种语言。没有广告、没有内购、不用注册，也从不联网。</p>'),
     ('<span class="desc">Signed and notarized. Locks the keyboard.</span><span class="go">Download ↓</span>',
      '<span class="desc">已签名并经 Apple 公证。会锁住键盘。</span><span class="go">下载 ↓</span>'),
     ('<span class="desc">No admin rights needed. Locks the keyboard.</span><span class="go">Download ↓</span>',
@@ -100,8 +100,8 @@ PAIRS = [
      '<li><b>笔记本：</b>打开“同时锁住鼠标和触控板”，小手掌就什么都点不了。</li>'),
     ('<li><b>iPhone and iPad:</b> turn on Guided Access, then triple-click the side button while it plays. <b>Android:</b> use App pinning.</li>',
      '<li><b>iPhone 和 iPad：</b>打开“引导式访问”，弹琴时连按三下侧边按钮。<b>Android：</b>使用“应用固定”。</li>'),
-    ('<span>No ads</span><span>No purchases</span><span>No accounts</span><span>No data collected</span><span>Works offline</span>',
-     '<span>没有广告</span><span>没有内购</span><span>不用注册</span><span>不收集数据</span><span>离线可用</span>'),
+    ('<span>No ads</span><span>No purchases</span><span>No accounts</span><span>No data collected</span><span>Works offline</span><span>25 languages</span>',
+     '<span>没有广告</span><span>没有内购</span><span>不用注册</span><span>不收集数据</span><span>离线可用</span><span>25 种语言</span>'),
     # footer
     ('<span>Piano notes: <a href="https://archive.org/details/SalamanderGrandPianoV3">Salamander Grand Piano V3</a> by Alexander Holm, CC BY 3.0.</span>',
      '<span>钢琴音源：<a href="https://archive.org/details/SalamanderGrandPianoV3">Salamander Grand Piano V3</a>，作者 Alexander Holm，CC BY 3.0。</span>'),
