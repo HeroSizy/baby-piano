@@ -347,7 +347,8 @@ footer .links { display: flex; gap: 20px; }
   .art.scale { height: 150px; }
   .art.scale span { width: 26px; }
 
-  .get-it { margin: 0; border-radius: 28px; padding: 56px 0; }
+  .get-it { margin: 0 max(16px, env(safe-area-inset-left)); border-radius: 28px; padding: 48px 0; }
+  .get-it .wrap { padding: 0 20px; }
   .platforms { grid-template-columns: 1fr; gap: 10px; margin-top: 28px; }
   .plat { display: grid; grid-template-columns: 30px 1fr auto; grid-template-rows: auto auto; column-gap: 14px; row-gap: 2px; align-items: center; padding: 16px 18px; border-radius: 18px; }
   .plat svg { grid-row: 1 / 3; width: 26px; height: 26px; }
