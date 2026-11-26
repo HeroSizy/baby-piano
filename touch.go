@@ -122,11 +122,17 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 		}
 		face := core.Node(core.View{
 			StyleFunc: func() core.Style {
-				return core.Style{FlexGrow: 1, CornerRadii: radii, Background: look.color(cx.Dark()), Gradients: look.sheen(cx.Dark()),
+				st := core.Style{FlexGrow: 1, CornerRadii: radii, Background: look.color(cx.Dark()), Gradients: look.sheen(cx.Dark()),
 					ShadowColor: look.glow(), ShadowRadius: 26,
 					AlignItems: core.AlignCenter, JustifyContent: core.JustifyEnd,
 					Padding:  core.Edges{Bottom: core.Points(letter() * lift)},
 					Animated: &core.AnimatedStyle{Scale: bounces[k], ShadowOpacity: glows[k]}}
+				if look.black && cx.Dark() {
+					// On the night a black key is a lighter plum with a pale
+					// rim, so it stands off the background between the keys.
+					st.BorderWidth, st.BorderColor = 1.5, core.RGBA(0xffffff, 0.22)
+				}
+				return st
 			},
 			Children: children,
 		})
@@ -184,12 +190,13 @@ type keyLook struct {
 
 // color is the key's color on the dark screen, as bright as the night
 // lets it glow, or on the light one, a pastel a step lighter that sits on
-// the paper; a black key is the night's own plum ink on either, a little
-// softer on paper, whatever its hue, which is only its glow's.
+// the paper; a black key is plum ink on either, lighter than the night on
+// the dark screen so it shows against it, whatever its hue, which is only
+// its glow's.
 func (l keyLook) color(dark bool) core.Color {
 	switch {
 	case l.black && dark:
-		return core.RGB(0x1c172d)
+		return core.RGB(0x4a406c)
 	case l.black:
 		return core.RGB(0x3b3254)
 	case dark:
@@ -293,7 +300,7 @@ func noteLetter(cx *core.Scope, name string, look keyLook, size func() float64) 
 func (l keyLook) ink(dark bool) core.Color {
 	switch {
 	case l.black && dark:
-		return core.RGBA(0xcfc5ea, 0.62)
+		return core.RGBA(0xe6dff7, 0.78)
 	case l.black:
 		return core.RGBA(0xe6dff7, 0.72)
 	case dark:
@@ -318,7 +325,7 @@ func (l keyLook) sheen(dark bool) []core.Gradient {
 	case !l.black:
 		return nil
 	case dark:
-		return []core.Gradient{core.LinearGradient(180, core.RGB(0x2b2444), core.RGB(0x120e1f))}
+		return []core.Gradient{core.LinearGradient(180, core.RGB(0x62568a), core.RGB(0x3f355e))}
 	}
 	return []core.Gradient{core.LinearGradient(180, core.RGB(0x4d4368), core.RGB(0x2f2745))}
 }
