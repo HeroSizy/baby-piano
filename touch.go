@@ -239,44 +239,42 @@ func pianoOctave(octave int, light float64, key func(k int, look keyLook, style 
 	return core.View{Style: core.Style{Width: core.Pct(100), Height: core.Pct(99.9 / 3), Direction: core.Row}, Children: children}
 }
 
-// noteLetter is a key's note name, as C or F#: a sticker near the key's
-// foot, a round of cream with the letter in the key's own color, deeper,
-// so it reads on the key and stays clear when the key glows. A black key's
-// is smaller, a pill for its sharp. height is the white keys' sticker size.
+// noteLetter is a key's note name, as C or F#, pressed into the key as if
+// printed there: a deeper shade of the key's own color, its lower edge
+// catching the light, so the letter reads as sunk into the key rather than
+// laid on it. A black key's is smaller. height is the white keys' size.
 func noteLetter(cx *core.Scope, name string, look keyLook, height func() float64) core.Node {
-	return core.View{
-		StyleFunc: func() core.Style {
-			h := height()
-			if look.black {
-				h = max(h*0.85, 24)
-			}
-			bg := core.RGBA(0xffffff, 0.9)
-			if cx.Dark() {
-				bg = core.RGBA(0xfff4e2, 0.92)
-			}
-			return core.Style{MinWidth: core.Pt(core.Points(h)), Height: core.Pt(core.Points(h)), CornerRadius: core.Points(h / 2),
-				Padding: core.Symmetric(0, core.Points(h*0.18)), AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter,
-				Background: bg, Shadows: []core.BoxShadow{{Offset: core.Point{Y: core.Points(h * 0.06)}, Blur: core.Points(h * 0.16), Color: core.RGBA(0x000000, 0.16)}}}
-		},
-		Children: []core.Node{core.Text{Content: name, StyleFunc: func() core.Style {
-			h := height()
-			size := h * 0.56
-			if look.black {
-				size = max(h*0.85, 24) * 0.46
-			}
-			return ui.TypeBody.Merge(core.Style{FontSize: core.Points(size), LineHeight: core.Points(size * 1.1), FontWeight: ui.Bold,
-				Color: look.ink(cx.Dark())})
-		}}},
-	}
+	return core.Text{Content: name, StyleFunc: func() core.Style {
+		size := height() * 0.95
+		if look.black {
+			size = max(height()*0.85, 24) * 0.55
+		}
+		dark := cx.Dark()
+		return ui.TypeBody.Merge(core.Style{FontSize: core.Points(size), LineHeight: core.Points(size * 1.05), FontWeight: ui.Bold,
+			Color: look.ink(dark), TextShadowColor: look.rim(dark), TextShadowOffset: core.Point{Y: core.Points(max(size*0.028, 1))}, TextShadowRadius: core.Points(size * 0.012)})
+	}}
 }
 
-// ink is the color a key's letter is written in: the key's hue, deep.
+// ink is the color a key's letter is pressed in: the key's own, deeper.
 func (l keyLook) ink(dark bool) core.Color {
-	if l.black {
-		return hsl(l.hue, 0.4, 0.26)
+	switch {
+	case l.black && dark:
+		return hsl(l.hue, 0.5, 0.12)
+	case l.black:
+		return hsl(l.hue, 0.4, 0.17)
+	case dark:
+		return hsl(l.hue, 0.7, l.light-0.2).Faded(0.85)
 	}
-	if dark {
-		return hsl(l.hue, 0.7, 0.34)
+	return hsl(l.hue, 0.62, l.light-0.16).Faded(0.85)
+}
+
+// rim is the light on the pressed letter's lower edge.
+func (l keyLook) rim(dark bool) core.Color {
+	switch {
+	case l.black:
+		return core.RGBA(0xffffff, 0.22)
+	case dark:
+		return core.RGBA(0xffffff, 0.4)
 	}
-	return hsl(l.hue, 0.65, 0.38)
+	return core.RGBA(0xffffff, 0.6)
 }
