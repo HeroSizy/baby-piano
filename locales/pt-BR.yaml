@@ -32,6 +32,8 @@ scaleChromatic: "Todas as doze"
 scaleChromaticNote: "Teclas brancas e pretas, todas as notas."
 visualsTitle: "Fogos de artifício"
 visualsNote: "Uma explosão colorida a cada nota. Não precisa se o bebê não vê a tela."
+noteNamesTitle: Nomes das notas nas teclas
+noteNamesNote: Mostra C D E F G A B em cada tecla, para aprender as notas juntos.
 lockMouseTitle: "Bloquear também o mouse e o trackpad"
 lockMouseNote: "Recomendado em notebooks. Para sair, digite quitpiano."
 keyboardOn: "Teclado conectado"

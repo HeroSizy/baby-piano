@@ -181,6 +181,10 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 		card = append(card, toggleRow(cx, iconMouse, accentBlue, locales.LockMouseTitle(cx), locales.LockMouseNote(cx), "lockMouse", a.settings.lockMouse))
 	}
 	card = append(card, toggleRow(cx, iconFirework, accentCoral, locales.VisualsTitle(cx), locales.VisualsNote(cx), "visuals", a.settings.visuals))
+	if !computer {
+		// Only the touch keys are on the screen to letter.
+		card = append(card, toggleRow(cx, iconNote, accentPurple, locales.NoteNamesTitle(cx), locales.NoteNamesNote(cx), "noteNames", a.settings.noteNames))
+	}
 
 	// tips are how parents keep the baby in and how they stop.
 	var tips []core.Node

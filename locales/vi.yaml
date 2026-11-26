@@ -32,6 +32,8 @@ scaleChromatic: "Đủ mười hai"
 scaleChromaticNote: "Phím trắng và phím đen, mọi nốt."
 visualsTitle: "Pháo hoa"
 visualsNote: "Một chùm pháo hoa rực rỡ cho mỗi nốt. Không cần nếu bé không nhìn thấy màn hình."
+noteNamesTitle: Tên nốt trên phím
+noteNamesNote: Hiện C D E F G A B trên mỗi phím, để cùng nhau học nốt nhạc.
 lockMouseTitle: "Khóa cả chuột và bàn di chuột"
 lockMouseNote: "Nên dùng trên máy tính xách tay. Khi đó dừng bằng cách gõ quitpiano."
 keyboardOn: "Đã kết nối bàn phím"

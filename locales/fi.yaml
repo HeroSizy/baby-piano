@@ -32,6 +32,8 @@ scaleChromatic: "Kaikki kaksitoista"
 scaleChromaticNote: "Valkoiset ja mustat koskettimet, jokainen sävel."
 visualsTitle: "Ilotulitus"
 visualsNote: "Värikäs räjähdys jokaisesta sävelestä. Ei tarpeen, jos vauva ei näe näyttöä."
+noteNamesTitle: Nuottien nimet koskettimissa
+noteNamesNote: Näyttää C D E F G A B jokaisessa koskettimessa, niin opitte sävelet yhdessä.
 lockMouseTitle: "Lukitse myös hiiri ja ohjauslevy"
 lockMouseNote: "Suositellaan kannettavissa. Lopeta silloin kirjoittamalla quitpiano."
 keyboardOn: "Näppäimistö liitetty"

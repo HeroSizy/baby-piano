@@ -1,6 +1,9 @@
 package piano
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 // Scale is which notes the keys play, chosen by the parents. Every scale
 // has as many notes as Notes, low to high, so a computer's keys and the
@@ -82,6 +85,10 @@ func NoteName(p int) string {
 	names := [12]string{"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"}
 	return names[p%12] + strconv.Itoa(p/12-1)
 }
+
+// Letter is MIDI pitch p's note name without its octave, as a key shows
+// it, such as C or F#.
+func Letter(p int) string { return strings.TrimRight(NoteName(p), "-0123456789") }
 
 // PitchGain is how loud MIDI pitch p plays relative to the parent's volume:
 // from C6 up the notes fade, to 60% at C8, so the highest are not piercing.

@@ -32,6 +32,8 @@ scaleChromatic: "Tutte e dodici"
 scaleChromaticNote: "Tasti bianchi e neri, ogni nota."
 visualsTitle: "Fuochi d’artificio"
 visualsNote: "Un’esplosione di colori per ogni nota. Non serve se il bambino non vede lo schermo."
+noteNamesTitle: Nomi delle note sui tasti
+noteNamesNote: Mostra C D E F G A B su ogni tasto, per imparare le note insieme.
 lockMouseTitle: "Blocca anche mouse e trackpad"
 lockMouseNote: "Consigliato sui portatili. Poi esci digitando quitpiano."
 keyboardOn: "Tastiera collegata"

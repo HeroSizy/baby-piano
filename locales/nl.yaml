@@ -32,6 +32,8 @@ scaleChromatic: "Alle twaalf"
 scaleChromaticNote: "Witte en zwarte toetsen, elke toon."
 visualsTitle: "Vuurwerk"
 visualsNote: "Een kleurige knal bij elke toon. Niet nodig als de baby het scherm niet ziet."
+noteNamesTitle: Nootnamen op de toetsen
+noteNamesNote: Toont C D E F G A B op elke toets, om samen de noten te leren.
 lockMouseTitle: "Ook muis en trackpad vergrendelen"
 lockMouseNote: "Aanbevolen op laptops. Stop dan door quitpiano te typen."
 keyboardOn: "Toetsenbord verbonden"

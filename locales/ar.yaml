@@ -32,6 +32,8 @@ scaleChromatic: "الاثنتا عشرة كلها"
 scaleChromaticNote: "المفاتيح البيضاء والسوداء، كل النغمات."
 visualsTitle: "ألعاب نارية"
 visualsNote: "انفجار ملوّن مع كل نغمة. لا حاجة إليه إن كان الطفل لا يرى الشاشة."
+noteNamesTitle: أسماء النوتات على المفاتيح
+noteNamesNote: تظهر C D E F G A B على كل مفتاح، لتتعلّما النوتات معًا.
 lockMouseTitle: "اقفل الماوس ولوحة التعقب أيضًا"
 lockMouseNote: "يُنصح به على أجهزة اللابتوب. وللإيقاف حينها اكتب quitpiano."
 keyboardOn: "لوحة المفاتيح متصلة"

@@ -32,6 +32,8 @@ scaleChromatic: "Wszystkie dwanaście"
 scaleChromaticNote: "Białe i czarne klawisze, każda nuta."
 visualsTitle: "Fajerwerki"
 visualsNote: "Kolorowy wybuch przy każdej nucie. Niepotrzebne, jeśli maluch nie widzi ekranu."
+noteNamesTitle: Nazwy nut na klawiszach
+noteNamesNote: Pokazuje C D E F G A B na każdym klawiszu, by razem uczyć się nut.
 lockMouseTitle: "Zablokuj też mysz i gładzik"
 lockMouseNote: "Zalecane na laptopach. Wtedy zakończ, wpisując quitpiano."
 keyboardOn: "Klawiatura podłączona"

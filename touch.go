@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/nsgo-dev/nsgo/core"
+	"github.com/nsgo-dev/nsgo/ui"
 
 	"github.com/HeroSizy/baby-piano/piano"
 )
@@ -75,18 +76,48 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 	a.tapAt = func(p core.Point) { press(keyAt(p), p) }
 	cx.Cleanup(func() { a.tapAt = nil })
 
+	// letter is how big a key's note name is drawn: its bubble's height,
+	// about half the smaller side of a white key, kept readable on a phone
+	// and not too big on a tablet.
+	letters := a.settings.noteNames.Get()
+	across := cols
+	if scale == piano.Chromatic {
+		across = 7
+	}
+	// All twelve keep it below the black keys.
+	letter := func() float64 {
+		s := size.Get()
+		w, h := float64(s.Width)/float64(across), float64(s.Height)/float64(rows)
+		if scale == piano.Chromatic {
+			h *= (1 - blackHeight) * 1.6
+		}
+		return min(max(min(w, h)*0.42, 26), 64)
+	}
+	lift := 0.36
+	if scale == piano.Chromatic {
+		lift = 0.18
+	}
+
 	// key is key k's look: a rounded color that glows white and bounces
-	// when it sounds, its color as the screen is light or dark.
+	// when it sounds, its color as the screen is light or dark, and with
+	// the parents' say its note's letter on it.
 	key := func(k int, look keyLook, style core.Style) core.Node {
+		children := []core.Node{core.View{
+			Style: core.Style{Position: core.Absolute, Top: core.Pt(0), Right: core.Pt(0), Bottom: core.Pt(0), Left: core.Pt(0),
+				CornerRadius: 18, Background: core.RGB(0xffffff),
+				Animated: &core.AnimatedStyle{Opacity: core.Interpolate(glows[k], core.Interpolation{Input: []float64{0, 1}, Output: []float64{0, 0.55}})}},
+		}}
+		if letters {
+			children = append(children, noteLetter(cx, piano.Letter(scale.Pitch(first+k)), look, letter))
+		}
 		return core.View{Style: style, Children: []core.Node{core.View{
 			StyleFunc: func() core.Style {
 				return core.Style{FlexGrow: 1, CornerRadius: 18, Background: look.color(cx.Dark()), ShadowColor: look.glow(), ShadowRadius: 26,
+					AlignItems: core.AlignCenter, JustifyContent: core.JustifyEnd,
+					Padding:  core.Edges{Bottom: core.Points(letter() * lift)},
 					Animated: &core.AnimatedStyle{Scale: bounces[k], ShadowOpacity: glows[k]}}
 			},
-			Children: []core.Node{core.View{
-				Style: core.Style{FlexGrow: 1, CornerRadius: 18, Background: core.RGB(0xffffff),
-					Animated: &core.AnimatedStyle{Opacity: core.Interpolate(glows[k], core.Interpolation{Input: []float64{0, 1}, Output: []float64{0, 0.55}})}},
-			}},
+			Children: children,
 		}}}
 	}
 	// The rows from the top, the highest octave first; a column keeps its
@@ -206,4 +237,46 @@ func pianoOctave(octave int, light float64, key func(k int, look keyLook, style 
 				Width: core.Pct(float32(blackWidth / 7 * 100)), Height: core.Pct(blackHeight * 100), Padding: core.All(4)}))
 	}
 	return core.View{Style: core.Style{Width: core.Pct(100), Height: core.Pct(99.9 / 3), Direction: core.Row}, Children: children}
+}
+
+// noteLetter is a key's note name, as C or F#: a sticker near the key's
+// foot, a round of cream with the letter in the key's own color, deeper,
+// so it reads on the key and stays clear when the key glows. A black key's
+// is smaller, a pill for its sharp. height is the white keys' sticker size.
+func noteLetter(cx *core.Scope, name string, look keyLook, height func() float64) core.Node {
+	return core.View{
+		StyleFunc: func() core.Style {
+			h := height()
+			if look.black {
+				h = max(h*0.85, 24)
+			}
+			bg := core.RGBA(0xffffff, 0.9)
+			if cx.Dark() {
+				bg = core.RGBA(0xfff4e2, 0.92)
+			}
+			return core.Style{MinWidth: core.Pt(core.Points(h)), Height: core.Pt(core.Points(h)), CornerRadius: core.Points(h / 2),
+				Padding: core.Symmetric(0, core.Points(h*0.18)), AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter,
+				Background: bg, Shadows: []core.BoxShadow{{Offset: core.Point{Y: core.Points(h * 0.06)}, Blur: core.Points(h * 0.16), Color: core.RGBA(0x000000, 0.16)}}}
+		},
+		Children: []core.Node{core.Text{Content: name, StyleFunc: func() core.Style {
+			h := height()
+			size := h * 0.56
+			if look.black {
+				size = max(h*0.85, 24) * 0.46
+			}
+			return ui.TypeBody.Merge(core.Style{FontSize: core.Points(size), LineHeight: core.Points(size * 1.1), FontWeight: ui.Bold,
+				Color: look.ink(cx.Dark())})
+		}}},
+	}
+}
+
+// ink is the color a key's letter is written in: the key's hue, deep.
+func (l keyLook) ink(dark bool) core.Color {
+	if l.black {
+		return hsl(l.hue, 0.4, 0.26)
+	}
+	if dark {
+		return hsl(l.hue, 0.7, 0.34)
+	}
+	return hsl(l.hue, 0.65, 0.38)
 }

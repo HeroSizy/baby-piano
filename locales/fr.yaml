@@ -32,6 +32,8 @@ scaleChromatic: "Les douze"
 scaleChromaticNote: "Touches blanches et noires, toutes les notes."
 visualsTitle: "Feux d’artifice"
 visualsNote: "Une gerbe de couleurs pour chaque note. Inutile si bébé ne voit pas l’écran."
+noteNamesTitle: Noms des notes sur les touches
+noteNamesNote: Affiche C D E F G A B sur chaque touche, pour apprendre les notes ensemble.
 lockMouseTitle: "Verrouiller aussi la souris et le trackpad"
 lockMouseNote: "Conseillé sur les portables. Arrêtez alors en tapant quitpiano."
 keyboardOn: "Clavier connecté"

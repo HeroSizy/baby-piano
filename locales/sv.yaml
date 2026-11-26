@@ -32,6 +32,8 @@ scaleChromatic: "Alla tolv"
 scaleChromaticNote: "Vita och svarta tangenter, varje ton."
 visualsTitle: "Fyrverkeri"
 visualsNote: "En färgglad explosion för varje ton. Behövs inte om bebisen inte ser skärmen."
+noteNamesTitle: Notnamn på tangenterna
+noteNamesNote: Visar C D E F G A B på varje tangent, så att ni kan lära er tonerna tillsammans.
 lockMouseTitle: "Lås även mus och styrplatta"
 lockMouseNote: "Rekommenderas på bärbara datorer. Avsluta då genom att skriva quitpiano."
 keyboardOn: "Tangentbord anslutet"

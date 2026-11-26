@@ -32,6 +32,8 @@ scaleChromatic: "12の音すべて"
 scaleChromaticNote: "白鍵も黒鍵も、すべての音。"
 visualsTitle: "花火"
 visualsNote: "音ごとにカラフルな花火。赤ちゃんが画面を見られないなら不要です。"
+noteNamesTitle: 鍵盤に音名を表示
+noteNamesNote: 鍵盤に C D E F G A B を表示します。いっしょに音を覚えるときに。
 lockMouseTitle: "マウスとトラックパッドもロック"
 lockMouseNote: "ノートパソコンにおすすめ。終了は quitpiano の入力で。"
 keyboardOn: "キーボード接続中"

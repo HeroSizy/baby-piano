@@ -32,6 +32,8 @@ scaleChromatic: "Все двенадцать"
 scaleChromaticNote: "Белые и чёрные клавиши, все ноты."
 visualsTitle: "Фейерверк"
 visualsNote: "Цветной салют на каждую ноту. Не нужен, если малыш не видит экран."
+noteNamesTitle: Названия нот на клавишах
+noteNamesNote: Показывает C D E F G A B на каждой клавише, чтобы учить ноты вместе.
 lockMouseTitle: "Заблокировать также мышь и трекпад"
 lockMouseNote: "Рекомендуется на ноутбуках. Выход — набрать quitpiano."
 keyboardOn: "Клавиатура подключена"

@@ -34,6 +34,8 @@ scaleChromatic: All twelve
 scaleChromaticNote: White and black keys, every note.
 visualsTitle: Fireworks
 visualsNote: A colorful burst for each note. Not needed if the baby cannot see the screen.
+noteNamesTitle: Note names on the keys
+noteNamesNote: Shows C D E F G A B on each key, for learning the notes together.
 lockMouseTitle: Lock the mouse and trackpad too
 lockMouseNote: Recommended on laptops. Then stop by typing quitpiano.
 keyboardOn: Keyboard connected

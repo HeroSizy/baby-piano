@@ -32,6 +32,8 @@ scaleChromatic: 全部音
 scaleChromaticNote: 黑键白键都有，12 个音全用上。
 visualsTitle: 彩色烟花
 visualsNote: 每个音放一朵烟花。宝宝看不到屏幕的话不用开。
+noteNamesTitle: 琴键上显示音名
+noteNamesNote: 在每个琴键上标出 C D E F G A B，陪宝宝一起认音。
 lockMouseTitle: 同时锁住鼠标和触控板
 lockMouseNote: 笔记本推荐。打开后只能键入 quitpiano 退出。
 keyboardOn: 已连接键盘

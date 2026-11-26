@@ -42,6 +42,8 @@ type settings struct {
 	volume    *core.Persisted[float64]
 	lockMouse *core.Persisted[bool]
 	visuals   *core.Persisted[bool]
+	// noteNames is whether the touch keys show their notes' letters.
+	noteNames *core.Persisted[bool]
 	scale     *core.Persisted[piano.Scale]
 }
 
@@ -50,6 +52,7 @@ func loadSettings(cx *core.Scope) settings {
 		volume:    core.NewPersisted(cx, "volume", 0.45, core.PersistOptions{}),
 		lockMouse: core.NewPersisted(cx, "lockMouse", false, core.PersistOptions{}),
 		visuals:   core.NewPersisted(cx, "showVisuals", false, core.PersistOptions{}),
+		noteNames: core.NewPersisted(cx, "showNoteNames", false, core.PersistOptions{}),
 		scale:     core.NewPersisted(cx, "scale", piano.Pentatonic, core.PersistOptions{}),
 	}
 }

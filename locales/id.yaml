@@ -32,6 +32,8 @@ scaleChromatic: "Kedua belas nada"
 scaleChromaticNote: "Tuts putih dan hitam, semua nada."
 visualsTitle: "Kembang api"
 visualsNote: "Ledakan warna untuk setiap nada. Tidak perlu jika bayi tidak bisa melihat layar."
+noteNamesTitle: Nama nada di tuts
+noteNamesNote: Menampilkan C D E F G A B di setiap tuts, untuk belajar nada bersama.
 lockMouseTitle: "Kunci juga mouse dan trackpad"
 lockMouseNote: "Disarankan untuk laptop. Berhenti dengan mengetik quitpiano."
 keyboardOn: "Keyboard terhubung"

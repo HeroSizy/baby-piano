@@ -32,6 +32,8 @@ scaleChromatic: "Alle zwölf"
 scaleChromaticNote: "Weiße und schwarze Tasten, jeder Ton."
 visualsTitle: "Feuerwerk"
 visualsNote: "Ein bunter Funkenregen zu jedem Ton. Nicht nötig, wenn das Baby den Bildschirm nicht sieht."
+noteNamesTitle: Notennamen auf den Tasten
+noteNamesNote: Zeigt C D E F G A B auf jeder Taste, um die Noten gemeinsam zu lernen.
 lockMouseTitle: "Auch Maus und Trackpad sperren"
 lockMouseNote: "Empfohlen für Laptops. Beenden dann durch Tippen von quitpiano."
 keyboardOn: "Tastatur verbunden"

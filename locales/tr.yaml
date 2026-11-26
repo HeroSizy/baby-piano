@@ -32,6 +32,8 @@ scaleChromatic: "On ikisi de"
 scaleChromaticNote: "Beyaz ve siyah tuşlar, her nota."
 visualsTitle: "Havai fişek"
 visualsNote: "Her notada renkli bir patlama. Bebek ekranı göremiyorsa gerekmez."
+noteNamesTitle: Tuşlarda nota adları
+noteNamesNote: Her tuşta C D E F G A B gösterir, notaları birlikte öğrenmek için.
 lockMouseTitle: "Fareyi ve izleme dörtgenini de kilitle"
 lockMouseNote: "Dizüstü bilgisayarlarda önerilir. Durdurmak için quitpiano yazın."
 keyboardOn: "Klavye bağlı"

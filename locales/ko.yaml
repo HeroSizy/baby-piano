@@ -32,6 +32,8 @@ scaleChromatic: "열두 음 모두"
 scaleChromaticNote: "흰 건반과 검은 건반, 모든 음."
 visualsTitle: "불꽃놀이"
 visualsNote: "음마다 알록달록한 불꽃. 아기가 화면을 볼 수 없다면 필요 없습니다."
+noteNamesTitle: 건반에 음 이름 표시
+noteNamesNote: 건반마다 C D E F G A B를 보여 줘요. 함께 음을 익힐 때 켜세요.
 lockMouseTitle: "마우스와 트랙패드도 잠그기"
 lockMouseNote: "노트북에 권장. 끝내려면 quitpiano를 입력하세요."
 keyboardOn: "키보드 연결됨"

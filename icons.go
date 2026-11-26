@@ -34,6 +34,11 @@ var (
 		`<path d="M11 7.5V5M11 21v-2.5M5.5 13H3M19 13h-2.5M7.1 9.1 5.3 7.3M16.7 18.7l-1.8-1.8M7.1 16.9l-1.8 1.8M16.7 7.3l-1.8 1.8"/>` +
 		`<path d="M19.5 2.5v3M18 4h3" stroke-width="1.6"/>`)
 
+	// iconNote is a pair of eighth notes joined by their beam: the notes'
+	// names on the keys.
+	iconNote = mustSVG(`<circle cx="7" cy="17.5" r="2.8" fill="currentColor" fill-opacity=".22"/><circle cx="17" cy="15.5" r="2.8" fill="currentColor" fill-opacity=".22"/>` +
+		`<path d="M9.8 17.5V6.5l10-2v11"/><path d="M9.8 10l10-2" stroke-width="1.6"/>`)
+
 	// iconWave is an open hand waving, tipped over, two marks beside it.
 	// The hand is lucide's (ISC licence, which NSGo ships in icons/lucide).
 	iconWave = mustSVG(`<g transform="rotate(-14 13 14) translate(1.5 1) scale(.9)">` +

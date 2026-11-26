@@ -32,6 +32,8 @@ scaleChromatic: "כל השנים־עשר"
 scaleChromaticNote: "קלידים לבנים ושחורים, כל צליל."
 visualsTitle: "זיקוקים"
 visualsNote: "פרץ צבעוני לכל צליל. לא נחוץ אם התינוק לא רואה את המסך."
+noteNamesTitle: שמות התווים על הקלידים
+noteNamesNote: מציג C D E F G A B על כל קליד, כדי ללמוד את התווים יחד.
 lockMouseTitle: "לנעול גם את העכבר ומשטח המגע"
 lockMouseNote: "מומלץ במחשבים ניידים. כדי לעצור, הקלידו quitpiano."
 keyboardOn: "מקלדת מחוברת"

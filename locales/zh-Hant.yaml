@@ -32,6 +32,8 @@ scaleChromatic: "全部的音"
 scaleChromaticNote: "黑鍵白鍵都有，12 個音全用上。"
 visualsTitle: "彩色煙火"
 visualsNote: "每個音放一朵煙火。寶寶看不到螢幕的話不用開。"
+noteNamesTitle: 琴鍵上顯示音名
+noteNamesNote: 在每個琴鍵上標出 C D E F G A B，陪寶寶一起認音。
 lockMouseTitle: "同時鎖住滑鼠和觸控板"
 lockMouseNote: "筆電建議開啟。開啟後只能輸入 quitpiano 退出。"
 keyboardOn: "已連接鍵盤"

@@ -32,6 +32,8 @@ scaleChromatic: "ครบสิบสอง"
 scaleChromaticNote: "คีย์ขาวและดำ ทุกโน้ต"
 visualsTitle: "พลุ"
 visualsNote: "พลุสีสันสดใสทุกโน้ต ไม่จำเป็นถ้าลูกน้อยมองไม่เห็นหน้าจอ"
+noteNamesTitle: ชื่อโน้ตบนคีย์
+noteNamesNote: แสดง C D E F G A B บนทุกคีย์ ไว้ฝึกจำโน้ตด้วยกัน
 lockMouseTitle: "ล็อกเมาส์และแทร็คแพดด้วย"
 lockMouseNote: "แนะนำสำหรับโน้ตบุ๊ก หยุดได้ด้วยการพิมพ์ quitpiano"
 keyboardOn: "เชื่อมต่อแป้นพิมพ์แล้ว"

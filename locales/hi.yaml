@@ -32,6 +32,8 @@ scaleChromatic: "सभी बारह"
 scaleChromaticNote: "सफ़ेद और काली कुंजियाँ, हर सुर।"
 visualsTitle: "आतिशबाज़ी"
 visualsNote: "हर सुर पर एक रंगीन फुहार। अगर बच्चा स्क्रीन नहीं देख सकता तो ज़रूरी नहीं।"
+noteNamesTitle: कुंजियों पर सुरों के नाम
+noteNamesNote: हर कुंजी पर C D E F G A B दिखाता है, ताकि आप साथ में सुर सीख सकें।
 lockMouseTitle: "माउस और ट्रैकपैड भी लॉक करें"
 lockMouseNote: "लैपटॉप पर सुझाया गया। तब रोकने के लिए quitpiano टाइप करें।"
 keyboardOn: "कीबोर्ड जुड़ा है"

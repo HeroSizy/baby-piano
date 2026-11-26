@@ -32,6 +32,8 @@ scaleChromatic: "Alle tolv"
 scaleChromaticNote: "Hvide og sorte tangenter, hver eneste tone."
 visualsTitle: "Fyrværkeri"
 visualsNote: "Et farverigt brag for hver tone. Ikke nødvendigt, hvis babyen ikke kan se skærmen."
+noteNamesTitle: Nodenavne på tangenterne
+noteNamesNote: Viser C D E F G A B på hver tangent, så I kan lære tonerne sammen.
 lockMouseTitle: "Lås også mus og pegefelt"
 lockMouseNote: "Anbefales på bærbare. Stop så ved at skrive quitpiano."
 keyboardOn: "Tastatur tilsluttet"

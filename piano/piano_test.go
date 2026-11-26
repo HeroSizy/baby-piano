@@ -143,3 +143,11 @@ func TestLimiter(t *testing.T) {
 		t.Error("a note while muted")
 	}
 }
+
+func TestLetter(t *testing.T) {
+	for p, want := range map[int]string{60: "C", 61: "C#", 69: "A", 70: "A#", 23: "B", 36: "C"} {
+		if got := Letter(p); got != want {
+			t.Errorf("Letter(%d) = %q, want %q", p, got, want)
+		}
+	}
+}

@@ -789,6 +789,8 @@ const (
 	textScaleChromaticNote
 	textVisualsTitle
 	textVisualsNote
+	textNoteNamesTitle
+	textNoteNamesNote
 	textLockMouseTitle
 	textLockMouseNote
 	textKeyboardOn
@@ -834,6 +836,8 @@ var keyOfText = [numTexts]string{
 	"scaleChromaticNote",
 	"visualsTitle",
 	"visualsNote",
+	"noteNamesTitle",
+	"noteNamesNote",
 	"lockMouseTitle",
 	"lockMouseNote",
 	"keyboardOn",
@@ -877,6 +881,8 @@ var textsEn = i18n.NewTexts(""+
 	"White and black keys, every note."+
 	"Fireworks"+
 	"A colorful burst for each note. Not needed if the baby cannot see the screen."+
+	"Note names on the keys"+
+	"Shows C D E F G A B on each key, for learning the notes together."+
 	"Lock the mouse and trackpad too"+
 	"Recommended on laptops. Then stop by typing quitpiano."+
 	"Keyboard connected"+
@@ -917,6 +923,8 @@ var textsEn = i18n.NewTexts(""+
 		33,
 		9,
 		77,
+		22,
+		65,
 		31,
 		54,
 		18,
@@ -960,6 +968,8 @@ var textsAr = i18n.NewTexts(""+
 	"المفاتيح البيضاء والسوداء، كل النغمات."+
 	"ألعاب نارية"+
 	"انفجار ملوّن مع كل نغمة. لا حاجة إليه إن كان الطفل لا يرى الشاشة."+
+	"أسماء النوتات على المفاتيح"+
+	"تظهر C D E F G A B على كل مفتاح، لتتعلّما النوتات معًا."+
 	"اقفل الماوس ولوحة التعقب أيضًا"+
 	"يُنصح به على أجهزة اللابتوب. وللإيقاف حينها اكتب quitpiano."+
 	"لوحة المفاتيح متصلة"+
@@ -1000,6 +1010,8 @@ var textsAr = i18n.NewTexts(""+
 		71,
 		21,
 		115,
+		49,
+		89,
 		56,
 		99,
 		36,
@@ -1043,6 +1055,8 @@ var textsDa = i18n.NewTexts(""+
 	"Hvide og sorte tangenter, hver eneste tone."+
 	"Fyrværkeri"+
 	"Et farverigt brag for hver tone. Ikke nødvendigt, hvis babyen ikke kan se skærmen."+
+	"Nodenavne på tangenterne"+
+	"Viser C D E F G A B på hver tangent, så I kan lære tonerne sammen."+
 	"Lås også mus og pegefelt"+
 	"Anbefales på bærbare. Stop så ved at skrive quitpiano."+
 	"Tastatur tilsluttet"+
@@ -1083,6 +1097,8 @@ var textsDa = i18n.NewTexts(""+
 		43,
 		11,
 		84,
+		25,
+		69,
 		26,
 		57,
 		19,
@@ -1126,6 +1142,8 @@ var textsDe = i18n.NewTexts(""+
 	"Weiße und schwarze Tasten, jeder Ton."+
 	"Feuerwerk"+
 	"Ein bunter Funkenregen zu jedem Ton. Nicht nötig, wenn das Baby den Bildschirm nicht sieht."+
+	"Notennamen auf den Tasten"+
+	"Zeigt C D E F G A B auf jeder Taste, um die Noten gemeinsam zu lernen."+
 	"Auch Maus und Trackpad sperren"+
 	"Empfohlen für Laptops. Beenden dann durch Tippen von quitpiano."+
 	"Tastatur verbunden"+
@@ -1166,6 +1184,8 @@ var textsDe = i18n.NewTexts(""+
 		38,
 		9,
 		92,
+		25,
+		70,
 		30,
 		64,
 		18,
@@ -1209,6 +1229,8 @@ var textsEs = i18n.NewTexts(""+
 	"Teclas blancas y negras, todas las notas."+
 	"Fuegos artificiales"+
 	"Un estallido de color con cada nota. No hace falta si el bebé no ve la pantalla."+
+	"Nombres de notas en las teclas"+
+	"Muestra C D E F G A B en cada tecla, para aprender las notas juntos."+
 	"Bloquear también el ratón y el trackpad"+
 	"Recomendado en portátiles. Para salir, escribe quitpiano."+
 	"Teclado conectado"+
@@ -1249,6 +1271,8 @@ var textsEs = i18n.NewTexts(""+
 		41,
 		19,
 		81,
+		30,
+		68,
 		41,
 		58,
 		17,
@@ -1292,6 +1316,8 @@ var textsFi = i18n.NewTexts(""+
 	"Valkoiset ja mustat koskettimet, jokainen sävel."+
 	"Ilotulitus"+
 	"Värikäs räjähdys jokaisesta sävelestä. Ei tarpeen, jos vauva ei näe näyttöä."+
+	"Nuottien nimet koskettimissa"+
+	"Näyttää C D E F G A B jokaisessa koskettimessa, niin opitte sävelet yhdessä."+
 	"Lukitse myös hiiri ja ohjauslevy"+
 	"Suositellaan kannettavissa. Lopeta silloin kirjoittamalla quitpiano."+
 	"Näppäimistö liitetty"+
@@ -1332,6 +1358,8 @@ var textsFi = i18n.NewTexts(""+
 		49,
 		10,
 		86,
+		28,
+		81,
 		33,
 		68,
 		23,
@@ -1375,6 +1403,8 @@ var textsFr = i18n.NewTexts(""+
 	"Touches blanches et noires, toutes les notes."+
 	"Feux d’artifice"+
 	"Une gerbe de couleurs pour chaque note. Inutile si bébé ne voit pas l’écran."+
+	"Noms des notes sur les touches"+
+	"Affiche C D E F G A B sur chaque touche, pour apprendre les notes ensemble."+
 	"Verrouiller aussi la souris et le trackpad"+
 	"Conseillé sur les portables. Arrêtez alors en tapant quitpiano."+
 	"Clavier connecté"+
@@ -1415,6 +1445,8 @@ var textsFr = i18n.NewTexts(""+
 		45,
 		17,
 		81,
+		30,
+		75,
 		42,
 		65,
 		17,
@@ -1458,6 +1490,8 @@ var textsHe = i18n.NewTexts(""+
 	"קלידים לבנים ושחורים, כל צליל."+
 	"זיקוקים"+
 	"פרץ צבעוני לכל צליל. לא נחוץ אם התינוק לא רואה את המסך."+
+	"שמות התווים על הקלידים"+
+	"מציג C D E F G A B על כל קליד, כדי ללמוד את התווים יחד."+
 	"לנעול גם את העכבר ומשטח המגע"+
 	"מומלץ במחשבים ניידים. כדי לעצור, הקלידו quitpiano."+
 	"מקלדת מחוברת"+
@@ -1498,6 +1532,8 @@ var textsHe = i18n.NewTexts(""+
 		54,
 		14,
 		97,
+		41,
+		86,
 		51,
 		82,
 		23,
@@ -1541,6 +1577,8 @@ var textsHi = i18n.NewTexts(""+
 	"सफ़ेद और काली कुंजियाँ, हर सुर।"+
 	"आतिशबाज़ी"+
 	"हर सुर पर एक रंगीन फुहार। अगर बच्चा स्क्रीन नहीं देख सकता तो ज़रूरी नहीं।"+
+	"कुंजियों पर सुरों के नाम"+
+	"हर कुंजी पर C D E F G A B दिखाता है, ताकि आप साथ में सुर सीख सकें।"+
 	"माउस और ट्रैकपैड भी लॉक करें"+
 	"लैपटॉप पर सुझाया गया। तब रोकने के लिए quitpiano टाइप करें।"+
 	"कीबोर्ड जुड़ा है"+
@@ -1581,6 +1619,8 @@ var textsHi = i18n.NewTexts(""+
 		81,
 		27,
 		191,
+		64,
+		146,
 		74,
 		136,
 		44,
@@ -1624,6 +1664,8 @@ var textsId = i18n.NewTexts(""+
 	"Tuts putih dan hitam, semua nada."+
 	"Kembang api"+
 	"Ledakan warna untuk setiap nada. Tidak perlu jika bayi tidak bisa melihat layar."+
+	"Nama nada di tuts"+
+	"Menampilkan C D E F G A B di setiap tuts, untuk belajar nada bersama."+
 	"Kunci juga mouse dan trackpad"+
 	"Disarankan untuk laptop. Berhenti dengan mengetik quitpiano."+
 	"Keyboard terhubung"+
@@ -1664,6 +1706,8 @@ var textsId = i18n.NewTexts(""+
 		33,
 		11,
 		80,
+		17,
+		69,
 		29,
 		60,
 		18,
@@ -1707,6 +1751,8 @@ var textsIt = i18n.NewTexts(""+
 	"Tasti bianchi e neri, ogni nota."+
 	"Fuochi d’artificio"+
 	"Un’esplosione di colori per ogni nota. Non serve se il bambino non vede lo schermo."+
+	"Nomi delle note sui tasti"+
+	"Mostra C D E F G A B su ogni tasto, per imparare le note insieme."+
 	"Blocca anche mouse e trackpad"+
 	"Consigliato sui portatili. Poi esci digitando quitpiano."+
 	"Tastiera collegata"+
@@ -1747,6 +1793,8 @@ var textsIt = i18n.NewTexts(""+
 		32,
 		20,
 		85,
+		25,
+		65,
 		29,
 		56,
 		18,
@@ -1790,6 +1838,8 @@ var textsJa = i18n.NewTexts(""+
 	"白鍵も黒鍵も、すべての音。"+
 	"花火"+
 	"音ごとにカラフルな花火。赤ちゃんが画面を見られないなら不要です。"+
+	"鍵盤に音名を表示"+
+	"鍵盤に C D E F G A B を表示します。いっしょに音を覚えるときに。"+
 	"マウスとトラックパッドもロック"+
 	"ノートパソコンにおすすめ。終了は quitpiano の入力で。"+
 	"キーボード接続中"+
@@ -1830,6 +1880,8 @@ var textsJa = i18n.NewTexts(""+
 		39,
 		6,
 		96,
+		24,
+		87,
 		45,
 		74,
 		24,
@@ -1873,6 +1925,8 @@ var textsKo = i18n.NewTexts(""+
 	"흰 건반과 검은 건반, 모든 음."+
 	"불꽃놀이"+
 	"음마다 알록달록한 불꽃. 아기가 화면을 볼 수 없다면 필요 없습니다."+
+	"건반에 음 이름 표시"+
+	"건반마다 C D E F G A B를 보여 줘요. 함께 음을 익힐 때 켜세요."+
 	"마우스와 트랙패드도 잠그기"+
 	"노트북에 권장. 끝내려면 quitpiano를 입력하세요."+
 	"키보드 연결됨"+
@@ -1913,6 +1967,8 @@ var textsKo = i18n.NewTexts(""+
 		40,
 		12,
 		92,
+		27,
+		80,
 		38,
 		63,
 		19,
@@ -1956,6 +2012,8 @@ var textsNb = i18n.NewTexts(""+
 	"Hvite og svarte tangenter, hver eneste tone."+
 	"Fyrverkeri"+
 	"Et fargerikt smell for hver tone. Ikke nødvendig hvis babyen ikke ser skjermen."+
+	"Notenavn på tangentene"+
+	"Viser C D E F G A B på hver tangent, så dere kan lære tonene sammen."+
 	"Lås også mus og styreflate"+
 	"Anbefales på bærbare. Stopp da ved å skrive quitpiano."+
 	"Tastatur tilkoblet"+
@@ -1996,6 +2054,8 @@ var textsNb = i18n.NewTexts(""+
 		44,
 		10,
 		80,
+		23,
+		71,
 		28,
 		57,
 		18,
@@ -2039,6 +2099,8 @@ var textsNl = i18n.NewTexts(""+
 	"Witte en zwarte toetsen, elke toon."+
 	"Vuurwerk"+
 	"Een kleurige knal bij elke toon. Niet nodig als de baby het scherm niet ziet."+
+	"Nootnamen op de toetsen"+
+	"Toont C D E F G A B op elke toets, om samen de noten te leren."+
 	"Ook muis en trackpad vergrendelen"+
 	"Aanbevolen op laptops. Stop dan door quitpiano te typen."+
 	"Toetsenbord verbonden"+
@@ -2079,6 +2141,8 @@ var textsNl = i18n.NewTexts(""+
 		35,
 		8,
 		77,
+		23,
+		62,
 		33,
 		56,
 		21,
@@ -2122,6 +2186,8 @@ var textsPl = i18n.NewTexts(""+
 	"Białe i czarne klawisze, każda nuta."+
 	"Fajerwerki"+
 	"Kolorowy wybuch przy każdej nucie. Niepotrzebne, jeśli maluch nie widzi ekranu."+
+	"Nazwy nut na klawiszach"+
+	"Pokazuje C D E F G A B na każdym klawiszu, by razem uczyć się nut."+
 	"Zablokuj też mysz i gładzik"+
 	"Zalecane na laptopach. Wtedy zakończ, wpisując quitpiano."+
 	"Klawiatura podłączona"+
@@ -2162,6 +2228,8 @@ var textsPl = i18n.NewTexts(""+
 		38,
 		10,
 		81,
+		23,
+		69,
 		29,
 		59,
 		23,
@@ -2205,6 +2273,8 @@ var textsPtBR = i18n.NewTexts(""+
 	"Teclas brancas e pretas, todas as notas."+
 	"Fogos de artifício"+
 	"Uma explosão colorida a cada nota. Não precisa se o bebê não vê a tela."+
+	"Nomes das notas nas teclas"+
+	"Mostra C D E F G A B em cada tecla, para aprender as notas juntos."+
 	"Bloquear também o mouse e o trackpad"+
 	"Recomendado em notebooks. Para sair, digite quitpiano."+
 	"Teclado conectado"+
@@ -2245,6 +2315,8 @@ var textsPtBR = i18n.NewTexts(""+
 		40,
 		19,
 		76,
+		26,
+		66,
 		37,
 		54,
 		17,
@@ -2288,6 +2360,8 @@ var textsRu = i18n.NewTexts(""+
 	"Белые и чёрные клавиши, все ноты."+
 	"Фейерверк"+
 	"Цветной салют на каждую ноту. Не нужен, если малыш не видит экран."+
+	"Названия нот на клавишах"+
+	"Показывает C D E F G A B на каждой клавише, чтобы учить ноты вместе."+
 	"Заблокировать также мышь и трекпад"+
 	"Рекомендуется на ноутбуках. Выход — набрать quitpiano."+
 	"Клавиатура подключена"+
@@ -2328,6 +2402,8 @@ var textsRu = i18n.NewTexts(""+
 		59,
 		18,
 		118,
+		45,
+		113,
 		64,
 		92,
 		41,
@@ -2371,6 +2447,8 @@ var textsSv = i18n.NewTexts(""+
 	"Vita och svarta tangenter, varje ton."+
 	"Fyrverkeri"+
 	"En färgglad explosion för varje ton. Behövs inte om bebisen inte ser skärmen."+
+	"Notnamn på tangenterna"+
+	"Visar C D E F G A B på varje tangent, så att ni kan lära er tonerna tillsammans."+
 	"Lås även mus och styrplatta"+
 	"Rekommenderas på bärbara datorer. Avsluta då genom att skriva quitpiano."+
 	"Tangentbord anslutet"+
@@ -2411,6 +2489,8 @@ var textsSv = i18n.NewTexts(""+
 		37,
 		10,
 		81,
+		23,
+		83,
 		29,
 		75,
 		20,
@@ -2454,6 +2534,8 @@ var textsTh = i18n.NewTexts(""+
 	"คีย์ขาวและดำ ทุกโน้ต"+
 	"พลุ"+
 	"พลุสีสันสดใสทุกโน้ต ไม่จำเป็นถ้าลูกน้อยมองไม่เห็นหน้าจอ"+
+	"ชื่อโน้ตบนคีย์"+
+	"แสดง C D E F G A B บนทุกคีย์ ไว้ฝึกจำโน้ตด้วยกัน"+
 	"ล็อกเมาส์และแทร็คแพดด้วย"+
 	"แนะนำสำหรับโน้ตบุ๊ก หยุดได้ด้วยการพิมพ์ quitpiano"+
 	"เชื่อมต่อแป้นพิมพ์แล้ว"+
@@ -2494,6 +2576,8 @@ var textsTh = i18n.NewTexts(""+
 		58,
 		9,
 		163,
+		42,
+		112,
 		72,
 		125,
 		66,
@@ -2537,6 +2621,8 @@ var textsTr = i18n.NewTexts(""+
 	"Beyaz ve siyah tuşlar, her nota."+
 	"Havai fişek"+
 	"Her notada renkli bir patlama. Bebek ekranı göremiyorsa gerekmez."+
+	"Tuşlarda nota adları"+
+	"Her tuşta C D E F G A B gösterir, notaları birlikte öğrenmek için."+
 	"Fareyi ve izleme dörtgenini de kilitle"+
 	"Dizüstü bilgisayarlarda önerilir. Durdurmak için quitpiano yazın."+
 	"Klavye bağlı"+
@@ -2577,6 +2663,8 @@ var textsTr = i18n.NewTexts(""+
 		33,
 		12,
 		67,
+		22,
+		72,
 		39,
 		70,
 		14,
@@ -2620,6 +2708,8 @@ var textsUk = i18n.NewTexts(""+
 	"Білі й чорні клавіші, усі ноти."+
 	"Феєрверк"+
 	"Кольоровий салют на кожну ноту. Не потрібен, якщо маля не бачить екрана."+
+	"Назви нот на клавішах"+
+	"Показує C D E F G A B на кожній клавіші, щоб вивчати ноти разом."+
 	"Заблокувати також мишу й трекпад"+
 	"Радимо на ноутбуках. Вихід — набрати quitpiano."+
 	"Клавіатуру під’єднано"+
@@ -2660,6 +2750,8 @@ var textsUk = i18n.NewTexts(""+
 		55,
 		16,
 		130,
+		39,
+		105,
 		60,
 		78,
 		42,
@@ -2703,6 +2795,8 @@ var textsVi = i18n.NewTexts(""+
 	"Phím trắng và phím đen, mọi nốt."+
 	"Pháo hoa"+
 	"Một chùm pháo hoa rực rỡ cho mỗi nốt. Không cần nếu bé không nhìn thấy màn hình."+
+	"Tên nốt trên phím"+
+	"Hiện C D E F G A B trên mỗi phím, để cùng nhau học nốt nhạc."+
 	"Khóa cả chuột và bàn di chuột"+
 	"Nên dùng trên máy tính xách tay. Khi đó dừng bằng cách gõ quitpiano."+
 	"Đã kết nối bàn phím"+
@@ -2743,6 +2837,8 @@ var textsVi = i18n.NewTexts(""+
 		42,
 		9,
 		104,
+		22,
+		76,
 		38,
 		82,
 		27,
@@ -2786,6 +2882,8 @@ var textsZhHans = i18n.NewTexts(""+
 	"黑键白键都有，12 个音全用上。"+
 	"彩色烟花"+
 	"每个音放一朵烟花。宝宝看不到屏幕的话不用开。"+
+	"琴键上显示音名"+
+	"在每个琴键上标出 C D E F G A B，陪宝宝一起认音。"+
 	"同时锁住鼠标和触控板"+
 	"笔记本推荐。打开后只能键入 quitpiano 退出。"+
 	"已连接键盘"+
@@ -2826,6 +2924,8 @@ var textsZhHans = i18n.NewTexts(""+
 		42,
 		12,
 		66,
+		21,
+		65,
 		30,
 		59,
 		15,
@@ -2869,6 +2969,8 @@ var textsZhHant = i18n.NewTexts(""+
 	"黑鍵白鍵都有，12 個音全用上。"+
 	"彩色煙火"+
 	"每個音放一朵煙火。寶寶看不到螢幕的話不用開。"+
+	"琴鍵上顯示音名"+
+	"在每個琴鍵上標出 C D E F G A B，陪寶寶一起認音。"+
 	"同時鎖住滑鼠和觸控板"+
 	"筆電建議開啟。開啟後只能輸入 quitpiano 退出。"+
 	"已連接鍵盤"+
@@ -2909,6 +3011,8 @@ var textsZhHant = i18n.NewTexts(""+
 		42,
 		12,
 		66,
+		21,
+		65,
 		30,
 		62,
 		15,
@@ -3467,6 +3571,20 @@ func VisualsNote(cx *core.Scope) string { return For(cx).VisualsNote() }
 
 // VisualsNote is the package's VisualsNote in the language of msgs.
 func (msgs Messages) VisualsNote() string { return msgs.text(textVisualsNote) }
+
+// NoteNamesTitle says "Note names on the keys"
+// in the language the app shows under cx.
+func NoteNamesTitle(cx *core.Scope) string { return For(cx).NoteNamesTitle() }
+
+// NoteNamesTitle is the package's NoteNamesTitle in the language of msgs.
+func (msgs Messages) NoteNamesTitle() string { return msgs.text(textNoteNamesTitle) }
+
+// NoteNamesNote says "Shows C D E F G A B on each key, for learning the notes together."
+// in the language the app shows under cx.
+func NoteNamesNote(cx *core.Scope) string { return For(cx).NoteNamesNote() }
+
+// NoteNamesNote is the package's NoteNamesNote in the language of msgs.
+func (msgs Messages) NoteNamesNote() string { return msgs.text(textNoteNamesNote) }
 
 // LockMouseTitle says "Lock the mouse and trackpad too"
 // in the language the app shows under cx.
