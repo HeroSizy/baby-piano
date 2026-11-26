@@ -39,6 +39,11 @@ var (
 	iconNote = mustSVG(`<circle cx="7" cy="17.5" r="2.8" fill="currentColor" fill-opacity=".22"/><circle cx="17" cy="15.5" r="2.8" fill="currentColor" fill-opacity=".22"/>` +
 		`<path d="M9.8 17.5V6.5l10-2v11"/><path d="M9.8 10l10-2" stroke-width="1.6"/>`)
 
+	// faceAsleep and faceAwake are the switch's knob: eyes closed and a
+	// small mouth while off, bright eyes and a smile when on.
+	faceAsleep = mustSVG(`<path d="M5.5 10.5q2 2 4 0M14.5 10.5q2 2 4 0"/><path d="M10.6 16.2h2.8"/>`)
+	faceAwake  = mustSVG(`<path d="M7.6 9.6v.01M16.4 9.6v.01" stroke-width="3.2"/><path d="M7.4 14q4.6 4.4 9.2 0"/>`)
+
 	// iconWave is an open hand waving, tipped over, two marks beside it.
 	// The hand is lucide's (ISC licence, which NSGo ships in icons/lucide).
 	iconWave = mustSVG(`<g transform="rotate(-14 13 14) translate(1.5 1) scale(.9)">` +

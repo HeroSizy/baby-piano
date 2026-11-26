@@ -125,7 +125,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 		heading(locales.Volume(cx)),
 		core.View{Style: core.Style{Direction: core.Row, AlignItems: core.AlignCenter, Gap: 16}, Children: []core.Node{
 			core.View{Style: core.Style{FlexGrow: 1, FlexShrink: 1}, Children: []core.Node{
-				ui.Slider{
+				cuteSlider{
 					Value: a.settings.volume.Get,
 					OnChange: func(v float64) {
 						_ = a.settings.volume.Set(v)
@@ -136,12 +136,11 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 					Min: 0.05, Max: 0.9, Label: locales.Volume(cx), TestID: "volume",
 				},
 			}},
-			ui.Button{Text: locales.TryIt(cx), Icon: func() *core.SVG { return iconSpeaker }, Variant: ui.ButtonOutline, TestID: "try",
-				Style: core.Style{CornerRadius: 999}, OnPress: func() {
-					for i, n := range []int{15, 17, 19, 22} { // C4 E4 A4 E5
-						cx.AfterFunc(time.Duration(i)*250*time.Millisecond, func() { a.play(n) })
-					}
-				}},
+			tryButton(cx, locales.TryIt(cx), func() {
+				for i, n := range []int{15, 17, 19, 22} { // C4 E4 A4 E5
+					cx.AfterFunc(time.Duration(i)*250*time.Millisecond, func() { a.play(n) })
+				}
+			}),
 		}},
 	}
 
@@ -452,16 +451,7 @@ func toggleRow(cx *core.Scope, svg *core.SVG, tint accent, title, note, id strin
 				core.Text{Content: note, StyleFunc: hushed(cx, core.Style{FontSize: 13, LineHeight: 18})},
 			}},
 			// The row takes the press; the switch shows the state.
-			core.View{Style: core.Style{Width: core.Pt(50), Height: core.Pt(30), CornerRadius: 15, Padding: core.All(3)},
-				StyleFunc: func() core.Style {
-					st := core.Style{Width: core.Pt(50), Height: core.Pt(30), CornerRadius: 15, Padding: core.All(3), Background: tonesOf(cx).track, AlignItems: core.AlignStart}
-					if on.Get() {
-						st.Background, st.AlignItems = coral, core.AlignEnd
-					}
-					return st
-				},
-				Children: []core.Node{core.View{Style: core.Style{Width: core.Pt(24), Height: core.Pt(24), CornerRadius: 12, Background: core.RGB(0xffffff),
-					Shadows: []core.BoxShadow{{Offset: core.Point{Y: 1}, Blur: 3, Color: core.RGBA(0x000000, 0.2)}}}}}},
+			cuteSwitch(cx, on.Get),
 		},
 	}
 }

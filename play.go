@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/nsgo-dev/nsgo/core"
+	"github.com/nsgo-dev/nsgo/ui"
 
 	"github.com/HeroSizy/baby-piano/locales"
 )
@@ -179,13 +180,28 @@ func (a *app) corner(cx *core.Scope) core.Node {
 					BorderWidth: 4, BorderColor: tonesOf(cx).ink.Faded(0.85),
 					Animated: &core.AnimatedStyle{Opacity: ring, Scale: ring}}
 			}},
-			// The hint sits on a dark pill so it reads over any key color, keeps
-			// clear of the screen edge, and fades once parents have seen it.
-			core.View{Style: core.Style{Position: core.Absolute, Top: core.Pt(cornerSize - 4), Right: core.Pt(16),
-				Width: core.Pt(320), AlignItems: core.AlignCenter, // the corner itself is narrow
-				Padding: core.Symmetric(6, 12), CornerRadius: 999, Background: core.RGBA(0x000000, 0.35),
-				Animated: &core.AnimatedStyle{Opacity: hint}},
-				Children: []core.Node{core.Text{Content: locales.CornerHint(cx), Style: core.Style{FontSize: 13, TextAlign: core.TextAlignCenter, Color: core.RGBA(0xffffff, 0.9)}}}},
+			// The hint is a little card like the setup page's tips, the
+			// waving hand beside the words, with a tail pointing up at the
+			// ring; it reads over any key color, keeps clear of the screen
+			// edge, and fades once parents have seen it.
+			core.View{PointerEvents: core.PointerEventsNone,
+				Style: core.Style{Position: core.Absolute, Top: core.Pt(cornerSize - 14), Right: core.Pt(12),
+					Width: core.Pt(300), AlignItems: core.AlignEnd, // the corner itself is narrow
+					Animated: &core.AnimatedStyle{Opacity: hint}},
+				Children: []core.Node{
+					core.View{StyleFunc: func() core.Style {
+						return core.Style{Width: core.Pt(16), Height: core.Pt(16), CornerRadius: 4, Background: tonesOf(cx).card,
+							Margin: core.Edges{Right: cornerSize/2 - 12 - 8, Bottom: -10}, Transform: core.Transform{Rotate: 45}}
+					}},
+					core.View{StyleFunc: func() core.Style {
+						t := tonesOf(cx)
+						return core.Style{MaxWidth: core.Pt(300), Direction: core.Row, AlignItems: core.AlignCenter, Gap: 10, Padding: core.Edges{Top: 10, Bottom: 10, Left: 10, Right: 16},
+							CornerRadius: 20, Background: t.card, Shadows: []core.BoxShadow{{Offset: core.Point{Y: 8}, Blur: 24, Color: t.cardShadow}}}
+					}, Children: []core.Node{
+						badge(cx, iconWave, accentOrange, 32, 20, 10),
+						core.Text{Content: locales.CornerHint(cx), StyleFunc: inked(cx, core.Style{FontSize: 14, LineHeight: 19, FontWeight: ui.Semibold, FlexShrink: 1})},
+					}},
+				}},
 		},
 	}
 }
