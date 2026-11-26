@@ -266,18 +266,22 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 				Background: t.paperTop, Gradients: []core.Gradient{core.LinearGradient(180, t.paperTop, t.paperBottom)}}
 		},
 		OnLayout: func(b core.Bounds) { animateTurn(cx, page.GetUntracked(), b.Size); page.Set(b.Size) },
-		Children: []core.Node{ui.ScrollView{
-			EdgeColor: ui.Fixed(core.RGBA(0xffffff, 0)),
-			Style:     core.Style{FlexGrow: 1, FlexShrink: 1, MinHeight: core.Pt(0)},
+		Children: []core.Node{core.Scroll{
+			// A phone or tablet scrolls under the finger with no bar, as
+			// its own apps' pages do; a computer keeps its bar.
+			HideIndicator: !computer,
+			Style:         core.Style{FlexGrow: 1, FlexShrink: 1, MinHeight: core.Pt(0)},
 			// Centered when it fits, scrolling when it does not: at least
 			// the page's height, never pinned to it.
-			ContentStyle: core.Style{AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter,
-				Padding: core.Symmetric(32, 20), PaddingEnv: core.EnvAll(core.EnvSafeArea)},
 			Children: []core.Node{core.View{
-				StyleFunc: func() core.Style {
-					return core.Style{Width: core.Pct(100), MinHeight: core.Pt(max(page.Get().Height-64, 0)), AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter}
-				},
-				Children: []core.Node{layout},
+				Style: core.Style{AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter,
+					Padding: core.Symmetric(32, 20), PaddingEnv: core.EnvAll(core.EnvSafeArea)},
+				Children: []core.Node{core.View{
+					StyleFunc: func() core.Style {
+						return core.Style{Width: core.Pct(100), MinHeight: core.Pt(max(page.Get().Height-64, 0)), AlignItems: core.AlignCenter, JustifyContent: core.JustifyCenter}
+					},
+					Children: []core.Node{layout},
+				}},
 			}},
 		}},
 	}
