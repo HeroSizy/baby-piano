@@ -2,7 +2,6 @@ package main
 
 import (
 	"math"
-	"strings"
 	"time"
 
 	"github.com/nsgo-dev/nsgo/core"
@@ -103,31 +102,34 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 	// when it sounds, its color as the screen is light or dark, and with
 	// the parents' say its note's letter on it.
 	key := func(k int, look keyLook, style core.Style) core.Node {
+		radii := look.corners()
 		children := []core.Node{core.View{
 			Style: core.Style{Position: core.Absolute, Top: core.Pt(0), Right: core.Pt(0), Bottom: core.Pt(0), Left: core.Pt(0),
-				CornerRadius: 18, Background: core.RGB(0xffffff),
+				CornerRadii: radii, Background: core.RGB(0xffffff),
 				Animated: &core.AnimatedStyle{Opacity: core.Interpolate(glows[k], core.Interpolation{Input: []float64{0, 1}, Output: []float64{0, 0.55}})}},
 		}}
-		if letters {
-			name := piano.Letter(scale.Pitch(first + k))
-			children = append(children, noteLetter(cx, name, look, func() float64 {
-				if !look.black {
-					return letter() * 0.85
-				}
-				// As big as fits the black key's width.
-				inner := float64(size.Get().Width)/7*blackWidth - 14
-				return min(letter()*0.6, inner/0.95)
-			}))
+		// Only the colored keys are lettered: a black key is the sharp
+		// of the letter to its left, as on a piano, and stays plain.
+		if letters && !look.black {
+			children = append(children, noteLetter(cx, piano.Letter(scale.Pitch(first+k)), look, func() float64 { return letter() * 0.85 }))
 		}
-		return core.View{Style: style, Children: []core.Node{core.View{
+		face := core.Node(core.View{
 			StyleFunc: func() core.Style {
-				return core.Style{FlexGrow: 1, CornerRadius: 18, Background: look.color(cx.Dark()), ShadowColor: look.glow(), ShadowRadius: 26,
+				return core.Style{FlexGrow: 1, CornerRadii: radii, Background: look.color(cx.Dark()), Gradients: look.sheen(cx.Dark()),
+					ShadowColor: look.glow(), ShadowRadius: 26,
 					AlignItems: core.AlignCenter, JustifyContent: core.JustifyEnd,
 					Padding:  core.Edges{Bottom: core.Points(letter() * lift)},
 					Animated: &core.AnimatedStyle{Scale: bounces[k], ShadowOpacity: glows[k]}}
 			},
 			Children: children,
-		}}}
+		})
+		if look.black {
+			// A black key stands above the colored ones: it casts a
+			// shadow on them.
+			face = core.View{Style: core.Style{FlexGrow: 1, CornerRadii: radii,
+				Shadows: []core.BoxShadow{{Offset: core.Point{Y: 3}, Blur: 8, Color: core.RGBA(0x1a1030, 0.35)}}}, Children: []core.Node{face}}
+		}
+		return core.View{Style: style, Children: []core.Node{face}}
 	}
 	// The rows from the top, the highest octave first; a column keeps its
 	// color, a little lighter each octave up.
@@ -175,13 +177,14 @@ type keyLook struct {
 
 // color is the key's color on the dark screen, as bright as the night
 // lets it glow, or on the light one, a pastel a step lighter that sits on
-// the paper; a black key stays dark on either, a little softer on paper.
+// the paper; a black key is the night's own plum ink on either, a little
+// softer on paper, whatever its hue, which is only its glow's.
 func (l keyLook) color(dark bool) core.Color {
 	switch {
 	case l.black && dark:
-		return hsl(l.hue, 0.45, 0.22)
+		return core.RGB(0x1c172d)
 	case l.black:
-		return hsl(l.hue, 0.35, 0.3)
+		return core.RGB(0x3b3254)
 	case dark:
 		return hsl(l.hue, 0.78, l.light)
 	}
@@ -248,54 +251,48 @@ func pianoOctave(octave int, light float64, key func(k int, look keyLook, style 
 	return core.View{Style: core.Style{Width: core.Pct(100), Height: core.Pct(99.9 / 3), Direction: core.Row}, Children: children}
 }
 
-// noteLetter is a key's note name, as C or F#, pressed into the key as if
-// printed there. On a colored key it is a deeper shade of the key's own
-// color with a soft light edge below, sunk into it; on a black key, a pale
-// tint of its color, as a piano's legends are inlaid, with a shadow above
-// so it sits in the key too. size is its font size.
+// noteLetter is a colored key's note name, as C, pressed into the key as
+// if printed there: a deeper shade of the key's own color with a soft
+// light edge below, so it reads as sunk into the key. size is its font
+// size.
 func noteLetter(cx *core.Scope, name string, look keyLook, size func() float64) core.Node {
-	text := func(s string, scale float64) core.Node {
-		return core.Text{Content: s, StyleFunc: func() core.Style {
-			pt := size() * scale
-			edge := core.Point{Y: core.Points(max(pt*0.025, 0.8))}
-			if look.black {
-				edge.Y = -edge.Y
-			}
-			return ui.TypeBody.Merge(core.Style{FontSize: core.Points(pt), LineHeight: core.Points(pt * 1.05), FontWeight: ui.Bold,
-				Color: look.ink(cx.Dark()), TextShadowColor: look.rim(cx.Dark()), TextShadowOffset: edge, TextShadowRadius: core.Points(pt * 0.03)})
-		}}
-	}
-	letter, sharp := strings.CutSuffix(name, "#")
-	if !sharp {
-		return text(name, 1)
-	}
-	// A sharp is written as music writes it, small and raised after the
-	// letter, so it fits a narrow black key.
-	return core.View{Style: core.Style{Direction: core.Row, AlignItems: core.AlignStart}, Children: []core.Node{
-		text(letter, 1), text("♯", 0.6),
+	return core.Text{Content: name, StyleFunc: func() core.Style {
+		pt := size()
+		rim := core.RGBA(0xffffff, 0.42)
+		if cx.Dark() {
+			rim = core.RGBA(0xffffff, 0.28)
+		}
+		return ui.TypeBody.Merge(core.Style{FontSize: core.Points(pt), LineHeight: core.Points(pt * 1.05), FontWeight: ui.Bold,
+			Color: look.ink(cx.Dark()), TextShadowColor: rim, TextShadowOffset: core.Point{Y: core.Points(max(pt*0.025, 0.8))}, TextShadowRadius: core.Points(pt * 0.03)})
 	}}
 }
 
-// ink is the color a key's letter is pressed in: the key's own, deeper, or
-// on a black key paler.
+// ink is the color a colored key's letter is pressed in: the key's own,
+// deeper.
 func (l keyLook) ink(dark bool) core.Color {
-	switch {
-	case l.black:
-		return hsl(l.hue, 0.7, 0.74).Faded(0.7)
-	case dark:
+	if dark {
 		return hsl(l.hue, 0.72, l.light-0.17).Faded(0.8)
 	}
 	return hsl(l.hue, 0.66, l.light-0.12).Faded(0.8)
 }
 
-// rim is the light on the pressed letter's lower edge, or on a black
-// key the shade along its top.
-func (l keyLook) rim(dark bool) core.Color {
-	switch {
-	case l.black:
-		return core.RGBA(0x000000, 0.45)
-	case dark:
-		return core.RGBA(0xffffff, 0.28)
+// corners are a key's: round all over, or a black key's, squarer at the
+// top where it meets the screen's edge of the octave and round at its foot.
+func (l keyLook) corners() core.Corners {
+	if l.black {
+		return core.Corners{TopLeft: 8, TopRight: 8, BottomRight: 16, BottomLeft: 16}
 	}
-	return core.RGBA(0xffffff, 0.42)
+	return core.Corners{TopLeft: 18, TopRight: 18, BottomRight: 18, BottomLeft: 18}
+}
+
+// sheen is the light down a black key, a little brighter at its top; the
+// colored keys are flat.
+func (l keyLook) sheen(dark bool) []core.Gradient {
+	switch {
+	case !l.black:
+		return nil
+	case dark:
+		return []core.Gradient{core.LinearGradient(180, core.RGB(0x2b2444), core.RGB(0x120e1f))}
+	}
+	return []core.Gradient{core.LinearGradient(180, core.RGB(0x4d4368), core.RGB(0x2f2745))}
 }
