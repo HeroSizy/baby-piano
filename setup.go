@@ -267,9 +267,8 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 		},
 		OnLayout: func(b core.Bounds) { animateTurn(cx, page.GetUntracked(), b.Size); page.Set(b.Size) },
 		Children: []core.Node{core.Scroll{
-			// A phone or tablet scrolls under the finger with no bar, as
-			// its own apps' pages do; a computer keeps its bar.
-			HideIndicator: !computer,
+			// It scrolls under a finger, a wheel or a trackpad, with no bar.
+			HideIndicator: true,
 			Style:         core.Style{FlexGrow: 1, FlexShrink: 1, MinHeight: core.Pt(0)},
 			// Centered when it fits, scrolling when it does not: at least
 			// the page's height, never pinned to it.
