@@ -2,6 +2,7 @@ package main
 
 import (
 	"math"
+	"strings"
 	"time"
 
 	"github.com/nsgo-dev/nsgo/core"
@@ -108,7 +109,15 @@ func (a *app) touchKeys(cx *core.Scope, burst func(note int, at core.Point)) cor
 				Animated: &core.AnimatedStyle{Opacity: core.Interpolate(glows[k], core.Interpolation{Input: []float64{0, 1}, Output: []float64{0, 0.55}})}},
 		}}
 		if letters {
-			children = append(children, noteLetter(cx, piano.Letter(scale.Pitch(first+k)), look, letter))
+			name := piano.Letter(scale.Pitch(first + k))
+			children = append(children, noteLetter(cx, name, look, func() float64 {
+				if !look.black {
+					return letter() * 0.85
+				}
+				// As big as fits the black key's width.
+				inner := float64(size.Get().Width)/7*blackWidth - 14
+				return min(letter()*0.6, inner/0.95)
+			}))
 		}
 		return core.View{Style: style, Children: []core.Node{core.View{
 			StyleFunc: func() core.Style {
@@ -240,41 +249,53 @@ func pianoOctave(octave int, light float64, key func(k int, look keyLook, style 
 }
 
 // noteLetter is a key's note name, as C or F#, pressed into the key as if
-// printed there: a deeper shade of the key's own color, its lower edge
-// catching the light, so the letter reads as sunk into the key rather than
-// laid on it. A black key's is smaller. height is the white keys' size.
-func noteLetter(cx *core.Scope, name string, look keyLook, height func() float64) core.Node {
-	return core.Text{Content: name, StyleFunc: func() core.Style {
-		size := height() * 0.95
-		if look.black {
-			size = max(height()*0.85, 24) * 0.55
-		}
-		dark := cx.Dark()
-		return ui.TypeBody.Merge(core.Style{FontSize: core.Points(size), LineHeight: core.Points(size * 1.05), FontWeight: ui.Bold,
-			Color: look.ink(dark), TextShadowColor: look.rim(dark), TextShadowOffset: core.Point{Y: core.Points(max(size*0.028, 1))}, TextShadowRadius: core.Points(size * 0.012)})
+// printed there. On a colored key it is a deeper shade of the key's own
+// color with a soft light edge below, sunk into it; on a black key, a pale
+// tint of its color, as a piano's legends are inlaid, with a shadow above
+// so it sits in the key too. size is its font size.
+func noteLetter(cx *core.Scope, name string, look keyLook, size func() float64) core.Node {
+	text := func(s string, scale float64) core.Node {
+		return core.Text{Content: s, StyleFunc: func() core.Style {
+			pt := size() * scale
+			edge := core.Point{Y: core.Points(max(pt*0.025, 0.8))}
+			if look.black {
+				edge.Y = -edge.Y
+			}
+			return ui.TypeBody.Merge(core.Style{FontSize: core.Points(pt), LineHeight: core.Points(pt * 1.05), FontWeight: ui.Bold,
+				Color: look.ink(cx.Dark()), TextShadowColor: look.rim(cx.Dark()), TextShadowOffset: edge, TextShadowRadius: core.Points(pt * 0.03)})
+		}}
+	}
+	letter, sharp := strings.CutSuffix(name, "#")
+	if !sharp {
+		return text(name, 1)
+	}
+	// A sharp is written as music writes it, small and raised after the
+	// letter, so it fits a narrow black key.
+	return core.View{Style: core.Style{Direction: core.Row, AlignItems: core.AlignStart}, Children: []core.Node{
+		text(letter, 1), text("♯", 0.6),
 	}}
 }
 
-// ink is the color a key's letter is pressed in: the key's own, deeper.
+// ink is the color a key's letter is pressed in: the key's own, deeper, or
+// on a black key paler.
 func (l keyLook) ink(dark bool) core.Color {
 	switch {
-	case l.black && dark:
-		return hsl(l.hue, 0.5, 0.12)
 	case l.black:
-		return hsl(l.hue, 0.4, 0.17)
+		return hsl(l.hue, 0.7, 0.74).Faded(0.7)
 	case dark:
-		return hsl(l.hue, 0.7, l.light-0.2).Faded(0.85)
+		return hsl(l.hue, 0.72, l.light-0.17).Faded(0.8)
 	}
-	return hsl(l.hue, 0.62, l.light-0.16).Faded(0.85)
+	return hsl(l.hue, 0.66, l.light-0.12).Faded(0.8)
 }
 
-// rim is the light on the pressed letter's lower edge.
+// rim is the light on the pressed letter's lower edge, or on a black
+// key the shade along its top.
 func (l keyLook) rim(dark bool) core.Color {
 	switch {
 	case l.black:
-		return core.RGBA(0xffffff, 0.22)
+		return core.RGBA(0x000000, 0.45)
 	case dark:
-		return core.RGBA(0xffffff, 0.4)
+		return core.RGBA(0xffffff, 0.28)
 	}
-	return core.RGBA(0xffffff, 0.6)
+	return core.RGBA(0xffffff, 0.42)
 }
