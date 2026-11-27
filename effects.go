@@ -15,13 +15,15 @@ import (
 const (
 	burstSlots = 8
 	glowSlots  = 4
-	sparkCount = 8
-	ringCount  = 2
+	sparkCount = 14
+	ringCount  = 1
 )
 
-// effects draw each note as a firework where it plays: a bright core that
-// pops, rings that spread like a shockwave and sparks that fly out and
-// fall, with a faint glow of the note's color over the whole screen. With
+// effects draw each note as a firework where it plays: a small flash, a
+// faint ring and a spray of sparks, with a faint glow of the note's color
+// over the whole screen. No two are alike: each note picks one of a few
+// kinds of firework (fireKinds), and its sparks their own shapes, sizes,
+// shades, reach and timing. With
 // the fireworks off, a note is a soft bloom of its color instead, so a
 // press still shows. Every motion runs on the platform from a fixed pool
 // of views, in colors for the light or dark screen.
@@ -38,6 +40,7 @@ type effects struct {
 type burst struct {
 	at       *core.Signal[core.Point]
 	diam     *core.Signal[float64]
+	coreDiam *core.Signal[float64]
 	coreTint *core.Signal[core.Color]
 	ringTint *core.Signal[core.Color]
 	coreO    *core.AnimatedValue
@@ -46,9 +49,13 @@ type burst struct {
 	sparks   [sparkCount]spark
 }
 
+// spark is one piece of a firework: a shape of a size and a shade that
+// flies, turns, shrinks and fades.
 type spark struct {
-	tint      *core.Signal[core.Color]
-	o, tx, ty *core.AnimatedValue
+	shape              *core.Signal[*core.SVG]
+	size               *core.Signal[float64]
+	tint               *core.Signal[core.Color]
+	o, tx, ty, rot, sc *core.AnimatedValue
 }
 
 type glow struct {
@@ -64,6 +71,7 @@ func newEffects(cx *core.Scope, fancy bool) *effects {
 		b := &burst{
 			at:       core.NewSignal(cx, core.Point{}),
 			diam:     core.NewSignal(cx, 100.0),
+			coreDiam: core.NewSignal(cx, 60.0),
 			coreTint: core.NewSignal(cx, white),
 			ringTint: core.NewSignal(cx, white),
 			coreO:    val(0),
@@ -73,7 +81,8 @@ func newEffects(cx *core.Scope, fancy bool) *effects {
 			b.rings[i].o, b.rings[i].s = val(0), val(0)
 		}
 		for i := range b.sparks {
-			b.sparks[i] = spark{tint: core.NewSignal(cx, white), o: val(0), tx: val(0), ty: val(0)}
+			b.sparks[i] = spark{shape: core.NewSignal(cx, sparkDot), size: core.NewSignal(cx, 12.0), tint: core.NewSignal(cx, white),
+				o: val(0), tx: val(0), ty: val(0), rot: val(0), sc: val(1)}
 		}
 		e.bursts = append(e.bursts, b)
 	}
@@ -105,6 +114,7 @@ func hue(t float64) float64 { return t * 0.85 * 360 }
 // paper.
 type fireTones struct {
 	core, ring, glow   core.Color
+	pale               core.Color // the palest spark: near white on the night, the note's deepest on paper
 	bloom              core.Color // the soft bloom's, with the fireworks off
 	sparkS, sparkL     float64
 	glowPeak, softPeak float64 // the screen's tint at its strongest, with and without fireworks
@@ -112,11 +122,11 @@ type fireTones struct {
 
 func fireTonesAt(h float64, dark bool) fireTones {
 	if dark {
-		return fireTones{core: hsl(h, 1, 0.8), ring: hsl(h, 0.95, 0.62), glow: hsl(h, 0.9, 0.55), bloom: hsl(h, 0.9, 0.68),
-			sparkS: 1, sparkL: 0.68, glowPeak: 0.07, softPeak: 0.09}
+		return fireTones{core: hsl(h, 1, 0.8), ring: hsl(h, 0.95, 0.62), glow: hsl(h, 0.9, 0.55), bloom: hsl(h, 0.9, 0.68), pale: hsl(h, 1, 0.94),
+			sparkS: 1, sparkL: 0.78, glowPeak: 0.07, softPeak: 0.09}
 	}
-	return fireTones{core: hsl(h, 1, 0.62), ring: hsl(h, 0.9, 0.5), glow: hsl(h, 0.9, 0.6), bloom: hsl(h, 0.95, 0.6),
-		sparkS: 0.95, sparkL: 0.55, glowPeak: 0.10, softPeak: 0.10}
+	return fireTones{core: hsl(h, 1, 0.62), ring: hsl(h, 0.9, 0.5), glow: hsl(h, 0.9, 0.6), bloom: hsl(h, 0.95, 0.6), pale: hsl(h, 0.9, 0.36),
+		sparkS: 1, sparkL: 0.5, glowPeak: 0.10, softPeak: 0.10}
 }
 
 // burstAt plays note i at p: its firework, or with the fireworks off its
@@ -143,6 +153,7 @@ func (e *effects) burstAt(i int, p core.Point) {
 	d := (90 + rand.Float64()*40) * big
 	b.at.Set(p)
 	b.diam.Set(d)
+	b.coreDiam.Set(d * 0.6)
 	b.coreTint.Set(tn.core)
 	b.ringTint.Set(tn.ring)
 
@@ -152,7 +163,7 @@ func (e *effects) burstAt(i int, p core.Point) {
 	if !e.fancy {
 		// The soft bloom: the core alone, larger and fainter, swelling
 		// slowly as it fades; still, it only fades in and out.
-		b.diam.Set(d * 1.7)
+		b.coreDiam.Set(d * 1.7 * 0.6)
 		b.coreTint.Set(tn.bloom)
 		for _, r := range b.rings {
 			r.o.Set(0)
@@ -192,41 +203,175 @@ func (e *effects) burstAt(i int, p core.Point) {
 		return
 	}
 
+	// The flash: small, quick, gone before the sparks have landed.
+	b.coreDiam.Set(d * 0.34)
+	b.coreS.Set(0.3)
 	steps := []*core.Animation{
-		// The core pops past its size and settles, then fades.
-		core.Spring(b.coreS, 1, core.SpringConfig{Stiffness: 260, Damping: 9}),
-		core.Sequence(core.Timing(b.coreO, 1, core.TimingConfig{Duration: 60 * time.Millisecond}), fadeOut(b.coreO, 120, 550)),
+		core.Timing(b.coreS, 1.5, core.TimingConfig{Duration: ms(420), Easing: burstEase}),
+		core.Sequence(core.Timing(b.coreO, 0.95, core.TimingConfig{Duration: 50 * time.Millisecond}), fadeOut(b.coreO, 40, 330)),
 	}
-	b.coreS.Set(0.2)
-	for k, r := range b.rings {
-		r.s.Set(0.3)
-		r.o.Set(0.9 - 0.3*float64(k))
-		lag := 90 * float64(k)
+	// One faint ring, so the burst has a breath of air round it.
+	for _, r := range b.rings {
+		r.s.Set(0.25)
+		r.o.Set(0.3)
 		steps = append(steps,
-			core.Timing(r.s, 2.6+0.6*float64(k), core.TimingConfig{Delay: ms(lag), Duration: ms(900), Easing: core.BezierEasing(core.EaseOut)}),
-			fadeOut(r.o, lag+100, 800),
+			core.Timing(r.s, 1.9+0.8*rand.Float64(), core.TimingConfig{Duration: ms(800), Easing: burstEase}),
+			fadeOut(r.o, 60, 620),
 		)
 	}
+
+	kind := fireKinds[rand.IntN(len(fireKinds))]
+	n := kind.count[0] + rand.IntN(kind.count[1]-kind.count[0]+1)
 	start := rand.Float64() * 2 * math.Pi
-	for k, s := range b.sparks {
-		angle := start + 2*math.Pi*float64(k)/sparkCount + (rand.Float64()-0.5)*0.5
-		dist := d * (0.9 + 0.7*rand.Float64())
-		s.tint.Set(hsl(h+float64(k%3-1)*28, tn.sparkS, tn.sparkL))
-		s.tx.Set(0)
-		s.ty.Set(0)
-		s.o.Set(1)
-		fly := ms(650 + 250*rand.Float64())
+	for k := range b.sparks {
+		s := &b.sparks[k]
+		if k >= n {
+			s.o.Set(0)
+			continue
+		}
+		// Round the burst, but never evenly: each spark strays within
+		// its share of the circle, and by more than its share in a cloud.
+		angle := start + 2*math.Pi*(float64(k)+rand.Float64()*kind.stray)/float64(n)
+		reach := kind.reach[0] + (kind.reach[1]-kind.reach[0])*rand.Float64()
+		if kind.layers && k%2 == 1 {
+			reach *= 0.55
+		}
+		dist := d * reach
+		x, y := math.Cos(angle)*dist, math.Sin(angle)*dist*kind.squash-d*kind.lift
+		shape := kind.shapes[rand.IntN(len(kind.shapes))]
+		size := (kind.size[0] + (kind.size[1]-kind.size[0])*rand.Float64()) * (0.75 + 0.35*big)
+		s.shape.Set(shape)
+		s.size.Set(size)
+		s.tint.Set(sparkTint(h, tn))
+
+		wait := time.Duration(rand.Float64()*kind.spread) * time.Millisecond
+		fly := ms(kind.fly * (0.8 + 0.4*rand.Float64()))
+		fall := ms(kind.fall * (0.8 + 0.4*rand.Float64()))
+		drop := kind.drop * big * (0.6 + 0.8*rand.Float64())
+
+		// A streak points the way it flies; the others tumble.
+		if shape == sparkStreak {
+			s.rot.Set(angle * 180 / math.Pi)
+		} else {
+			from := rand.Float64() * 360
+			s.rot.Set(from)
+			steps = append(steps, core.Timing(s.rot, from+(rand.Float64()-0.5)*kind.spin, core.TimingConfig{Delay: wait, Duration: fly + fall}))
+		}
+		s.tx.Set(x * kind.from)
+		s.ty.Set(y * kind.from)
+		s.sc.Set(0.2)
+		s.o.Set(0)
+		shine := []*core.Animation{core.Timing(s.o, 1, core.TimingConfig{Delay: wait, Duration: 40 * time.Millisecond})}
+		if kind.twinkle {
+			// It glitters on the way: dim and bright again, at its own pace.
+			for range 2 + rand.IntN(2) {
+				blink := time.Duration(70+rand.IntN(90)) * time.Millisecond
+				shine = append(shine,
+					core.Timing(s.o, 0.25, core.TimingConfig{Duration: blink}),
+					core.Timing(s.o, 1, core.TimingConfig{Duration: blink}))
+			}
+		}
+		shine = append(shine, core.Timing(s.o, 0, core.TimingConfig{Delay: fly * 4 / 10, Duration: fly*3/10 + fall, Easing: core.BezierEasing(core.EaseIn)}))
 		steps = append(steps,
-			core.Timing(s.tx, math.Cos(angle)*dist, core.TimingConfig{Duration: fly, Easing: core.BezierEasing(core.EaseOut)}),
-			// Out along the angle, then a little fall.
+			core.Sequence(shine...),
+			// Out fast and slowing, then drifting on as it falls.
 			core.Sequence(
-				core.Timing(s.ty, math.Sin(angle)*dist, core.TimingConfig{Duration: fly, Easing: core.BezierEasing(core.EaseOut)}),
-				core.Timing(s.ty, math.Sin(angle)*dist+40*big, core.TimingConfig{Duration: ms(450), Easing: core.BezierEasing(core.EaseIn)}),
+				core.Timing(s.tx, x*0.94, core.TimingConfig{Delay: wait, Duration: fly, Easing: burstEase}),
+				core.Timing(s.tx, x, core.TimingConfig{Duration: fall}),
 			),
-			fadeOut(s.o, 300, 800),
+			core.Sequence(
+				core.Timing(s.ty, y, core.TimingConfig{Delay: wait, Duration: fly, Easing: burstEase}),
+				core.Timing(s.ty, y+drop, core.TimingConfig{Duration: fall, Easing: core.BezierEasing(core.EaseIn)}),
+			),
+			// It pops to its size, then dwindles as it falls.
+			core.Sequence(
+				core.Spring(s.sc, 1, core.SpringConfig{Stiffness: 300, Damping: 12}),
+				core.Timing(s.sc, 0.35, core.TimingConfig{Delay: wait + fly/2, Duration: fall, Easing: core.BezierEasing(core.EaseIn)}),
+			),
 		)
 	}
 	e.cx.StartAnimation(core.Parallel(steps...), nil)
+}
+
+// burstEase is a firework's rush out: nearly all the way at once, then
+// coasting to a stop.
+var burstEase = core.BezierEasing(core.Curve{X1: 0.08, Y1: 0.75, X2: 0.2, Y2: 1})
+
+// The sparks' shapes, filled in the spark's color.
+var (
+	sparkDot = fillSVG(`<circle cx="12" cy="12" r="7"/>`)
+	// sparkStar is a plump five-pointed star.
+	sparkStar = fillSVG(`<path d="M12 2.6l2.7 5.7 6.2.8-4.5 4.4 1.1 6.2L12 16.8l-5.5 2.9 1.1-6.2L3.1 9.1l6.2-.8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>`)
+	// sparkGlint is a four-pointed glint, as a star twinkles.
+	sparkGlint = fillSVG(`<path d="M12 2C12.8 8 16 11.2 22 12 16 12.8 12.8 16 12 22 11.2 16 8 12.8 2 12 8 11.2 11.2 8 12 2z"/>`)
+	sparkHeart = fillSVG(`<path d="M12 20.5C6.500 16.200 3 13 3 9.200 3 6.300 5.200 4.200 7.900 4.200c1.600 0 3.100.8 4.100 2.100 1-1.300 2.500-2.100 4.100-2.100 2.700 0 4.900 2.100 4.900 5 0 3.800-3.500 7-9 11.300z"/>`)
+	// sparkStreak is a short trail, long the way it flies.
+	sparkStreak = fillSVG(`<rect x="1" y="9.500" width="22" height="5" rx="2.500"/>`)
+)
+
+func fillSVG(body string) *core.SVG {
+	s, err := core.ParseSVG([]byte(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">` + body + `</svg>`))
+	if err != nil {
+		panic(err)
+	}
+	return s
+}
+
+// fireKind is a kind of firework: how many sparks, of which shapes and
+// sizes, how far and how they fly. Lengths are in the burst's diameters,
+// times in milliseconds for a middle note.
+type fireKind struct {
+	shapes  []*core.SVG
+	count   [2]int     // fewest and most sparks
+	size    [2]float64 // smallest and largest, in points
+	reach   [2]float64 // nearest and farthest
+	layers  bool       // every other spark stops short, an inner round
+	stray   float64    // how far a spark strays from its place round the circle: 1 its own share
+	from    float64    // where it starts along its way: 0 the middle, more for a cloud
+	squash  float64    // 1 a round burst, less a flatter one
+	lift    float64    // how far the whole burst rises
+	spread  float64    // the sparks leave over this long
+	fly     float64
+	fall    float64
+	drop    float64 // how far it falls, in points
+	spin    float64 // how far it turns, in degrees
+	twinkle bool
+}
+
+var fireKinds = []fireKind{
+	// A round burst of dots and little stars in two rounds.
+	{shapes: []*core.SVG{sparkDot, sparkDot, sparkStar}, count: [2]int{11, 14}, size: [2]float64{12, 22}, reach: [2]float64{0.68, 1.1},
+		layers: true, stray: 0.8, squash: 1, spread: 50, fly: 520, fall: 520, drop: 34, spin: 200},
+	// Long trails that hang and droop, like a willow.
+	{shapes: []*core.SVG{sparkStreak}, count: [2]int{10, 14}, size: [2]float64{21, 36}, reach: [2]float64{0.72, 1.2},
+		stray: 0.9, squash: 1, spread: 30, fly: 600, fall: 700, drop: 70},
+	// A cloud of glints that twinkle where they hang.
+	{shapes: []*core.SVG{sparkGlint, sparkGlint, sparkDot}, count: [2]int{9, 13}, size: [2]float64{13, 31}, reach: [2]float64{0.22, 1.1},
+		stray: 6, from: 0.55, squash: 0.85, spread: 260, fly: 620, fall: 420, drop: 14, spin: 60, twinkle: true},
+	// A few big stars that tumble out.
+	{shapes: []*core.SVG{sparkStar}, count: [2]int{6, 9}, size: [2]float64{23, 39}, reach: [2]float64{0.65, 1},
+		stray: 0.6, squash: 1, spread: 40, fly: 560, fall: 560, drop: 40, spin: 420},
+	// Hearts and dots thrown up like a fountain, falling back.
+	{shapes: []*core.SVG{sparkHeart, sparkHeart, sparkDot}, count: [2]int{7, 10}, size: [2]float64{16, 34}, reach: [2]float64{0.36, 0.94},
+		stray: 1.4, squash: 0.6, lift: 0.5, spread: 120, fly: 560, fall: 680, drop: 90, spin: 90},
+	// Everything at once, a little of each, glittering.
+	{shapes: []*core.SVG{sparkDot, sparkStar, sparkGlint, sparkStreak}, count: [2]int{12, 14}, size: [2]float64{12, 29}, reach: [2]float64{0.43, 1.2},
+		stray: 1.2, squash: 1, spread: 90, fly: 560, fall: 560, drop: 44, spin: 240, twinkle: true},
+}
+
+// sparkTint is a spark's shade for a note of hue h: mostly near the note's
+// color, lighter or deeper, some a neighbor's, and now and then a warm
+// gold or the screen's palest, as fireworks glitter.
+func sparkTint(h float64, tn fireTones) core.Color {
+	switch r := rand.Float64(); {
+	case r < 0.12:
+		return hsl(44, 1, tn.sparkL+0.04)
+	case r < 0.26:
+		return tn.pale
+	case r < 0.45:
+		return hsl(h+(rand.Float64()-0.5)*110, tn.sparkS, tn.sparkL+(rand.Float64()-0.5)*0.1)
+	}
+	return hsl(h+(rand.Float64()-0.5)*36, tn.sparkS, tn.sparkL+(rand.Float64()-0.5)*0.16)
 }
 
 // flash tints the whole screen faintly with color c, up to opacity peak.
@@ -276,18 +421,19 @@ func (e *effects) node() core.Node {
 			}})
 		}
 		parts = append(parts, core.View{StyleFunc: func() core.Style {
-			s := circle(b.diam.Get() * 0.6)
+			s := circle(b.coreDiam.Get())
 			s.Background = b.coreTint.Get()
-			s.ShadowColor, s.ShadowRadius = b.ringTint.Get(), 30
+			s.ShadowColor, s.ShadowRadius = b.ringTint.Get(), 24
 			s.Animated = &core.AnimatedStyle{Opacity: b.coreO, Scale: b.coreS}
 			return s
 		}})
-		for _, sp := range b.sparks {
-			parts = append(parts, core.View{StyleFunc: func() core.Style {
-				s := circle(10 + b.diam.Get()*0.06)
-				s.Background = sp.tint.Get()
-				s.Animated = &core.AnimatedStyle{Opacity: sp.o, TranslateX: sp.tx, TranslateY: sp.ty}
-				return s
+		for i := range b.sparks {
+			sp := &b.sparks[i]
+			parts = append(parts, core.Icon{SVGFunc: sp.shape.Get, StyleFunc: func() core.Style {
+				d := core.Points(sp.size.Get())
+				return core.Style{Position: core.Absolute, Left: core.Pt(-d / 2), Top: core.Pt(-d / 2), Width: core.Pt(d), Height: core.Pt(d),
+					Color:    sp.tint.Get(),
+					Animated: &core.AnimatedStyle{Opacity: sp.o, TranslateX: sp.tx, TranslateY: sp.ty, Rotate: sp.rot, Scale: sp.sc}}
 			}})
 		}
 		nodes = append(nodes, core.View{
