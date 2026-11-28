@@ -19,6 +19,7 @@ systemVolumeUnknown: This output's volume cannot be read, as with HDMI and some 
 start: Start playing (full screen, keyboard locked)
 secureInput: Another app turned on secure keyboard entry, such as Terminal's Secure Keyboard Entry or a password field, and no app can lock the keyboard through it. Turn it off, or restart the computer, then start again.
 lockFailed: The keyboard could not be locked. Check that Mash Piano is switched on in System Settings › Privacy & Security › Accessibility; after an update, remove its old entry (−) and add it again.
+lockFailedWindows: "The keyboard could not be locked. Close Mash Piano and open it again; if it still fails, restart the computer."
 windowsLimits: Ctrl+Alt+Del cannot be blocked by any app; Win+L is blocked while the baby plays.
 cornerHint: "Parents: hold the top-right corner for 3 seconds to stop"
 touchIntro: Every tap, or every key on an attached keyboard, plays a gentle piano note, all in a scale that always sounds well together.

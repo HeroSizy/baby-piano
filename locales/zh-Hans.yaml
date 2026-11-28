@@ -17,6 +17,7 @@ systemVolumeUnknown: 当前输出设备无法读取音量（如 HDMI、部分外
 start: 开始弹琴（全屏锁定键盘）
 secureInput: 有程序开启了“安全键盘输入”（如终端的“安全键盘输入”、正在输入的密码框），这时任何程序都锁不住键盘。请关闭它（或重启电脑）后再开始。
 lockFailed: 无法锁定键盘。请确认已在 系统设置 › 隐私与安全性 › 辅助功能 中打开“Mash Piano”；更新版本后，请先删掉旧条目（−）再重新添加。
+lockFailedWindows: "无法锁定键盘。请关闭 Mash Piano 后重新打开；如果仍然不行，请重启电脑。"
 windowsLimits: Ctrl+Alt+Del 任何程序都拦不住；Win+L 在弹琴时会被禁用。
 cornerHint: 家长：在右上角按住 3 秒退出
 touchIntro: 点一下屏幕，或者按一下接上的键盘，都会弹出一个轻柔的钢琴音，所有的音都在同一个音阶里，怎么弹都好听。

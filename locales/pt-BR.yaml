@@ -17,6 +17,7 @@ systemVolumeUnknown: "Não é possível ler o volume desta saída, como no HDMI 
 start: "Começar a tocar (tela cheia, teclado bloqueado)"
 secureInput: "Outro app ativou a entrada segura de teclado, como a do Terminal ou um campo de senha, e assim nenhum app consegue bloquear o teclado. Desative-a ou reinicie o computador e comece de novo."
 lockFailed: "Não foi possível bloquear o teclado. Verifique se o Mash Piano está ativado em Ajustes do Sistema › Privacidade e Segurança › Acessibilidade; depois de uma atualização, remova o item antigo (−) e adicione-o de novo."
+lockFailedWindows: "Não foi possível bloquear o teclado. Feche o Mash Piano e abra de novo; se ainda não funcionar, reinicie o computador."
 windowsLimits: "Nenhum app consegue bloquear Ctrl+Alt+Del; Win+L fica bloqueado enquanto o bebê toca."
 cornerHint: "Pais: segurem o canto superior direito por 3 segundos para sair"
 touchIntro: "Cada toque, ou cada tecla de um teclado conectado, toca uma nota suave de piano, todas numa escala que sempre soa bem junta."

@@ -17,6 +17,7 @@ systemVolumeUnknown: "Không đọc được âm lượng của đầu ra này, 
 start: "Bắt đầu chơi (toàn màn hình, khóa bàn phím)"
 secureInput: "Một ứng dụng khác đã bật nhập bàn phím bảo mật, chẳng hạn trong Terminal hoặc ô mật khẩu, nên không ứng dụng nào khóa được bàn phím. Hãy tắt nó hoặc khởi động lại máy tính, rồi bắt đầu lại."
 lockFailed: "Không thể khóa bàn phím. Hãy kiểm tra Mash Piano đã được bật trong Cài đặt hệ thống › Quyền riêng tư & Bảo mật › Trợ năng; sau khi cập nhật, hãy xóa mục cũ (−) rồi thêm lại."
+lockFailedWindows: "Không thể khóa bàn phím. Hãy đóng Mash Piano rồi mở lại; nếu vẫn không được, hãy khởi động lại máy tính."
 windowsLimits: "Không ứng dụng nào chặn được Ctrl+Alt+Del; Win+L bị chặn khi bé chơi."
 cornerHint: "Phụ huynh: giữ góc trên bên phải 3 giây để dừng"
 touchIntro: "Mỗi lần chạm, hoặc mỗi phím trên bàn phím đã kết nối, sẽ phát một nốt piano êm dịu, tất cả trong một thang âm luôn nghe hài hòa."

@@ -17,6 +17,7 @@ systemVolumeUnknown: "Volume output ini tidak dapat dibaca, seperti pada HDMI da
 start: "Mulai bermain (layar penuh, keyboard terkunci)"
 secureInput: "App lain menyalakan input keyboard aman, misalnya di Terminal atau kolom kata sandi, sehingga tidak ada app yang bisa mengunci keyboard. Matikan, atau mulai ulang komputer, lalu mulai lagi."
 lockFailed: "Keyboard tidak dapat dikunci. Pastikan Mash Piano dinyalakan di Pengaturan Sistem › Privasi & Keamanan › Aksesibilitas; setelah pembaruan, hapus entri lama (−) lalu tambahkan lagi."
+lockFailedWindows: "Keyboard tidak dapat dikunci. Tutup Mash Piano lalu buka lagi; jika masih gagal, mulai ulang komputer."
 windowsLimits: "Tidak ada app yang bisa memblokir Ctrl+Alt+Del; Win+L diblokir selama bayi bermain."
 cornerHint: "Orang tua: tahan pojok kanan atas selama 3 detik untuk berhenti"
 touchIntro: "Setiap ketukan, atau setiap tombol pada keyboard yang terpasang, memainkan nada piano yang lembut, semuanya dalam tangga nada yang selalu terdengar indah."

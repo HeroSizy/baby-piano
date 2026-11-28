@@ -17,6 +17,7 @@ systemVolumeUnknown: "Volymen för den här utgången går inte att läsa, som m
 start: "Börja spela (helskärm, tangentbordet låst)"
 secureInput: "En annan app har slagit på säker tangentbordsinmatning, till exempel Terminals eller ett lösenordsfält, och då kan ingen app låsa tangentbordet. Stäng av den eller starta om datorn och börja sedan igen."
 lockFailed: "Tangentbordet kunde inte låsas. Kontrollera att Mash Piano är påslaget i Systeminställningar › Integritet och säkerhet › Hjälpmedel; efter en uppdatering tar du bort den gamla posten (−) och lägger till den igen."
+lockFailedWindows: "Tangentbordet kunde inte låsas. Stäng Mash Piano och öppna det igen; om det fortfarande inte fungerar, starta om datorn."
 windowsLimits: "Ctrl+Alt+Del kan ingen app blockera; Win+L är blockerat medan bebisen spelar."
 cornerHint: "Föräldrar: håll det övre högra hörnet i 3 sekunder för att avsluta"
 touchIntro: "Varje tryck, eller varje tangent på ett anslutet tangentbord, spelar en mjuk pianoton, alla i en skala som alltid låter fint ihop."

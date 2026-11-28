@@ -143,6 +143,24 @@ func TestComputerLocksAndKeysPlay(t *testing.T) {
 	}
 }
 
+// Windows has no Accessibility setting: the setup neither asks for it nor
+// keeps the piano from starting.
+func TestWindowsStartsWithoutAccessibility(t *testing.T) {
+	k := &fakeKiosk{supported: true, volume: 0.3}
+	app := start(t, k, nsgotest.Environment(core.Environment{Audio: true, OS: core.OSWindows, Idiom: core.IdiomDesktop}))
+	app.Advance(time.Second)
+	if app.Exists("id:settings") {
+		t.Fatal("Windows is sent to Accessibility settings")
+	}
+	if !app.Enabled("id:start") {
+		t.Fatal("start is disabled on Windows")
+	}
+	app.Press("id:start")
+	if !k.started || !k.entered {
+		t.Fatalf("start: lock %v, screens covered %v", k.started, k.entered)
+	}
+}
+
 func TestQuitIsRefusedWhilePlaying(t *testing.T) {
 	k := &fakeKiosk{supported: true}
 	app := start(t, k, onMac)

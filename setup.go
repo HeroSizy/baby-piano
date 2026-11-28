@@ -27,12 +27,19 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 	permission := core.NewSignal(cx, core.PermissionUnavailable)
 	systemVolume := core.NewSignal(cx, -1.0) // -1: unknown
 
+	// Only macOS asks the user to let an app take the keyboard, through
+	// Accessibility; Windows has no such setting and NSGo reports it as not
+	// gated there, so a Windows computer never waits on it.
+	askAccessibility := computer && cx.Env().OS() == core.OSMacOS
+
 	// What changes outside the app is read again every second: the
 	// Accessibility permission and the computer's volume.
 	if computer {
 		var poll func()
 		poll = func() {
-			cx.PermissionStatus(core.PermissionAccessibility, permission.Set)
+			if askAccessibility {
+				cx.PermissionStatus(core.PermissionAccessibility, permission.Set)
+			}
 			if v, ok := a.kiosk.SystemVolume(); ok {
 				systemVolume.Set(float64(v))
 			} else {
@@ -44,7 +51,7 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 	}
 	needsPermission := func() bool {
 		p := permission.Get()
-		return computer && p != core.PermissionGranted && p != core.PermissionUnavailable
+		return askAccessibility && !p.Allowed() && p != core.PermissionUnavailable
 	}
 
 	text := func(fn func() string, style core.Style, color func() core.Color) core.Node {
@@ -71,13 +78,15 @@ func (a *app) setupScreen(cx *core.Scope) core.Node {
 		switch err := startErr.Get(); {
 		case errors.Is(err, errSecureInput):
 			return locales.SecureInput(cx)
+		case err != nil && cx.Env().OS() == core.OSWindows:
+			return locales.LockFailedWindows(cx)
 		case err != nil:
 			return locales.LockFailed(cx)
 		}
 		if needsPermission() {
 			return locales.PermissionMissing(cx)
 		}
-		if computer && permission.Get() == core.PermissionGranted {
+		if askAccessibility && permission.Get() == core.PermissionGranted {
 			return locales.PermissionGranted(cx)
 		}
 		return ""

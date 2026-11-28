@@ -17,6 +17,7 @@ systemVolumeUnknown: "Die Lautstärke dieser Ausgabe lässt sich nicht lesen, et
 start: "Spielen starten (Vollbild, Tastatur gesperrt)"
 secureInput: "Eine andere App hat die sichere Tastatureingabe eingeschaltet, etwa die des Terminals oder ein Passwortfeld, und dann kann keine App die Tastatur sperren. Schalte sie aus oder starte den Computer neu und starte dann erneut."
 lockFailed: "Die Tastatur konnte nicht gesperrt werden. Prüfe, ob Mash Piano unter Systemeinstellungen › Datenschutz & Sicherheit › Bedienungshilfen eingeschaltet ist; entferne nach einem Update den alten Eintrag (−) und füge ihn neu hinzu."
+lockFailedWindows: "Die Tastatur konnte nicht gesperrt werden. Schließe Mash Piano und öffne es erneut; klappt es dann noch nicht, starte den Computer neu."
 windowsLimits: "Strg+Alt+Entf kann keine App blockieren; Win+L ist gesperrt, während das Baby spielt."
 cornerHint: "Eltern: obere rechte Ecke 3 Sekunden halten zum Beenden"
 touchIntro: "Jedes Tippen oder jede Taste einer angeschlossenen Tastatur spielt einen sanften Klavierton, alle in einer Tonleiter, die immer schön zusammenklingt."

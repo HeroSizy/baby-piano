@@ -17,6 +17,7 @@ systemVolumeUnknown: "Het volume van deze uitvoer is niet te lezen, zoals bij HD
 start: "Begin met spelen (volledig scherm, toetsenbord vergrendeld)"
 secureInput: "Een andere app heeft beveiligde toetsenbordinvoer aangezet, zoals die van Terminal of een wachtwoordveld, en dan kan geen app het toetsenbord vergrendelen. Zet het uit of herstart de computer en begin opnieuw."
 lockFailed: "Het toetsenbord kon niet worden vergrendeld. Controleer dat Mash Piano aanstaat in Systeeminstellingen › Privacy en beveiliging › Toegankelijkheid; verwijder na een update het oude item (−) en voeg het opnieuw toe."
+lockFailedWindows: "Het toetsenbord kon niet worden vergrendeld. Sluit Mash Piano en open het opnieuw; lukt het dan nog niet, start de computer opnieuw op."
 windowsLimits: "Ctrl+Alt+Del kan geen enkele app blokkeren; Win+L is geblokkeerd terwijl de baby speelt."
 cornerHint: "Ouders: houd de rechterbovenhoek 3 seconden vast om te stoppen"
 touchIntro: "Elke tik, of elke toets op een aangesloten toetsenbord, speelt een zachte pianotoon, allemaal in een toonladder die altijd mooi samen klinkt."

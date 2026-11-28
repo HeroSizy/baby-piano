@@ -17,6 +17,7 @@ systemVolumeUnknown: "Le volume de cette sortie ne peut pas être lu, comme avec
 start: "Commencer à jouer (plein écran, clavier verrouillé)"
 secureInput: "Une autre app a activé la saisie sécurisée au clavier, comme celle du Terminal ou un champ de mot de passe, et aucune app ne peut alors verrouiller le clavier. Désactivez-la ou redémarrez l’ordinateur, puis recommencez."
 lockFailed: "Le clavier n’a pas pu être verrouillé. Vérifiez que Mash Piano est activé dans Réglages Système › Confidentialité et sécurité › Accessibilité ; après une mise à jour, supprimez l’ancienne entrée (−) et ajoutez-la à nouveau."
+lockFailedWindows: "Le clavier n’a pas pu être verrouillé. Fermez Mash Piano puis rouvrez-le ; si le problème persiste, redémarrez l’ordinateur."
 windowsLimits: "Aucune app ne peut bloquer Ctrl+Alt+Suppr ; Win+L est bloqué pendant que bébé joue."
 cornerHint: "Parents : maintenez le coin supérieur droit 3 secondes pour arrêter"
 touchIntro: "Chaque toucher, ou chaque touche d’un clavier branché, joue une douce note de piano, toutes dans une gamme qui sonne toujours juste."

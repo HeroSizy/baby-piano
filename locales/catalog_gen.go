@@ -774,6 +774,7 @@ const (
 	textStart
 	textSecureInput
 	textLockFailed
+	textLockFailedWindows
 	textWindowsLimits
 	textCornerHint
 	textTouchIntro
@@ -821,6 +822,7 @@ var keyOfText = [numTexts]string{
 	"start",
 	"secureInput",
 	"lockFailed",
+	"lockFailedWindows",
 	"windowsLimits",
 	"cornerHint",
 	"touchIntro",
@@ -866,6 +868,7 @@ var textsEn = i18n.NewTexts(""+
 	"Start playing (full screen, keyboard locked)"+
 	"Another app turned on secure keyboard entry, such as Terminal's Secure Keyboard Entry or a password field, and no app can lock the keyboard through it. Turn it off, or restart the computer, then start again."+
 	"The keyboard could not be locked. Check that Mash Piano is switched on in System Settings › Privacy & Security › Accessibility; after an update, remove its old entry (−) and add it again."+
+	"The keyboard could not be locked. Close Mash Piano and open it again; if it still fails, restart the computer."+
 	"Ctrl+Alt+Del cannot be blocked by any app; Win+L is blocked while the baby plays."+
 	"Parents: hold the top-right corner for 3 seconds to stop"+
 	"Every tap, or every key on an attached keyboard, plays a gentle piano note, all in a scale that always sounds well together."+
@@ -908,6 +911,7 @@ var textsEn = i18n.NewTexts(""+
 		44,
 		207,
 		193,
+		110,
 		81,
 		56,
 		124,
@@ -953,6 +957,7 @@ var textsAr = i18n.NewTexts(""+
 	"ابدأ العزف (ملء الشاشة، لوحة المفاتيح مقفلة)"+
 	"شغّل تطبيق آخر إدخال لوحة المفاتيح الآمن، مثل الذي في تطبيق Terminal أو حقل كلمة سر، وعندها لا يستطيع أي تطبيق قفل لوحة المفاتيح. أوقفه أو أعد تشغيل الكمبيوتر، ثم ابدأ من جديد."+
 	"تعذّر قفل لوحة المفاتيح. تحقّق من تفعيل Mash Piano في إعدادات النظام › الخصوصية والأمن › تسهيلات الاستخدام؛ وبعد التحديث، احذف الإدخال القديم (−) ثم أضفه مجددًا."+
+	"تعذّر قفل لوحة المفاتيح. أغلق Mash Piano وافتحه من جديد؛ وإن استمرت المشكلة، أعد تشغيل الكمبيوتر."+
 	"لا يمكن لأي تطبيق منع Ctrl+Alt+Del؛ ويُمنع Win+L أثناء لعب الطفل."+
 	"للأهل: اضغطوا مع الاستمرار على الزاوية العلوية اليمنى 3 ثوانٍ للإيقاف"+
 	"كل لمسة، أو كل مفتاح في لوحة مفاتيح موصولة، يعزف نغمة بيانو هادئة، وكلها من سلّم يبدو جميلًا دائمًا."+
@@ -995,6 +1000,7 @@ var textsAr = i18n.NewTexts(""+
 		80,
 		310,
 		286,
+		168,
 		102,
 		126,
 		181,
@@ -1040,6 +1046,7 @@ var textsDa = i18n.NewTexts(""+
 	"Begynd at spille (fuld skærm, tastatur låst)"+
 	"En anden app har slået sikker indtastning til, f.eks. Terminals eller et adgangskodefelt, og så kan ingen app låse tastaturet. Slå den fra, eller genstart computeren, og begynd så igen."+
 	"Tastaturet kunne ikke låses. Tjek, at Mash Piano er slået til under Systemindstillinger › Anonymitet & sikkerhed › Tilgængelighed; efter en opdatering skal du fjerne den gamle post (−) og tilføje den igen."+
+	"Tastaturet kunne ikke låses. Luk Mash Piano, og åbn det igen; hvis det stadig ikke virker, så genstart computeren."+
 	"Ctrl+Alt+Del kan ingen app blokere; Win+L er blokeret, mens babyen spiller."+
 	"Forældre: hold øverste højre hjørne i 3 sekunder for at stoppe"+
 	"Hvert tryk, eller hver tast på et tilsluttet tastatur, spiller en blød klavertone, alle i en skala, der altid lyder pænt sammen."+
@@ -1082,6 +1089,7 @@ var textsDa = i18n.NewTexts(""+
 		46,
 		190,
 		215,
+		117,
 		75,
 		66,
 		131,
@@ -1127,6 +1135,7 @@ var textsDe = i18n.NewTexts(""+
 	"Spielen starten (Vollbild, Tastatur gesperrt)"+
 	"Eine andere App hat die sichere Tastatureingabe eingeschaltet, etwa die des Terminals oder ein Passwortfeld, und dann kann keine App die Tastatur sperren. Schalte sie aus oder starte den Computer neu und starte dann erneut."+
 	"Die Tastatur konnte nicht gesperrt werden. Prüfe, ob Mash Piano unter Systemeinstellungen › Datenschutz & Sicherheit › Bedienungshilfen eingeschaltet ist; entferne nach einem Update den alten Eintrag (−) und füge ihn neu hinzu."+
+	"Die Tastatur konnte nicht gesperrt werden. Schließe Mash Piano und öffne es erneut; klappt es dann noch nicht, starte den Computer neu."+
 	"Strg+Alt+Entf kann keine App blockieren; Win+L ist gesperrt, während das Baby spielt."+
 	"Eltern: obere rechte Ecke 3 Sekunden halten zum Beenden"+
 	"Jedes Tippen oder jede Taste einer angeschlossenen Tastatur spielt einen sanften Klavierton, alle in einer Tonleiter, die immer schön zusammenklingt."+
@@ -1169,6 +1178,7 @@ var textsDe = i18n.NewTexts(""+
 		45,
 		223,
 		235,
+		137,
 		86,
 		55,
 		150,
@@ -1214,6 +1224,7 @@ var textsEs = i18n.NewTexts(""+
 	"Empezar a tocar (pantalla completa, teclado bloqueado)"+
 	"Otra app activó la entrada de teclado segura, como la de Terminal o un campo de contraseña, y así ninguna app puede bloquear el teclado. Desactívala o reinicia el ordenador y vuelve a empezar."+
 	"No se pudo bloquear el teclado. Comprueba que Mash Piano esté activado en Ajustes del Sistema › Privacidad y seguridad › Accesibilidad; tras una actualización, elimina la entrada antigua (−) y vuelve a añadirla."+
+	"No se pudo bloquear el teclado. Cierra Mash Piano y vuelve a abrirlo; si sigue fallando, reinicia el ordenador."+
 	"Ninguna app puede bloquear Ctrl+Alt+Supr; Win+L se bloquea mientras el bebé toca."+
 	"Padres: mantened pulsada la esquina superior derecha 3 segundos para salir"+
 	"Cada toque, o cada tecla de un teclado conectado, suena como una nota suave de piano, todas en una escala que siempre suena bien."+
@@ -1256,6 +1267,7 @@ var textsEs = i18n.NewTexts(""+
 		54,
 		196,
 		220,
+		111,
 		82,
 		74,
 		129,
@@ -1301,6 +1313,7 @@ var textsFi = i18n.NewTexts(""+
 	"Aloita soittaminen (koko näyttö, näppäimistö lukittu)"+
 	"Toinen sovellus on laittanut suojatun näppäimistösyötön päälle, kuten Päätteen suojattu syöttö tai salasanakenttä, eikä mikään sovellus voi silloin lukita näppäimistöä. Laita se pois tai käynnistä tietokone uudelleen ja aloita sitten uudestaan."+
 	"Näppäimistöä ei voitu lukita. Tarkista, että Mash Piano on päällä kohdassa Järjestelmäasetukset › Tietosuoja ja suojaus › Käyttöapu; päivityksen jälkeen poista vanha kohde (−) ja lisää se uudelleen."+
+	"Näppäimistöä ei voitu lukita. Sulje Mash Piano ja avaa se uudelleen; jos se ei vieläkään toimi, käynnistä tietokone uudelleen."+
 	"Ctrl+Alt+Del-yhdistelmää ei voi estää mikään sovellus; Win+L on estetty vauvan soittaessa."+
 	"Vanhemmat: lopeta pitämällä oikeaa yläkulmaa 3 sekuntia"+
 	"Jokainen napautus tai liitetyn näppäimistön näppäin soittaa pehmeän pianon sävelen, ja kaikki ovat asteikossa, joka kuulostaa aina kauniilta yhdessä."+
@@ -1343,6 +1356,7 @@ var textsFi = i18n.NewTexts(""+
 		58,
 		265,
 		220,
+		135,
 		96,
 		59,
 		157,
@@ -1388,6 +1402,7 @@ var textsFr = i18n.NewTexts(""+
 	"Commencer à jouer (plein écran, clavier verrouillé)"+
 	"Une autre app a activé la saisie sécurisée au clavier, comme celle du Terminal ou un champ de mot de passe, et aucune app ne peut alors verrouiller le clavier. Désactivez-la ou redémarrez l’ordinateur, puis recommencez."+
 	"Le clavier n’a pas pu être verrouillé. Vérifiez que Mash Piano est activé dans Réglages Système › Confidentialité et sécurité › Accessibilité ; après une mise à jour, supprimez l’ancienne entrée (−) et ajoutez-la à nouveau."+
+	"Le clavier n’a pas pu être verrouillé. Fermez Mash Piano puis rouvrez-le ; si le problème persiste, redémarrez l’ordinateur."+
 	"Aucune app ne peut bloquer Ctrl+Alt+Suppr ; Win+L est bloqué pendant que bébé joue."+
 	"Parents : maintenez le coin supérieur droit 3 secondes pour arrêter"+
 	"Chaque toucher, ou chaque touche d’un clavier branché, joue une douce note de piano, toutes dans une gamme qui sonne toujours juste."+
@@ -1430,6 +1445,7 @@ var textsFr = i18n.NewTexts(""+
 		54,
 		226,
 		247,
+		132,
 		86,
 		69,
 		135,
@@ -1475,6 +1491,7 @@ var textsHe = i18n.NewTexts(""+
 	"להתחיל לנגן (מסך מלא, מקלדת נעולה)"+
 	"יישום אחר הפעיל הזנת מקלדת מאובטחת, כמו ב-Terminal או בשדה סיסמה, ואז אף יישום לא יכול לנעול את המקלדת. כבו אותה או הפעילו מחדש את המחשב, ואז התחילו שוב."+
 	"לא ניתן היה לנעול את המקלדת. ודאו ש-Mash Piano מופעל בהגדרות המערכת › פרטיות ואבטחה › נגישות; אחרי עדכון, הסירו את הרשומה הישנה (−) והוסיפו אותה מחדש."+
+	"לא ניתן היה לנעול את המקלדת. סגרו את Mash Piano ופתחו אותו שוב; אם זה עדיין לא עובד, הפעילו מחדש את המחשב."+
 	"אף יישום לא יכול לחסום את Ctrl+Alt+Del; \u200fWin+L חסום בזמן שהתינוק מנגן."+
 	"להורים: החזיקו את הפינה הימנית העליונה 3 שניות כדי לעצור"+
 	"כל נגיעה, או כל מקש במקלדת מחוברת, מנגנים צליל פסנתר רך, וכולם מסולם שתמיד נשמע יפה ביחד."+
@@ -1517,6 +1534,7 @@ var textsHe = i18n.NewTexts(""+
 		60,
 		264,
 		261,
+		178,
 		111,
 		101,
 		158,
@@ -1562,6 +1580,7 @@ var textsHi = i18n.NewTexts(""+
 	"बजाना शुरू करें (पूरी स्क्रीन, कीबोर्ड लॉक)"+
 	"किसी दूसरे ऐप ने सुरक्षित कीबोर्ड प्रविष्टि चालू कर दी है, जैसे Terminal में या पासवर्ड फ़ील्ड में, और तब कोई भी ऐप कीबोर्ड लॉक नहीं कर सकता। उसे बंद करें, या कंप्यूटर रीस्टार्ट करें, फिर दोबारा शुरू करें।"+
 	"कीबोर्ड लॉक नहीं हो सका। जाँचें कि सिस्टम सेटिंग्ज़ › गोपनीयता और सुरक्षा › ऐक्सेसिबिलिटी में Mash Piano चालू है; अपडेट के बाद पुरानी प्रविष्टि हटाएँ (−) और फिर से जोड़ें।"+
+	"कीबोर्ड लॉक नहीं हो सका। Mash Piano बंद करके फिर से खोलें; अगर फिर भी न हो, तो कंप्यूटर रीस्टार्ट करें।"+
 	"Ctrl+Alt+Del को कोई ऐप नहीं रोक सकता; बच्चे के खेलते समय Win+L रोका रहता है।"+
 	"माता-पिता: रोकने के लिए ऊपरी दायाँ कोना 3 सेकंड दबाए रखें"+
 	"हर टैप, या जुड़े कीबोर्ड की हर कुंजी, एक मधुर पियानो सुर बजाती है, सब ऐसे सरगम में जो हमेशा साथ में अच्छा लगता है।"+
@@ -1604,6 +1623,7 @@ var textsHi = i18n.NewTexts(""+
 		111,
 		515,
 		429,
+		247,
 		164,
 		145,
 		288,
@@ -1649,6 +1669,7 @@ var textsId = i18n.NewTexts(""+
 	"Mulai bermain (layar penuh, keyboard terkunci)"+
 	"App lain menyalakan input keyboard aman, misalnya di Terminal atau kolom kata sandi, sehingga tidak ada app yang bisa mengunci keyboard. Matikan, atau mulai ulang komputer, lalu mulai lagi."+
 	"Keyboard tidak dapat dikunci. Pastikan Mash Piano dinyalakan di Pengaturan Sistem › Privasi & Keamanan › Aksesibilitas; setelah pembaruan, hapus entri lama (−) lalu tambahkan lagi."+
+	"Keyboard tidak dapat dikunci. Tutup Mash Piano lalu buka lagi; jika masih gagal, mulai ulang komputer."+
 	"Tidak ada app yang bisa memblokir Ctrl+Alt+Del; Win+L diblokir selama bayi bermain."+
 	"Orang tua: tahan pojok kanan atas selama 3 detik untuk berhenti"+
 	"Setiap ketukan, atau setiap tombol pada keyboard yang terpasang, memainkan nada piano yang lembut, semuanya dalam tangga nada yang selalu terdengar indah."+
@@ -1691,6 +1712,7 @@ var textsId = i18n.NewTexts(""+
 		46,
 		189,
 		186,
+		102,
 		83,
 		63,
 		154,
@@ -1736,6 +1758,7 @@ var textsIt = i18n.NewTexts(""+
 	"Inizia a suonare (schermo intero, tastiera bloccata)"+
 	"Un’altra app ha attivato l’inserimento sicuro da tastiera, come quello di Terminale o un campo password, e così nessuna app può bloccare la tastiera. Disattivalo o riavvia il computer, poi ricomincia."+
 	"Impossibile bloccare la tastiera. Controlla che Mash Piano sia attivo in Impostazioni di Sistema › Privacy e sicurezza › Accessibilità; dopo un aggiornamento, rimuovi la vecchia voce (−) e aggiungila di nuovo."+
+	"Non è stato possibile bloccare la tastiera. Chiudi Mash Piano e riaprilo; se ancora non funziona, riavvia il computer."+
 	"Nessuna app può bloccare Ctrl+Alt+Canc; Win+L è bloccato mentre il bambino suona."+
 	"Genitori: tenete premuto l’angolo in alto a destra per 3 secondi per uscire"+
 	"Ogni tocco, o ogni tasto di una tastiera collegata, suona una dolce nota di pianoforte, tutte in una scala che suona sempre bene."+
@@ -1778,6 +1801,7 @@ var textsIt = i18n.NewTexts(""+
 		52,
 		206,
 		216,
+		119,
 		83,
 		77,
 		129,
@@ -1823,6 +1847,7 @@ var textsJa = i18n.NewTexts(""+
 	"演奏を始める（全画面・キーボードをロック）"+
 	"別のアプリが「セキュアキーボード入力」をオンにしています（ターミナルのセキュアキーボード入力やパスワード欄など）。この間はどのアプリもキーボードをロックできません。オフにするかコンピュータを再起動してから、もう一度始めてください。"+
 	"キーボードをロックできませんでした。システム設定 › プライバシーとセキュリティ › アクセシビリティ で Mash Piano がオンになっているか確認してください。アップデート後は古い項目を削除（−）してから追加し直してください。"+
+	"キーボードをロックできませんでした。Mash Piano を閉じてもう一度開いてください。それでもうまくいかない場合は、コンピュータを再起動してください。"+
 	"Ctrl+Alt+Del はどのアプリも止められません。Win+L は遊んでいる間ブロックされます。"+
 	"保護者の方：右上隅を 3 秒押すと終了"+
 	"画面をタップしても、つないだキーボードのキーを押しても、やさしいピアノの音が鳴ります。音はすべて同じ音階なので、いつもきれいに響きます。"+
@@ -1865,6 +1890,7 @@ var textsJa = i18n.NewTexts(""+
 		63,
 		345,
 		317,
+		209,
 		112,
 		51,
 		204,
@@ -1910,6 +1936,7 @@ var textsKo = i18n.NewTexts(""+
 	"연주 시작 (전체 화면, 키보드 잠금)"+
 	"다른 앱이 '보안 키보드 입력'을 켰습니다(터미널의 보안 키보드 입력, 암호 입력란 등). 이 상태에서는 어떤 앱도 키보드를 잠글 수 없습니다. 끄거나 컴퓨터를 재시동한 뒤 다시 시작하세요."+
 	"키보드를 잠글 수 없습니다. 시스템 설정 › 개인정보 보호 및 보안 › 손쉬운 사용에서 Mash Piano가 켜져 있는지 확인하세요. 업데이트 후에는 이전 항목을 삭제(−)하고 다시 추가하세요."+
+	"키보드를 잠글 수 없습니다. Mash Piano를 닫았다가 다시 열어 주세요. 그래도 안 되면 컴퓨터를 다시 시작해 주세요."+
 	"Ctrl+Alt+Del은 어떤 앱도 막을 수 없습니다. Win+L은 노는 동안 막힙니다."+
 	"부모님: 오른쪽 위 모서리를 3초간 누르면 종료"+
 	"화면을 탭하거나 연결된 키보드의 키를 누를 때마다 부드러운 피아노 음이 납니다. 모두 같은 음계라 언제나 잘 어울립니다."+
@@ -1952,6 +1979,7 @@ var textsKo = i18n.NewTexts(""+
 		47,
 		252,
 		246,
+		151,
 		91,
 		62,
 		165,
@@ -1997,6 +2025,7 @@ var textsNb = i18n.NewTexts(""+
 	"Begynn å spille (fullskjerm, tastatur låst)"+
 	"En annen app har slått på sikker tastaturinndata, for eksempel Terminals eller et passordfelt, og da kan ingen app låse tastaturet. Slå det av, eller start datamaskinen på nytt, og begynn så igjen."+
 	"Tastaturet kunne ikke låses. Sjekk at Mash Piano er slått på under Systeminnstillinger › Personvern og sikkerhet › Tilgjengelighet; etter en oppdatering fjerner du den gamle oppføringen (−) og legger den til igjen."+
+	"Tastaturet kunne ikke låses. Lukk Mash Piano og åpne det igjen; hvis det fortsatt ikke virker, start datamaskinen på nytt."+
 	"Ctrl+Alt+Del kan ingen app blokkere; Win+L er blokkert mens babyen spiller."+
 	"Foreldre: hold øvre høyre hjørne i 3 sekunder for å stoppe"+
 	"Hvert trykk, eller hver tast på et tilkoblet tastatur, spiller en myk pianotone, alle i en skala som alltid høres fin ut sammen."+
@@ -2039,6 +2068,7 @@ var textsNb = i18n.NewTexts(""+
 		45,
 		203,
 		224,
+		125,
 		75,
 		62,
 		130,
@@ -2084,6 +2114,7 @@ var textsNl = i18n.NewTexts(""+
 	"Begin met spelen (volledig scherm, toetsenbord vergrendeld)"+
 	"Een andere app heeft beveiligde toetsenbordinvoer aangezet, zoals die van Terminal of een wachtwoordveld, en dan kan geen app het toetsenbord vergrendelen. Zet het uit of herstart de computer en begin opnieuw."+
 	"Het toetsenbord kon niet worden vergrendeld. Controleer dat Mash Piano aanstaat in Systeeminstellingen › Privacy en beveiliging › Toegankelijkheid; verwijder na een update het oude item (−) en voeg het opnieuw toe."+
+	"Het toetsenbord kon niet worden vergrendeld. Sluit Mash Piano en open het opnieuw; lukt het dan nog niet, start de computer opnieuw op."+
 	"Ctrl+Alt+Del kan geen enkele app blokkeren; Win+L is geblokkeerd terwijl de baby speelt."+
 	"Ouders: houd de rechterbovenhoek 3 seconden vast om te stoppen"+
 	"Elke tik, of elke toets op een aangesloten toetsenbord, speelt een zachte pianotoon, allemaal in een toonladder die altijd mooi samen klinkt."+
@@ -2126,6 +2157,7 @@ var textsNl = i18n.NewTexts(""+
 		59,
 		209,
 		220,
+		135,
 		88,
 		62,
 		141,
@@ -2171,6 +2203,7 @@ var textsPl = i18n.NewTexts(""+
 	"Zacznij grać (pełny ekran, klawiatura zablokowana)"+
 	"Inna aplikacja włączyła bezpieczne wprowadzanie z klawiatury, np. w Terminalu lub w polu hasła, i wtedy żadna aplikacja nie może zablokować klawiatury. Wyłącz je lub uruchom ponownie komputer i zacznij od nowa."+
 	"Nie udało się zablokować klawiatury. Sprawdź, czy Mash Piano jest włączone w Ustawieniach systemowych › Prywatność i ochrona › Dostępność; po aktualizacji usuń stary wpis (−) i dodaj go ponownie."+
+	"Nie udało się zablokować klawiatury. Zamknij Mash Piano i otwórz ponownie; jeśli nadal nie działa, uruchom ponownie komputer."+
 	"Ctrl+Alt+Del nie może zablokować żadna aplikacja; Win+L jest zablokowane, gdy maluch gra."+
 	"Rodzice: przytrzymajcie prawy górny róg przez 3 sekundy, aby zakończyć"+
 	"Każde dotknięcie lub klawisz podłączonej klawiatury gra łagodną nutę pianina, a wszystkie należą do skali, która zawsze ładnie brzmi."+
@@ -2213,6 +2246,7 @@ var textsPl = i18n.NewTexts(""+
 		52,
 		219,
 		213,
+		131,
 		92,
 		74,
 		144,
@@ -2258,6 +2292,7 @@ var textsPtBR = i18n.NewTexts(""+
 	"Começar a tocar (tela cheia, teclado bloqueado)"+
 	"Outro app ativou a entrada segura de teclado, como a do Terminal ou um campo de senha, e assim nenhum app consegue bloquear o teclado. Desative-a ou reinicie o computador e comece de novo."+
 	"Não foi possível bloquear o teclado. Verifique se o Mash Piano está ativado em Ajustes do Sistema › Privacidade e Segurança › Acessibilidade; depois de uma atualização, remova o item antigo (−) e adicione-o de novo."+
+	"Não foi possível bloquear o teclado. Feche o Mash Piano e abra de novo; se ainda não funcionar, reinicie o computador."+
 	"Nenhum app consegue bloquear Ctrl+Alt+Del; Win+L fica bloqueado enquanto o bebê toca."+
 	"Pais: segurem o canto superior direito por 3 segundos para sair"+
 	"Cada toque, ou cada tecla de um teclado conectado, toca uma nota suave de piano, todas numa escala que sempre soa bem junta."+
@@ -2300,6 +2335,7 @@ var textsPtBR = i18n.NewTexts(""+
 		48,
 		188,
 		227,
+		121,
 		86,
 		63,
 		124,
@@ -2345,6 +2381,7 @@ var textsRu = i18n.NewTexts(""+
 	"Начать играть (весь экран, клавиатура заблокирована)"+
 	"Другое приложение включило защищённый ввод с клавиатуры, например в Терминале или в поле пароля, и тогда ни одно приложение не может заблокировать клавиатуру. Отключите его или перезагрузите компьютер и начните снова."+
 	"Не удалось заблокировать клавиатуру. Проверьте, что Mash Piano включено в Системных настройках › Конфиденциальность и безопасность › Универсальный доступ; после обновления удалите старую запись (−) и добавьте её снова."+
+	"Не удалось заблокировать клавиатуру. Закройте Mash Piano и откройте снова; если не поможет, перезагрузите компьютер."+
 	"Ctrl+Alt+Del не может заблокировать ни одно приложение; Win+L заблокировано, пока малыш играет."+
 	"Родителям: удерживайте правый верхний угол 3 секунды, чтобы выйти"+
 	"Каждое касание или клавиша подключённой клавиатуры играет мягкую ноту пианино, и все они из одного лада, который всегда звучит красиво."+
@@ -2387,6 +2424,7 @@ var textsRu = i18n.NewTexts(""+
 		96,
 		400,
 		396,
+		205,
 		159,
 		119,
 		248,
@@ -2432,6 +2470,7 @@ var textsSv = i18n.NewTexts(""+
 	"Börja spela (helskärm, tangentbordet låst)"+
 	"En annan app har slagit på säker tangentbordsinmatning, till exempel Terminals eller ett lösenordsfält, och då kan ingen app låsa tangentbordet. Stäng av den eller starta om datorn och börja sedan igen."+
 	"Tangentbordet kunde inte låsas. Kontrollera att Mash Piano är påslaget i Systeminställningar › Integritet och säkerhet › Hjälpmedel; efter en uppdatering tar du bort den gamla posten (−) och lägger till den igen."+
+	"Tangentbordet kunde inte låsas. Stäng Mash Piano och öppna det igen; om det fortfarande inte fungerar, starta om datorn."+
 	"Ctrl+Alt+Del kan ingen app blockera; Win+L är blockerat medan bebisen spelar."+
 	"Föräldrar: håll det övre högra hörnet i 3 sekunder för att avsluta"+
 	"Varje tryck, eller varje tangent på ett anslutet tangentbord, spelar en mjuk pianoton, alla i en skala som alltid låter fint ihop."+
@@ -2474,6 +2513,7 @@ var textsSv = i18n.NewTexts(""+
 		45,
 		210,
 		225,
+		123,
 		78,
 		73,
 		132,
@@ -2519,6 +2559,7 @@ var textsTh = i18n.NewTexts(""+
 	"เริ่มเล่น (เต็มหน้าจอ ล็อกแป้นพิมพ์)"+
 	"มีแอปอื่นเปิดการป้อนข้อมูลแป้นพิมพ์แบบปลอดภัยอยู่ เช่นใน Terminal หรือช่องรหัสผ่าน ซึ่งทำให้ไม่มีแอปใดล็อกแป้นพิมพ์ได้ โปรดปิด หรือรีสตาร์ทคอมพิวเตอร์ แล้วเริ่มใหม่"+
 	"ล็อกแป้นพิมพ์ไม่ได้ โปรดตรวจว่าเปิด Mash Piano ไว้ใน การตั้งค่าระบบ › ความเป็นส่วนตัวและความปลอดภัย › การช่วยการเข้าถึง หลังอัปเดต ให้ลบรายการเดิม (−) แล้วเพิ่มใหม่"+
+	"ไม่สามารถล็อกแป้นพิมพ์ได้ ปิด Mash Piano แล้วเปิดใหม่ หากยังไม่ได้ ให้รีสตาร์ตคอมพิวเตอร์"+
 	"ไม่มีแอปใดบล็อก Ctrl+Alt+Del ได้ ส่วน Win+L จะถูกบล็อกขณะลูกน้อยเล่น"+
 	"ผู้ปกครอง: กดมุมขวาบนค้างไว้ 3 วินาทีเพื่อหยุด"+
 	"ทุกครั้งที่แตะ หรือกดปุ่มบนแป้นพิมพ์ที่ต่อไว้ จะได้ยินเสียงเปียโนนุ่มๆ ทุกเสียงอยู่ในบันไดเสียงเดียวกันจึงไพเราะเสมอ"+
@@ -2561,6 +2602,7 @@ var textsTh = i18n.NewTexts(""+
 		100,
 		462,
 		444,
+		237,
 		160,
 		128,
 		342,
@@ -2606,6 +2648,7 @@ var textsTr = i18n.NewTexts(""+
 	"Çalmaya başla (tam ekran, klavye kilitli)"+
 	"Başka bir uygulama, örneğin Terminal’in güvenli klavye girişi ya da bir parola alanı, güvenli klavye girişini açtı; bu durumda hiçbir uygulama klavyeyi kilitleyemez. Kapatın ya da bilgisayarı yeniden başlatın, sonra tekrar başlayın."+
 	"Klavye kilitlenemedi. Sistem Ayarları › Gizlilik ve Güvenlik › Erişilebilirlik’te Mash Piano’nun açık olduğunu kontrol edin; bir güncellemeden sonra eski kaydı kaldırıp (−) yeniden ekleyin."+
+	"Klavye kilitlenemedi. Mash Piano'yu kapatıp yeniden açın; hâlâ olmuyorsa bilgisayarı yeniden başlatın."+
 	"Ctrl+Alt+Del’i hiçbir uygulama engelleyemez; Win+L bebek çalarken engellenir."+
 	"Ebeveynler: durdurmak için sağ üst köşeyi 3 saniye basılı tutun"+
 	"Her dokunuş ya da bağlı bir klavyedeki her tuş yumuşak bir piyano notası çalar; hepsi her zaman uyumlu duyulan bir dizidendir."+
@@ -2648,6 +2691,7 @@ var textsTr = i18n.NewTexts(""+
 		43,
 		251,
 		209,
+		110,
 		81,
 		70,
 		133,
@@ -2693,6 +2737,7 @@ var textsUk = i18n.NewTexts(""+
 	"Почати грати (весь екран, клавіатура заблокована)"+
 	"Інший застосунок увімкнув захищене введення з клавіатури, наприклад у Терміналі чи в полі пароля, і тоді жоден застосунок не може заблокувати клавіатуру. Вимкніть його або перезавантажте комп’ютер і почніть знову."+
 	"Не вдалося заблокувати клавіатуру. Перевірте, що Mash Piano увімкнено в Системних параметрах › Приватність і безпека › Універсальний доступ; після оновлення видаліть старий запис (−) і додайте його знову."+
+	"Не вдалося заблокувати клавіатуру. Закрийте Mash Piano і відкрийте знову; якщо не допоможе, перезапустіть комп’ютер."+
 	"Ctrl+Alt+Del не може заблокувати жоден застосунок; Win+L заблоковано, поки маля грає."+
 	"Батькам: утримуйте правий верхній кут 3 секунди, щоб вийти"+
 	"Кожен дотик або клавіша під’єднаної клавіатури грає м’яку ноту піаніно, і всі вони з одного ладу, що завжди звучить гарно."+
@@ -2735,6 +2780,7 @@ var textsUk = i18n.NewTexts(""+
 		90,
 		394,
 		368,
+		206,
 		140,
 		105,
 		224,
@@ -2780,6 +2826,7 @@ var textsVi = i18n.NewTexts(""+
 	"Bắt đầu chơi (toàn màn hình, khóa bàn phím)"+
 	"Một ứng dụng khác đã bật nhập bàn phím bảo mật, chẳng hạn trong Terminal hoặc ô mật khẩu, nên không ứng dụng nào khóa được bàn phím. Hãy tắt nó hoặc khởi động lại máy tính, rồi bắt đầu lại."+
 	"Không thể khóa bàn phím. Hãy kiểm tra Mash Piano đã được bật trong Cài đặt hệ thống › Quyền riêng tư & Bảo mật › Trợ năng; sau khi cập nhật, hãy xóa mục cũ (−) rồi thêm lại."+
+	"Không thể khóa bàn phím. Hãy đóng Mash Piano rồi mở lại; nếu vẫn không được, hãy khởi động lại máy tính."+
 	"Không ứng dụng nào chặn được Ctrl+Alt+Del; Win+L bị chặn khi bé chơi."+
 	"Phụ huynh: giữ góc trên bên phải 3 giây để dừng"+
 	"Mỗi lần chạm, hoặc mỗi phím trên bàn phím đã kết nối, sẽ phát một nốt piano êm dịu, tất cả trong một thang âm luôn nghe hài hòa."+
@@ -2822,6 +2869,7 @@ var textsVi = i18n.NewTexts(""+
 		55,
 		257,
 		229,
+		138,
 		87,
 		62,
 		168,
@@ -2867,6 +2915,7 @@ var textsZhHans = i18n.NewTexts(""+
 	"开始弹琴（全屏锁定键盘）"+
 	"有程序开启了“安全键盘输入”（如终端的“安全键盘输入”、正在输入的密码框），这时任何程序都锁不住键盘。请关闭它（或重启电脑）后再开始。"+
 	"无法锁定键盘。请确认已在 系统设置 › 隐私与安全性 › 辅助功能 中打开“Mash Piano”；更新版本后，请先删掉旧条目（−）再重新添加。"+
+	"无法锁定键盘。请关闭 Mash Piano 后重新打开；如果仍然不行，请重启电脑。"+
 	"Ctrl+Alt+Del 任何程序都拦不住；Win+L 在弹琴时会被禁用。"+
 	"家长：在右上角按住 3 秒退出"+
 	"点一下屏幕，或者按一下接上的键盘，都会弹出一个轻柔的钢琴音，所有的音都在同一个音阶里，怎么弹都好听。"+
@@ -2909,6 +2958,7 @@ var textsZhHans = i18n.NewTexts(""+
 		36,
 		201,
 		184,
+		99,
 		73,
 		39,
 		150,
@@ -2954,6 +3004,7 @@ var textsZhHant = i18n.NewTexts(""+
 	"開始彈琴（全螢幕鎖定鍵盤）"+
 	"有程式開啟了「安全鍵盤輸入」（如終端機的「安全鍵盤輸入」、正在輸入的密碼欄），這時任何程式都鎖不住鍵盤。請關閉它（或重新開機）後再開始。"+
 	"無法鎖定鍵盤。請確認已在 系統設定 › 隱私權與安全性 › 輔助使用 中開啟「Mash Piano」；更新版本後，請先刪除舊項目（−）再重新加入。"+
+	"無法鎖定鍵盤。請關閉 Mash Piano 後重新開啟；如果仍然不行，請重新啟動電腦。"+
 	"Ctrl+Alt+Del 任何程式都擋不住；Win+L 在彈琴時會被停用。"+
 	"家長：在右上角按住 3 秒退出"+
 	"點一下螢幕，或按一下接上的鍵盤，都會彈出一個輕柔的鋼琴音，所有的音都在同一個音階裡，怎麼彈都好聽。"+
@@ -2996,6 +3047,7 @@ var textsZhHant = i18n.NewTexts(""+
 		39,
 		204,
 		187,
+		105,
 		73,
 		39,
 		147,
@@ -3466,6 +3518,13 @@ func LockFailed(cx *core.Scope) string { return For(cx).LockFailed() }
 
 // LockFailed is the package's LockFailed in the language of msgs.
 func (msgs Messages) LockFailed() string { return msgs.text(textLockFailed) }
+
+// LockFailedWindows says "The keyboard could not be locked. Close Mash Piano and open it again; if it still fails, restart the computer."
+// in the language the app shows under cx.
+func LockFailedWindows(cx *core.Scope) string { return For(cx).LockFailedWindows() }
+
+// LockFailedWindows is the package's LockFailedWindows in the language of msgs.
+func (msgs Messages) LockFailedWindows() string { return msgs.text(textLockFailedWindows) }
 
 // WindowsLimits says "Ctrl+Alt+Del cannot be blocked by any app; Win+L is blocked while the baby plays."
 // in the language the app shows under cx.

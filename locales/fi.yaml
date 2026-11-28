@@ -17,6 +17,7 @@ systemVolumeUnknown: "Tämän ulostulon äänenvoimakkuutta ei voi lukea, kuten 
 start: "Aloita soittaminen (koko näyttö, näppäimistö lukittu)"
 secureInput: "Toinen sovellus on laittanut suojatun näppäimistösyötön päälle, kuten Päätteen suojattu syöttö tai salasanakenttä, eikä mikään sovellus voi silloin lukita näppäimistöä. Laita se pois tai käynnistä tietokone uudelleen ja aloita sitten uudestaan."
 lockFailed: "Näppäimistöä ei voitu lukita. Tarkista, että Mash Piano on päällä kohdassa Järjestelmäasetukset › Tietosuoja ja suojaus › Käyttöapu; päivityksen jälkeen poista vanha kohde (−) ja lisää se uudelleen."
+lockFailedWindows: "Näppäimistöä ei voitu lukita. Sulje Mash Piano ja avaa se uudelleen; jos se ei vieläkään toimi, käynnistä tietokone uudelleen."
 windowsLimits: "Ctrl+Alt+Del-yhdistelmää ei voi estää mikään sovellus; Win+L on estetty vauvan soittaessa."
 cornerHint: "Vanhemmat: lopeta pitämällä oikeaa yläkulmaa 3 sekuntia"
 touchIntro: "Jokainen napautus tai liitetyn näppäimistön näppäin soittaa pehmeän pianon sävelen, ja kaikki ovat asteikossa, joka kuulostaa aina kauniilta yhdessä."

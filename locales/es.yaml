@@ -17,6 +17,7 @@ systemVolumeUnknown: "No se puede leer el volumen de esta salida, como ocurre co
 start: "Empezar a tocar (pantalla completa, teclado bloqueado)"
 secureInput: "Otra app activó la entrada de teclado segura, como la de Terminal o un campo de contraseña, y así ninguna app puede bloquear el teclado. Desactívala o reinicia el ordenador y vuelve a empezar."
 lockFailed: "No se pudo bloquear el teclado. Comprueba que Mash Piano esté activado en Ajustes del Sistema › Privacidad y seguridad › Accesibilidad; tras una actualización, elimina la entrada antigua (−) y vuelve a añadirla."
+lockFailedWindows: "No se pudo bloquear el teclado. Cierra Mash Piano y vuelve a abrirlo; si sigue fallando, reinicia el ordenador."
 windowsLimits: "Ninguna app puede bloquear Ctrl+Alt+Supr; Win+L se bloquea mientras el bebé toca."
 cornerHint: "Padres: mantened pulsada la esquina superior derecha 3 segundos para salir"
 touchIntro: "Cada toque, o cada tecla de un teclado conectado, suena como una nota suave de piano, todas en una escala que siempre suena bien."

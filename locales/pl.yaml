@@ -17,6 +17,7 @@ systemVolumeUnknown: "Nie można odczytać głośności tego wyjścia, tak jak w
 start: "Zacznij grać (pełny ekran, klawiatura zablokowana)"
 secureInput: "Inna aplikacja włączyła bezpieczne wprowadzanie z klawiatury, np. w Terminalu lub w polu hasła, i wtedy żadna aplikacja nie może zablokować klawiatury. Wyłącz je lub uruchom ponownie komputer i zacznij od nowa."
 lockFailed: "Nie udało się zablokować klawiatury. Sprawdź, czy Mash Piano jest włączone w Ustawieniach systemowych › Prywatność i ochrona › Dostępność; po aktualizacji usuń stary wpis (−) i dodaj go ponownie."
+lockFailedWindows: "Nie udało się zablokować klawiatury. Zamknij Mash Piano i otwórz ponownie; jeśli nadal nie działa, uruchom ponownie komputer."
 windowsLimits: "Ctrl+Alt+Del nie może zablokować żadna aplikacja; Win+L jest zablokowane, gdy maluch gra."
 cornerHint: "Rodzice: przytrzymajcie prawy górny róg przez 3 sekundy, aby zakończyć"
 touchIntro: "Każde dotknięcie lub klawisz podłączonej klawiatury gra łagodną nutę pianina, a wszystkie należą do skali, która zawsze ładnie brzmi."

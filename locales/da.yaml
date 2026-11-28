@@ -17,6 +17,7 @@ systemVolumeUnknown: "Lydstyrken for denne udgang kan ikke aflæses, som med HDM
 start: "Begynd at spille (fuld skærm, tastatur låst)"
 secureInput: "En anden app har slået sikker indtastning til, f.eks. Terminals eller et adgangskodefelt, og så kan ingen app låse tastaturet. Slå den fra, eller genstart computeren, og begynd så igen."
 lockFailed: "Tastaturet kunne ikke låses. Tjek, at Mash Piano er slået til under Systemindstillinger › Anonymitet & sikkerhed › Tilgængelighed; efter en opdatering skal du fjerne den gamle post (−) og tilføje den igen."
+lockFailedWindows: "Tastaturet kunne ikke låses. Luk Mash Piano, og åbn det igen; hvis det stadig ikke virker, så genstart computeren."
 windowsLimits: "Ctrl+Alt+Del kan ingen app blokere; Win+L er blokeret, mens babyen spiller."
 cornerHint: "Forældre: hold øverste højre hjørne i 3 sekunder for at stoppe"
 touchIntro: "Hvert tryk, eller hver tast på et tilsluttet tastatur, spiller en blød klavertone, alle i en skala, der altid lyder pænt sammen."

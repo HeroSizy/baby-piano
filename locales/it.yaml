@@ -17,6 +17,7 @@ systemVolumeUnknown: "Il volume di questa uscita non si può leggere, come con H
 start: "Inizia a suonare (schermo intero, tastiera bloccata)"
 secureInput: "Un’altra app ha attivato l’inserimento sicuro da tastiera, come quello di Terminale o un campo password, e così nessuna app può bloccare la tastiera. Disattivalo o riavvia il computer, poi ricomincia."
 lockFailed: "Impossibile bloccare la tastiera. Controlla che Mash Piano sia attivo in Impostazioni di Sistema › Privacy e sicurezza › Accessibilità; dopo un aggiornamento, rimuovi la vecchia voce (−) e aggiungila di nuovo."
+lockFailedWindows: "Non è stato possibile bloccare la tastiera. Chiudi Mash Piano e riaprilo; se ancora non funziona, riavvia il computer."
 windowsLimits: "Nessuna app può bloccare Ctrl+Alt+Canc; Win+L è bloccato mentre il bambino suona."
 cornerHint: "Genitori: tenete premuto l’angolo in alto a destra per 3 secondi per uscire"
 touchIntro: "Ogni tocco, o ogni tasto di una tastiera collegata, suona una dolce nota di pianoforte, tutte in una scala che suona sempre bene."

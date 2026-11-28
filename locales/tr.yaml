@@ -17,6 +17,7 @@ systemVolumeUnknown: "HDMI ve bazı hoparlörlerde olduğu gibi bu çıkışın 
 start: "Çalmaya başla (tam ekran, klavye kilitli)"
 secureInput: "Başka bir uygulama, örneğin Terminal’in güvenli klavye girişi ya da bir parola alanı, güvenli klavye girişini açtı; bu durumda hiçbir uygulama klavyeyi kilitleyemez. Kapatın ya da bilgisayarı yeniden başlatın, sonra tekrar başlayın."
 lockFailed: "Klavye kilitlenemedi. Sistem Ayarları › Gizlilik ve Güvenlik › Erişilebilirlik’te Mash Piano’nun açık olduğunu kontrol edin; bir güncellemeden sonra eski kaydı kaldırıp (−) yeniden ekleyin."
+lockFailedWindows: "Klavye kilitlenemedi. Mash Piano'yu kapatıp yeniden açın; hâlâ olmuyorsa bilgisayarı yeniden başlatın."
 windowsLimits: "Ctrl+Alt+Del’i hiçbir uygulama engelleyemez; Win+L bebek çalarken engellenir."
 cornerHint: "Ebeveynler: durdurmak için sağ üst köşeyi 3 saniye basılı tutun"
 touchIntro: "Her dokunuş ya da bağlı bir klavyedeki her tuş yumuşak bir piyano notası çalar; hepsi her zaman uyumlu duyulan bir dizidendir."
