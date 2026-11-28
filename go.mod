@@ -4,7 +4,7 @@ go 1.27.3
 
 require (
 	github.com/ebitengine/purego v0.11.3
-	github.com/nsgo-dev/nsgo v0.3.0
+	github.com/nsgo-dev/nsgo v0.3.4
 	golang.org/x/sys v0.50.0
 )
 
