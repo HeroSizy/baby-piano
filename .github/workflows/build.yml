@@ -4,10 +4,10 @@ on:
   push:
     branches: [main]
     tags: ["v*"]
-    # The website (site/, which Cloudflare builds and deploys itself) and
-    # the docs and the App Store listing text are not the app: a change to
-    # them alone cuts no release.
-    paths-ignore: ["site/**", "*.md", "docs/**/*.md", "store/**"]
+    # The website (site/, which Cloudflare builds and deploys itself), the
+    # docs with the README's images, and the App Store listing text are not
+    # the app: a change to them alone cuts no release.
+    paths-ignore: ["site/**", "*.md", "docs/**/*.md", "docs/readme/**", "store/**"]
   pull_request:
   workflow_dispatch:
 
